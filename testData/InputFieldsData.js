@@ -1,6 +1,5 @@
 const InputFieldsData = {
-    movieName: "Walk to Remember",
-    email: "esteen@test.com"
+    movieName: "Walk to Remember"
 };
 
 module.exports = { InputFieldsData }
