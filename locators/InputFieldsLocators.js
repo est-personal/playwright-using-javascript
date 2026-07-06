@@ -1,10 +1,12 @@
+// Arrange Alphabetically
+// Locators for QA PLayground - Input Fields Page
 const InputFieldsLocators = {
-    scenario1TextField: 'input[id="movieName"]',
-    scenario2TextField: 'input[id="appendText"]',
-    scenario3TextField: 'input[id="insideText"]',
-    scenario4TextField: 'input[id="clearText"]',
-    scenario5TextField: 'input[id="disabledInput"]',
-    scenario6TextField: 'input[id="readonlyInput"]'
+    appendTextInput: '[data-testid="input-append-text"]',
+    clearTextInput: '[data-testid="input-clear-text"]',
+    disabledInput: '[data-testid="input-disabled"]',
+    movieNameInput: '[data-testid="input-movie-name"]',
+    readonlyInput: '[data-testid="input-readonly"]',
+    verifyTextInput: '[data-testid="input-verify-text"]'
 };
 
 module.exports = { InputFieldsLocators };
