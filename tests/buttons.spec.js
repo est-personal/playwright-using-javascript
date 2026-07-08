@@ -20,7 +20,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getHomeButtonText();
         expect(buttonText.trim())
-            .toBe('Go To Home');
+            .toBe(ButtonsData.homeButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -38,7 +39,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getCoordinateButtonText();
         expect(buttonText.trim())
-            .toBe('Find Location');
+            .toBe(ButtonsData.coordinateButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -68,7 +70,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getColourButtonText();
         expect(buttonText.trim())
-            .toBe('Find my color?');
+            .toBe(ButtonsData.colourButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -91,7 +94,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getSizeButtonText();
         expect(buttonText.trim())
-            .toBe('Do you know my size?');
+            .toBe(ButtonsData.sizeButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -129,7 +133,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getDisabledButtonText();
         expect(buttonText.trim())
-            .toBe('Disabled');
+            .toBe(ButtonsData.disabledButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -150,7 +155,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const initialText =
             await buttonsPage.getClickAndHoldButtonText();
         expect(initialText.trim())
-            .toBe('Click and Hold!');
+            .toBe(ButtonsData.clickAndHoldButtonText
+        );
         console.log(
             'Before Hold:', initialText
         );
@@ -158,7 +164,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const changedText =
         await buttonsPage.getClickAndHoldButtonText();
         expect(changedText.trim())
-            .toBe('Keep Holding...');
+            .toBe(ButtonsData.clickAndHoldButtonDuringHoldText
+        );
         console.log(
             'After 1 second:', changedText
         );
@@ -166,7 +173,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const completedText =
         await buttonsPage.getClickAndHoldButtonText();
         expect(completedText.trim())
-        .toBe('Hold Complete!');
+            .toBe(ButtonsData.clickAndHoldButtonDoneText
+        );
         console.log(
             'After 1.5 seconds:', completedText
         );
@@ -181,7 +189,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getDoubleClickButtonText();
         expect(buttonText.trim())
-            .toBe('Double Click Me');
+            .toBe(ButtonsData.doubleClickButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -192,7 +201,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const message =
             await buttonsPage.getMessageText();
         expect(message.trim())
-            .toBe('You Double-clicked on button!');
+            .toBe(ButtonsData.doubleClickMessage
+        );
         console.log(
             'Output Message:', message
         );  
@@ -206,7 +216,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         const buttonText =
             await buttonsPage.getRightClickButtonText();
         expect(buttonText.trim())
-            .toBe('Right Click Me');
+            .toBe(ButtonsData.rightClickButtonText
+        );
         console.log(
             'Button Text:', buttonText
         );
@@ -217,7 +228,84 @@ test.describe('QA Playground - Buttons Tests', () => {
         const message =
             await buttonsPage.getMessageText();
         expect(message.trim())
-            .toBe('You Right-clicked on button!');
+            .toBe(ButtonsData.rightClickMessage
+        );
+        console.log(
+            'Output Message:', message
+        );
+    });
+
+    test('TC09: Validate clicking Double Click button', async () => {
+        const doubleClickButton =
+            await buttonsPage.getDoubleClickButton();
+        await expect(doubleClickButton)
+            .toBeVisible();
+        await buttonsPage.clickDoubleClickButtonOnce();
+        await expect(
+            await buttonsPage.getMessageBox()
+        ).toBeVisible();
+        const message =
+            await buttonsPage.getMessageText();
+        expect(message.trim())
+            .toBe(ButtonsData.defaultMessage
+        );
+        console.log(
+            'Output Message:', message
+        );
+    });
+
+    test('TC10: Validate right-clicking Double Click button', async () => {
+        const doubleClickButton =
+            await buttonsPage.getDoubleClickButton();
+        await expect(doubleClickButton)
+            .toBeVisible();
+        await buttonsPage.rightClickDoubleClickButton();
+        await expect(
+            await buttonsPage.getMessageBox()
+        ).toBeVisible();
+        const message =
+            await buttonsPage.getMessageText();
+        expect(message.trim())
+            .toBe(ButtonsData.defaultMessage
+        );
+        console.log(
+            'Output Message:', message
+        );
+    });
+
+    test('TC11: Validate clicking Right Click button', async () => {
+        const rightClickButton =
+            await buttonsPage.getRightClickButton();
+        await expect(rightClickButton)
+            .toBeVisible();
+        await buttonsPage.clickRightClickButtonOnce();
+        await expect(
+            await buttonsPage.getMessageBox()
+        ).toBeVisible();
+        const message =
+            await buttonsPage.getMessageText();
+        expect(message.trim())
+            .toBe(ButtonsData.defaultMessage
+        );
+        console.log(
+            'Output Message:', message
+        );
+    });
+
+    test('TC12: Validate double-clicking Right Click button', async () => {
+        const doubleClickButton =
+            await buttonsPage.getRightClickButton();
+        await expect(doubleClickButton)
+            .toBeVisible();
+        await buttonsPage.doubleClickRightClickButton();
+        await expect(
+            await buttonsPage.getMessageBox()
+        ).toBeVisible();
+        const message =
+            await buttonsPage.getMessageText();
+        expect(message.trim())
+            .toBe(ButtonsData.defaultMessage
+        );
         console.log(
             'Output Message:', message
         );

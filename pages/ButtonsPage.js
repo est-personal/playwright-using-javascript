@@ -10,6 +10,18 @@ class ButtonsPage extends BasePage {
         super(page)
     }
 
+    async clickDoubleClickButtonOnce() {
+        await this.page
+            .locator(ButtonsLocators.doubleClickButton)
+            .click();
+    }
+
+    async clickRightClickButtonOnce() {
+        await this.page
+            .locator(ButtonsLocators.rightClickButton)
+            .click();
+    }
+
     async clickHomeButton() {
         await this.page
             .locator(ButtonsLocators.homeButton)
@@ -19,6 +31,12 @@ class ButtonsPage extends BasePage {
     async doubleClickButton() {
         await this.page
             .locator(ButtonsLocators.doubleClickButton)
+            .dblclick();
+    }
+
+    async doubleClickRightClickButton() {
+        await this.page
+            .locator(ButtonsLocators.rightClickButton)
             .dblclick();
     }
 
@@ -196,11 +214,12 @@ class ButtonsPage extends BasePage {
 
     async navigateToButtons() {
         await this.page.goto(
-            QaPlaygroundUrls.buttonsPage
+            QaPlaygroundUrls.buttonsPage,
+            {
+                waitUntil: 'domcontentloaded'
+            }
         );
-            await this.waitForPageToLoad();
     }
-    
 
     async releaseButton() {
         await this.page.mouse.up();
@@ -209,6 +228,12 @@ class ButtonsPage extends BasePage {
     async rightClickButton() {
         await this.page
             .locator(ButtonsLocators.rightClickButton)
+            .click({ button: 'right' });
+    }
+
+    async rightClickDoubleClickButton() {
+        await this.page
+            .locator(ButtonsLocators.doubleClickButton)
             .click({ button: 'right' });
     }
 

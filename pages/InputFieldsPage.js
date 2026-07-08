@@ -96,7 +96,10 @@ class InputFieldsPage {
 
     async navigateToInputFields() {
         await this.page.goto(
-            'https://qaplayground.com/practice/input-fields'
+            'https://qaplayground.com/practice/input-fields',
+            {
+                waitUntil: 'domcontentloaded'
+            }
         );
     }
 
