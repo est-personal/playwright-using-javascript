@@ -19,7 +19,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getHomeButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.homeButtonText
         );
         console.log(
@@ -38,7 +38,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getCoordinateButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.coordinateButtonText
         );
         console.log(
@@ -69,7 +69,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getColourButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.colourButtonText
         );
         console.log(
@@ -93,7 +93,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getSizeButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.sizeButtonText
         );
         console.log(
@@ -132,7 +132,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getDisabledButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.disabledButtonText
         );
         console.log(
@@ -154,7 +154,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const initialText =
             await buttonsPage.getClickAndHoldButtonText();
-        expect(message.trim())
+        expect(initialText.trim())
             .toBe(ButtonsData.clickAndHoldButtonText
         );
         console.log(
@@ -163,7 +163,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         await buttonsPage.startHoldButton();
         const changedText =
         await buttonsPage.getClickAndHoldButtonText();
-        expect(message.trim())
+        expect(changedText.trim())
             .toBe(ButtonsData.clickAndHoldButtonDuringHoldText
         );
         console.log(
@@ -172,7 +172,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         await buttonsPage.holdFor(1.5);
         const completedText =
         await buttonsPage.getClickAndHoldButtonText();
-        expect(message.trim())
+        expect(completedText.trim())
             .toBe(ButtonsData.clickAndHoldButtonDoneText
         );
         console.log(
@@ -188,7 +188,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getDoubleClickButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.doubleClickButtonText
         );
         console.log(
@@ -215,7 +215,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             .toBeVisible();
         const buttonText =
             await buttonsPage.getRightClickButtonText();
-        expect(message.trim())
+        expect(buttonText.trim())
             .toBe(ButtonsData.rightClickButtonText
         );
         console.log(
@@ -235,7 +235,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         );
     });
 
-    test.describe('TC09: Validate clicking Double Click button', async () => {
+    test('TC09: Validate clicking Double Click button', async () => {
         const doubleClickButton =
             await buttonsPage.getDoubleClickButton();
         await expect(doubleClickButton)
@@ -254,7 +254,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         );
     });
 
-    test.describe('TC10: Validate right-clicking Double Click button', async () => {
+    test('TC10: Validate right-clicking Double Click button', async () => {
         const doubleClickButton =
             await buttonsPage.getDoubleClickButton();
         await expect(doubleClickButton)
@@ -273,8 +273,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         );
     });
 
-    test.describe('TC11: Validate clicking Right Click button', async () => {
-        const doubleClickButton =
+    test('TC11: Validate clicking Right Click button', async () => {
+        const rightClickButton =
             await buttonsPage.getRightClickButton();
         await expect(rightClickButton)
             .toBeVisible();
@@ -292,10 +292,10 @@ test.describe('QA Playground - Buttons Tests', () => {
         );
     });
 
-    test.describe('TC12: Validate double-clicking RIght Click button', async () => {
+    test('TC12: Validate double-clicking Right Click button', async () => {
         const doubleClickButton =
             await buttonsPage.getRightClickButton();
-        await expect(rightClickButton)
+        await expect(doubleClickButton)
             .toBeVisible();
         await buttonsPage.doubleClickRightClickButton();
         await expect(

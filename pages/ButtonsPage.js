@@ -214,9 +214,11 @@ class ButtonsPage extends BasePage {
 
     async navigateToButtons() {
         await this.page.goto(
-            QaPlaygroundUrls.buttonsPage
+            QaPlaygroundUrls.buttonsPage,
+            {
+                waitUntil: 'domcontentloaded'
+            }
         );
-            await this.waitForPageToLoad();
     }
 
     async releaseButton() {
