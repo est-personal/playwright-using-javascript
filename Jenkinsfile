@@ -5,6 +5,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    env.GIT_BRANCH_NAME = env.BRANCH_NAME ?: "main"      
+                    env.GIT_COMMIT_SHORT = bat(
+                        script: 'git rev-parse --short HEAD',
+                        returnStdout: true
+                    ).trim()
+                }
             }
         }
 
@@ -31,6 +38,50 @@ pipeline {
             steps {
                 bat 'npx playwright test'
             }
+        }
+    }
+    
+    post {
+        success {
+            slackSend(
+                color: 'good',
+                message: """
+                    ✅ Playwright Tests Passed
+
+                    📦 Repository:
+                    playwright-using-javascript
+                    
+                    🌿 Branch:
+                    ${env.GIT_BRANCH_NAME}
+                    🏗 Job: ${env.JOB_NAME}
+                    🔢 Build: #${env.BUILD_NUMBER}
+                    📝 Commit: ${env.GIT_COMMIT_SHORT}
+                    ⏱ Duration: ${currentBuild.durationString}
+                    🔗 Build URL:
+                    ${env.BUILD_URL}
+                """
+            )
+        }
+
+        failure {
+            slackSend(
+                color: 'danger',
+                message: """
+                    ❌ Playwright Tests Failed
+
+                    📦 Repository:
+                    playwright-using-javascript
+
+                    🌿 Branch:
+                    ${env.GIT_BRANCH_NAME}
+                    🏗 Job: ${env.JOB_NAME}
+                    🔢 Build: #${env.BUILD_NUMBER}
+                    📝 Commit: ${env.GIT_COMMIT_SHORT}
+                    ⏱ Duration: ${currentBuild.durationString}
+                    🔗 Build URL:
+                    ${env.BUILD_URL}
+                """
+            )
         }
     }
 }
