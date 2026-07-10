@@ -14,7 +14,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
     test('TC01 Verify successful movie name input', {
         annotation: {
             type: 'QASE',
-            description: 'TA-1'
+            description: 'TAP-1'
         }
     }, async () => {
         await inputPage.enterMovieName(
@@ -29,7 +29,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
     test('TC02 Verify placeholder disappears on typing', {
         annotation: {
             type: 'QASE',
-            description: 'TA-1'
+            description: 'TAP-1'
         }
     }, async ({ page }) => {
         const placeholder =
