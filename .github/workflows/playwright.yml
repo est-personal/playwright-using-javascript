@@ -9,6 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+        QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+        QASE_PROJECT_CODE: ${{ secrets.QASE_PROJECT_CODE }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
