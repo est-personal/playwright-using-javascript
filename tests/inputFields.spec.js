@@ -11,7 +11,12 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await inputPage.navigateToInputFields();
     });
 
-    test('TC01 Verify successful movie name input', async () => {
+    test('TC01 Verify successful movie name input', {
+        annotation: {
+            type: 'QASE',
+            description: 'TA-1'
+        }
+    }, async () => {
         await inputPage.enterMovieName(
             InputFieldsData.movieName
         );
@@ -21,7 +26,12 @@ test.describe('QA Playground - Input Fields Tests', () => {
             .toBe(InputFieldsData.movieName);
     });
 
-    test('TC02 Verify placeholder disappears on typing', async ({ page }) => {
+    test('TC02 Verify placeholder disappears on typing', {
+        annotation: {
+            type: 'QASE',
+            description: 'TA-1'
+        }
+    }, async ({ page }) => {
         const placeholder =
             await inputPage.getMoviePlaceholder();
         expect(placeholder)
