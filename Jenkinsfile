@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        QASE_API_TOKEN = credentials('QASE_API_TOKEN')
+        QASE_PROJECT_CODE = 'TAP'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -37,6 +42,12 @@ pipeline {
         stage('Run Playwright Tests') {
             steps {
                 bat 'npx playwright test'
+            }
+        }
+
+        stage('Verify Qase') {
+            steps {
+                bat 'echo Project: %QASE_PROJECT_CODE%'
             }
         }
     }
