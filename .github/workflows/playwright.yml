@@ -89,3 +89,35 @@ jobs:
               🔗 Workflow:
               https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
+
+      - name: Verify Qase Secrets
+        run: |
+          if [ -n "$QASE_TESTOPS_API_TOKEN" ]; then
+            echo "✅ QASE_API_TOKEN is configured"
+          else
+            echo "❌ QASE_API_TOKEN is missing"
+            exit 1
+          fi
+
+          if [ -n "$QASE_TESTOPS_PROJECT" ]; then
+            echo "✅ QASE_PROJECT_CODE is configured"
+          else
+            echo "❌ QASE_PROJECT_CODE is missing"
+            exit 1
+          fi
+        env:
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+          QASE_TESTOPS_PROJECT: ${{ secrets.QASE_PROJECT_CODE }}
+ 
+      - name: Check Token Length
+        run: |
+          echo "Token length: ${#QASE_TESTOPS_API_TOKEN}"
+        env:
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+
+      - name: Verify Project Code
+        run: |
+          echo "Project: $QASE_TESTOPS_PROJECT"
+        env:
+          QASE_TESTOPS_PROJECT: ${{ secrets.QASE_PROJECT_CODE }}
+
