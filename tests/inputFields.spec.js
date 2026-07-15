@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 const { InputFieldsData } = require('../testData/InputFieldsData');
 
-test.describe('QA Playground - Input Fields Tests', () => {
+test.describe('QA Playground - Input Fields Test Cases', () => {
 
     let inputPage;
 
