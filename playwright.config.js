@@ -24,7 +24,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html'],
+    ['line'],
+    ['html', { outputFolder: 'playwright-report' }],
+    ['junit', { outputFile: 'test-results/results.xml' }],
     [
       'playwright-qase-reporter',
       {
@@ -33,7 +35,7 @@ export default defineConfig({
           api: {
             token: process.env.QASE_API_TOKEN
           },
-          project: 'TAP',
+          project: process.env.QASE_PROJECT_CODE || 'TAP',
           uploadAttachments: true,
           run: {
             complete: true
@@ -48,7 +50,9 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure'
   },
 
   /* Configure projects for major browsers */
