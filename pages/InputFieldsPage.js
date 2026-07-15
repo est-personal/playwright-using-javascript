@@ -8,18 +8,43 @@ class InputFieldsPage {
         this.page = page;
     }
 
+    //Async
     async appendText(text) {
-        const appendField =
-            this.page.locator(InputFieldsLocators.appendTextInput);
-
-        await appendField.click();
-        await appendField.pressSequentially(text);
+        const field = this.page.locator(
+        InputFieldsLocators.appendTabInput
+        );
+        await field.click();
+        await field.pressSequentially(text);
     }
 
-    async clearInputField() {
+    async clearField() {
         await this.page
-            .locator(InputFieldsLocators.clearTextInput)
-            .fill('');
+            .locator(InputFieldsLocators.clearFieldInput)
+            .clear();
+    }
+
+    async clickCleareButton() {
+        await this.page
+            .locator(InputFieldsLocators.clearButton)
+            .click();
+    }
+
+    async clickReadValueButton() {
+        await this.page
+            .locator(InputFieldsLocators.readValueButton)
+            .click();
+    }
+
+    async clickSubmitButton() {
+        await this.page
+            .locator(InputFieldsLocators.submitButton)
+            .click();
+    }
+
+    async enterTextInClearField(clearText) {
+        await this.page
+            .locator(InputFieldsLocators.clearFieldInput)
+            .fill(clearText);
     }
 
     async enterMovieName(movieName) {
@@ -28,70 +53,54 @@ class InputFieldsPage {
             .fill(movieName);
     }
 
-    async getAppendValue() {
+    async getAppendTabInputText() {
         return await this.page
-            .locator(InputFieldsLocators.appendTextInput)
+            .locator(
+                InputFieldsLocators.appendTabInput)
+            // .textContent();
             .inputValue();
     }
 
-    async getClearFieldValue() {
+    async getAppendTabResultText() {
         return await this.page
-            .locator(InputFieldsLocators.clearTextInput)
-            .inputValue();
+            .locator(
+                InputFieldsLocators.appendTabResult)
+            .textContent();
     }
 
-    async getDisabledAttribute() {
-        return await this.page
-            .locator(InputFieldsLocators.disabledInput)
-            .getAttribute('disabled');
-    }
-
-    async getDisabledValue() {
-        return await this.page
-            .locator(InputFieldsLocators.disabledInput)
-            .inputValue();
-    }
-
-    async getMovieNameValue() {
+    async getMovieNameInputText() {
         return await this.page
             .locator(InputFieldsLocators.movieNameInput)
-            .inputValue();
+            .textContent();
     }
 
-    async getMoviePlaceholder() {
+    async getMovieNameInputPlaceholderAttribute() {
         return await this.page
             .locator(InputFieldsLocators.movieNameInput)
             .getAttribute('placeholder');
     }
 
-    async getReadonlyAttribute() {
+    async getMovieNameResultText() {
         return await this.page
-            .locator(InputFieldsLocators.readonlyInput)
-            .getAttribute('readonly');
+            .locator(
+                InputFieldsLocators.movieNameResult)
+            .textContent();
     }
 
-    async getReadonlyValue() {
+    async getReadValueInputText() {
         return await this.page
-            .locator(InputFieldsLocators.readonlyInput)
+            .locator(
+                InputFieldsLocators.readValueInput)
+            // .textContent();
             .inputValue();
     }
 
-    async getVerifyTextAttribute() {
+    async getReadValueResultText() {
         return await this.page
-            .locator(InputFieldsLocators.verifyTextInput)
-            .getAttribute('value');
-    }
-
-    async getVerifyTextValue() {
-        return await this.page
-            .locator(InputFieldsLocators.verifyTextInput)
+            .locator(
+                InputFieldsLocators.readValueResult)
+            // .textContent();
             .inputValue();
-    }
-
-    async isDisabled() {
-        return await this.page
-            .locator(InputFieldsLocators.disabledInput)
-            .isDisabled();
     }
 
     async navigateToInputFields() {
@@ -103,8 +112,102 @@ class InputFieldsPage {
         );
     }
 
-    async pressTab() {
-        await this.page.keyboard.press('Tab');
+    async pressTabAppendTextField() {
+        await this.page
+            .locator(InputFieldsLocators.appendTabInput)
+            .press('Tab');
+    }
+
+    //Non-Async
+    getAppendTabInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.appendTabInput
+        );
+    }
+
+    getAppendTabResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.appendTabResult
+        );
+    }
+
+    getClearFieldInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.clearFieldInput
+        );
+    }
+
+    getClearFieldResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.clearFieldResult
+        );
+    }
+
+    getDisabledFieldInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.disabledFieldInput
+        );
+    }
+
+    getDisabledFieldResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.disabledFieldResult
+        );
+    }
+
+    getMovieNameInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.movieNameInput
+        );
+    }
+
+    getMovieNameResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.movieNameResult
+        );
+    }
+
+    getReadonlyFieldInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readOnlyInput
+        );
+    }
+
+    getReadonlyFieldResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readOnlyResult
+        );
+    }
+
+    getReadValueInput() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readValueInput
+        );
+    }
+
+    getReadValueResult() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readValueResult
+        );
+    }
+
+    getSubmitButton() {
+        return this.page
+            .locator(
+                InputFieldsLocators.submitButton
+        );
     }
     
 }
