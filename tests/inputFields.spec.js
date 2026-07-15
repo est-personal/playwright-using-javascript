@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const { qase } = require('playwright-qase-reporter');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 const { InputFieldsData } = require('../testData/InputFieldsData');
 
@@ -11,7 +12,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await inputPage.navigateToInputFields();
     });
 
-    test('TC01 Type a Movie Name', 
+    qase(195, test('Type a Movie Name', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -50,7 +51,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             InputFieldsData.movieValueText,
             { timeout: 10000 }
         );
-    });
+    }));
 
     test('TC02 No movie entered', 
         {
