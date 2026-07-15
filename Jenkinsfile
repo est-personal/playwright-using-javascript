@@ -101,16 +101,10 @@ pipeline {
             )
 
             script {
-                def testResult = currentBuild.rawBuild.getAction(
-                    hudson.tasks.junit.TestResultAction
-                )
-
-                if (testResult) {
-                    currentBuild.description =
-                        "✅ ${testResult.totalCount - testResult.failCount} | " +
-                        "❌ ${testResult.failCount} | " +
-                        "🧪 ${testResult.totalCount}"
-                }
+                """
+                    🌿 ${env.GIT_BRANCH_NAME}
+                    📝 ${env.GIT_COMMIT_SHORT}
+                """
             }
 
             publishHTML([
