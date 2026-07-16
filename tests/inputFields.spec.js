@@ -401,7 +401,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
         );
     }));
 
-    qase(214, test('Read-only Field', 
+    qase(214, test('Read-Only Field', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
