@@ -29,7 +29,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    env.CHANGE_ID = env.CHANGE_ID ?: 'N/A'
+                    env.CHANGE_ID = env.CHANGE_ID ?: 'est'
 
                     env.GIT_BRANCH_NAME = env.BRANCH_NAME ?: "main"
 
