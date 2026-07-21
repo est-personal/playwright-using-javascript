@@ -1,32 +1,81 @@
 // Arrange Alphabetically
 // Test Data for QA PLayground - Buttons Page
 const ButtonsData = {
-    clickAndHoldButtonDuringHoldText:
-        'Keep Holding...',
-    clickAndHoldButtonDoneText:
-        'Hold Complete!',
-    clickAndHoldButtonText:
+    backgroundText:
+        'Background: ',
+    clickHoldButtonText:
         'Click and Hold!',
-    colourButtonText:
-        'Find my color?',
-    coordinateButtonText:
-        'Find Location',
-    defaultMessage: 
-        'No action performed yet.',
-    doubleClickButtonText:
-        'Double Click Me',
-    doubleClickMessage:
-        'You Double-clicked on button!',
+    colorText:
+        'Color: —',
+    contextMenuTriggered:
+        'Context menu triggered!',
+    coodinatesText:
+        'Coordinates: —',
     disabledButtonText:
         'Disabled',
-    homeButtonText: 
+    disabledText:
+        'Button is disabled — no action fires',
+    doubleClickButtonText:
+        'Double Click Me',
+    doubleClickText:
+        'Double clicked!',
+    expectedColor:
+        'rgb(237, 233, 254)',
+    expectedSeconds:
+        '1.5s',
+    expectedXCoordinate:
+        '193px',
+    expectedYCoordinate:
+        '594px',
+    getColorButtonText:
+        'Find my color?',
+    getCoordinatesButtonText:
+        'Find Location',
+    getSizeButtonText:
+        'Do you know my size?',
+    heldForText:
+        'Held for ',
+    holdingText:
+        'Holding... keep pressing',
+    hText:
+        'H: ',
+    navigatedToHomePageText:
+        'Navigated to Home Page',
+    navigateHomeButtonText:
         'Go To Home',
+    noActionPerformedText:
+        'No action performed yet',
+    noNavigationYetText:
+        'No navigation yet',
+    notDoubleClickYetText:
+        'Not double-clicked yet',
+    notHoldYetText:
+        'Not held yet',
+    releasedTooEarlyText:
+        'Released too early - hold for 1.5s',
     rightClickButtonText:
         'Right Click Me',
-    rightClickMessage:
-        'You Right-clicked on button!',
-    sizeButtonText:
-        'Do you know my size?'
+    rightText:
+        'right',
+    sizeText:
+        'Size: —',
+    wText:
+        'W: ',
+    xText:
+        'X: ',
+    yText:
+        'Y: ',
+
+    // Dynamic Data
+    get getClickAndHoldValue() {
+        return  this.heldForText + this.expectedSeconds;
+    },
+    get getColorValue() {
+        return  this.xText + this.expectedYCoordinate + ',' + this.yText + this.expectedYCoordinate;
+    },
+    get getCoordinatesValue() {
+        return  this.backgroundText + this.expectedColor;
+    },
 };
 
 module.exports = { ButtonsData };
