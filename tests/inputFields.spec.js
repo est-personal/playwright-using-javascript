@@ -5,11 +5,11 @@ const { InputFieldsData } = require('../testData/InputFieldsData');
 
 test.describe('QA Playground - Input Fields Tests', () => {
 
-    let inputPage;
+    let inputFieldsPage;
 
     test.beforeEach(async ({ page }) => {
-        inputPage = new InputFieldsPage(page);
-        await inputPage.navigateToInputFields();
+        inputFieldsPage = new InputFieldsPage(page);
+        await inputFieldsPage.navigateToInputFields();
     });
 
     qase(195, test('Type a Movie Name', 
@@ -19,34 +19,34 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Movie Name input to be visible
         await expect(
-            inputPage.getMovieNameInput()
+            inputFieldsPage.getMovieNameInput()
         ).toBeVisible();
         // Enter text in Movie Name input
-        await inputPage.enterMovieName(
+        await inputFieldsPage.enterMovieName(
             InputFieldsData.enteredMovieName,
             { delay: 100 }
         );
         await expect(
-            inputPage.getMovieNameInput()
+            inputFieldsPage.getMovieNameInput()
         ).toHaveValue(
             InputFieldsData.enteredMovieName
         );
         // Click Submit button
         await expect(
-            inputPage.getSubmitButton()
+            inputFieldsPage.getSubmitButton()
         ).toBeVisible();
         await expect(
-            inputPage.getSubmitButton()
+            inputFieldsPage.getSubmitButton()
         ).toBeEnabled();
-        await inputPage.clickSubmitButton();
-        // Validate text is reflected is Movie Name result
+        await inputFieldsPage.clickSubmitButton();
+        // Validate text is reflected in Movie Name result
         await expect(
-            inputPage.getMovieNameResult()
+            inputFieldsPage.getMovieNameResult()
         ).not.toHaveText(
             InputFieldsData.defaultMovieNameResult
         );
         await expect(
-            inputPage.getMovieNameResult()
+            inputFieldsPage.getMovieNameResult()
         ).toHaveText(
             InputFieldsData.movieValueText,
             { timeout: 10000 }
@@ -60,13 +60,13 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Movie Name input to be visible
         await expect(
-            inputPage.getMovieNameInput()
+            inputFieldsPage.getMovieNameInput()
         ).toBeVisible();
         // Click Submit button
-        await inputPage.clickSubmitButton();
+        await inputFieldsPage.clickSubmitButton();
         // Validate value of Movie Name result if no movie entered
         await expect(
-            inputPage.getMovieNameResult()
+            inputFieldsPage.getMovieNameResult()
         ).toHaveText(
             InputFieldsData.defaultMovieNameResultNoneEntered,
             { timeout: 10000 }
@@ -80,17 +80,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Movie Name input to be visible
         await expect(
-            inputPage.getMovieNameInput()
+            inputFieldsPage.getMovieNameInput()
         ).toBeVisible();
         // Validate Placeholder to the Movie Name input
         const placeholderInputMovie = 
-            await inputPage.getMovieNameInputPlaceholderAttribute();
+            await inputFieldsPage.getMovieNameInputPlaceholderAttribute();
         expect(placeholderInputMovie)
             .toBe(InputFieldsData.placeholderMovieNameInput
         );
         // Validate Default value to the Movie Name result
         await expect(
-            inputPage.getMovieNameResult()
+            inputFieldsPage.getMovieNameResult()
         ).toHaveText(
             InputFieldsData.defaultMovieNameResult
         );
@@ -103,25 +103,25 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Append Tab input to be visible
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toBeVisible();
         // Enter text in Append Tab input
-        await inputPage.appendText(
+        await inputFieldsPage.appendText(
             InputFieldsData.appendText
         );
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toHaveValue(
             InputFieldsData.appendValue
         );
         console.log(
-            await inputPage.getAppendTabInput().inputValue()
+            await inputFieldsPage.getAppendTabInput().inputValue()
         );
         // Press Tab
-        await inputPage.pressTabAppendTextField();
+        await inputFieldsPage.pressTabAppendTextField();
         //Validate Append Tab result
         await expect(
-            inputPage.getAppendTabResult()
+            inputFieldsPage.getAppendTabResult()
         ).toHaveText(
             InputFieldsData.appendValueText
         );
@@ -134,19 +134,19 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Append Tab input to be visible
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toBeVisible();
         // Click Append Tab input
-        await inputPage.getAppendTabInput().click();
+        await inputFieldsPage.getAppendTabInput().click();
         // Verify focus in Append Tab input
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toBeFocused();
         // Press Tab
-        await inputPage.pressTabAppendTextField();
+        await inputFieldsPage.pressTabAppendTextField();
         // Validate focus not in Append Tab input
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).not.toBeFocused();
     }));
 
@@ -157,15 +157,15 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Append Tab input to be visible
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toBeVisible();
         // Click Append Tab input
-        await inputPage.getAppendTabInput().click();
+        await inputFieldsPage.getAppendTabInput().click();
         // Press Tab
-        await inputPage.pressTabAppendTextField();
+        await inputFieldsPage.pressTabAppendTextField();
         //Validate Append Tab result
         await expect(
-            inputPage.getAppendTabResult()
+            inputFieldsPage.getAppendTabResult()
         ).toHaveText(
             InputFieldsData.defaultAppendValueTextResult
         );
@@ -178,17 +178,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Append Tab input to be visible
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toBeVisible();
         // Validate Default value to the Append Tab input
         await expect(
-            inputPage.getAppendTabInput()
+            inputFieldsPage.getAppendTabInput()
         ).toHaveValue(
             InputFieldsData.defaultAppendTabInput
         );
         // Validate Default value to the Append Tab result
         await expect(
-            inputPage.getAppendTabResult()
+            inputFieldsPage.getAppendTabResult()
         ).toHaveText(
             InputFieldsData.defaultAppendValueTextResult
         );
@@ -201,16 +201,16 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Read Value input to be visible
         await expect(
-            inputPage.getReadValueInput()
+            inputFieldsPage.getReadValueInput()
         ).toBeVisible();
         // Get Read Value input
         const readValueFieldText =
-            await inputPage.getReadValueInputText();
+            await inputFieldsPage.getReadValueInputText();
         // Click Read Value button
-        await inputPage.clickReadValueButton();
+        await inputFieldsPage.clickReadValueButton();
         //Validate Read Value result
         await expect(
-            inputPage.getReadValueResult()
+            inputFieldsPage.getReadValueResult()
         ).toHaveText(
             InputFieldsData.valueText + readValueFieldText
         );
@@ -223,11 +223,11 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Read Value input to be visible
         await expect(
-            inputPage.getReadValueInput()
+            inputFieldsPage.getReadValueInput()
         ).toBeVisible();
         // Validate Read Value input is read-only
         await expect(
-            inputPage.getReadValueInput()
+            inputFieldsPage.getReadValueInput()
         ).toHaveAttribute(
             InputFieldsData.readOnly
         );
@@ -240,17 +240,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Read Value input to be visible
         await expect(
-            inputPage.getReadValueInput()
+            inputFieldsPage.getReadValueInput()
         ).toBeVisible();
         // Validate Default value to the Read Value input
         await expect(
-            inputPage.getReadValueInput()
+            inputFieldsPage.getReadValueInput()
         ).toHaveValue(
             InputFieldsData.defaultReadValueInput
         );
         // Validate Default value to the Read Value result
         await expect(
-            inputPage.getReadValueResult()
+            inputFieldsPage.getReadValueResult()
         ).toHaveText(
             InputFieldsData.defaultReadValueResult
         );
@@ -263,20 +263,20 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Clear Field input to be visible
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toBeVisible();
         // Get Clear Field Input
         const readValueFieldText =
-            await inputPage.getReadValueInputText();
+            await inputFieldsPage.getReadValueInputText();
         // Click Clear button
-        await inputPage.clickCleareButton();
+        await inputFieldsPage.clickCleareButton();
         // Validate Clear Field input is cleared
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toHaveText('');
         // Validate Clear Field result
         await expect(
-            inputPage.getClearFieldResult()
+            inputFieldsPage.getClearFieldResult()
         ).toHaveText(
             InputFieldsData.fieldClearedText,
             { timeout: 10000 }
@@ -290,23 +290,23 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Clear Field input to be visible
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toBeVisible();
         // Validate Clear Field Input
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toHaveValue(InputFieldsData.defaultClearFieldInput);
         // Clear via clear()
-        await inputPage.clickCleareButton();
+        await inputFieldsPage.clickCleareButton();
         // Validate Clear Field input is cleared
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toHaveValue('',
             { timeout: 10000 }
         );
         // Validate Clear Field result
         await expect(
-            inputPage.getClearFieldResult()
+            inputFieldsPage.getClearFieldResult()
         ).toHaveText(
             InputFieldsData.fieldClearedText
         );
@@ -319,22 +319,22 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Clear Field input to be visible
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toBeVisible();
         // Enter text in Clear Field Input
-        await inputPage.enterTextInClearField(
+        await inputFieldsPage.enterTextInClearField(
             InputFieldsData.sampleText,
             { delay: 100 }
         );
         // Click Clear button
-        await inputPage.clickCleareButton();
+        await inputFieldsPage.clickCleareButton();
         // Validate Clear Field input is cleared
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toHaveText('');
         // Validate Clear Field result
         await expect(
-            inputPage.getClearFieldResult()
+            inputFieldsPage.getClearFieldResult()
         ).toHaveText(
             InputFieldsData.fieldClearedText
         );
@@ -347,17 +347,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Clear Field input to be visible
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toBeVisible();
         // Validate Default value to the Clear Field input
         await expect(
-            inputPage.getClearFieldInput()
+            inputFieldsPage.getClearFieldInput()
         ).toHaveValue(
             InputFieldsData.defaultClearFieldInput
         );
         // Validate Default value to the Movie name result
         await expect(
-            inputPage.getClearFieldResult()
+            inputFieldsPage.getClearFieldResult()
         ).toHaveText(
             InputFieldsData.defaultClearFieldResult
         );
@@ -370,11 +370,11 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Disabled Field input to be visible
         await expect(
-            inputPage.getDisabledFieldInput()
+            inputFieldsPage.getDisabledFieldInput()
         ).toBeVisible();
         // Validate Disabled Field input is disabled
         await expect(
-            inputPage.getDisabledFieldInput()
+            inputFieldsPage.getDisabledFieldInput()
         ).toBeDisabled();
     }));
 
@@ -385,17 +385,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Disabled Field input to be visible
         await expect(
-            inputPage.getDisabledFieldInput()
+            inputFieldsPage.getDisabledFieldInput()
         ).toBeVisible();
         // Validate Default value to the Disabled Field input
         await expect(
-            inputPage.getDisabledFieldInput()
+            inputFieldsPage.getDisabledFieldInput()
         ).toHaveValue(
             InputFieldsData.defaultDisabledFieldInput
         );
         // Validate Default value to the Disabled Field result
         await expect(
-            inputPage.getDisabledFieldResult()
+            inputFieldsPage.getDisabledFieldResult()
         ).toHaveText(
             InputFieldsData.defaultDisabledFieldResult
         );
@@ -408,11 +408,11 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async () => {
         // Wait for Read-Only Field input to be visible
         await expect(
-            inputPage.getReadonlyFieldInput()
+            inputFieldsPage.getReadonlyFieldInput()
         ).toBeVisible();
         // Validate Read-Only Field input is read-only
         await expect(
-            inputPage.getReadonlyFieldInput()
+            inputFieldsPage.getReadonlyFieldInput()
         ).toHaveAttribute(
             InputFieldsData.readOnly
         );
@@ -425,17 +425,17 @@ test.describe('QA Playground - Input Fields Tests', () => {
     async ({ page }) => {
         // Wait for Read-Only Field input to be visible
         await expect(
-            inputPage.getReadonlyFieldInput()
+            inputFieldsPage.getReadonlyFieldInput()
         ).toBeVisible();
         // Validate Default value to the Read-Only Field input
         await expect(
-            inputPage.getReadonlyFieldInput()
+            inputFieldsPage.getReadonlyFieldInput()
         ).toHaveValue(
             InputFieldsData.defaultReadonlyFieldInput
         );
         // Validate Default value to the Read-Only Field result
         await expect(
-            inputPage.getReadonlyFieldResult()
+            inputFieldsPage.getReadonlyFieldResult()
         ).toHaveText(
             InputFieldsData.defaultReadonlyFieldResult
         );

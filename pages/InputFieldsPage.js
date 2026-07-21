@@ -8,7 +8,7 @@ class InputFieldsPage {
         this.page = page;
     }
 
-    //Async
+    // Async
     async appendText(text) {
         const field = this.page.locator(
         InputFieldsLocators.appendTabInput
@@ -118,7 +118,7 @@ class InputFieldsPage {
             .press('Tab');
     }
 
-    //Non-Async
+    // Non-Async
     getAppendTabInput() {
         return this.page
             .locator(
