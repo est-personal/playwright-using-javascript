@@ -85,6 +85,12 @@ pipeline {
             }
         }
 
+        stage ('Verify Report') {
+            steps {
+                bat 'dir playwright-report'
+            }
+        }
+
         stage('Verify Qase') {
             steps {
                 bat 'echo QASE Project: %QASE_PROJECT_CODE%'
