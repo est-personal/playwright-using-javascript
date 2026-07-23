@@ -85,38 +85,43 @@ pipeline {
             }
         }
 
-        // // Need to install Pipeline Utility Steps Plugin
-        // stage('Get Test Summary') {
-        //     steps {
-        //         script {
-        //             def results = readJSON file: 'test-results/results.json'
+        // Need to install Pipeline Utility Steps Plugin
+        stage('Get Test Summary') {
+            steps {
+                script {
+                    def results = readJSON file: 'test-results/results.json'
 
-        //             int passed = 0
-        //             int failed = 0
-        //             int skipped = 0
+                    int passed = 0
+                    int failed = 0
+                    int skipped = 0
+                    int flaky = 0
 
-        //             results.suites.each { suite ->
-        //                 suite.specs.each { spec ->
-        //                     spec.tests.each { test ->
-        //                         def status = test.results[-1]?.status
+                    results.suites.each { suite ->
+                        suite.specs.each { spec ->
+                            spec.tests.each { test ->
+                                def status = test.results[-1]?.status
 
-        //                         if (status == 'passed') {
-        //                             passed++
-        //                         } else if (status == 'failed') {
-        //                             failed++
-        //                         } else if (status == 'skipped') {
-        //                             skipped++
-        //                         }
-        //                     }
-        //                 }
-        //             }
+                                if (status == 'passed') {
+                                    passed++
+                                } else if (status == 'failed') {
+                                    failed++
+                                } else if (status == 'skipped') {
+                                    skipped++
+                                } else if (status == 'flaky') {
+                                    flaky++
+                                }
+                            }
+                        }
+                    }
 
-        //             env.PASSED_TESTS = passed.toString()
-        //             env.FAILED_TESTS = failed.toString()
-        //             env.SKIPPED_TESTS = skipped.toString()
-        //         }
-        //     }
-        // }
+                    env.PASSED_TESTS = passed.toString()
+                    env.FAILED_TESTS = failed.toString()
+                    env.SKIPPED_TESTS = skipped.toString()
+                    env.FLAKY_TESTS = flaky.toString()
+                    env.TOTAL_TESTS = (passed + failed + skipped).toString()
+                }
+            }
+        }
 
         stage ('Verify Report') {
             steps {
@@ -148,20 +153,20 @@ pipeline {
                 healthScaleFactor: 1.0
             )
 
-            script {
-                def action = currentBuild.rawBuild.getAction(
-                    hudson.tasks.junit.TestResultAction
-                )
+            // script {
+            //     def action = currentBuild.rawBuild.getAction(
+            //         hudson.tasks.junit.TestResultAction
+            //     )
 
-                if (action) {
-                    env.TOTAL_TESTS = "${action.totalCount}"
-                    env.FAILED_TESTS = "${action.failCount}"
-                    env.PASSED_TESTS = "${action.totalCount - action.failCount}"
-                }
-            }
+            //     if (action) {
+            //         env.TOTAL_TESTS = "${action.totalCount}"
+            //         env.FAILED_TESTS = "${action.failCount}"
+            //         env.PASSED_TESTS = "${action.totalCount - action.failCount}"
+            //     }
+            // }
 
             script {
-                println """
+                echo """
                     🌿 ${env.GIT_BRANCH_NAME}
                     📝 ${env.GIT_COMMIT_SHORT}
                 """
@@ -191,10 +196,12 @@ pipeline {
             slackSend(
                 color: 'good',
                 message: """
-                    ✅ PLAYWRIGHT TESTS PASSED
+                    🟢 PLAYWRIGHT TESTS PASSED
                     🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
+                    ⚠️ Flaky: ${env.FLAKY_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
@@ -219,10 +226,12 @@ pipeline {
             slackSend(
                 color: 'danger',
                 message: """
-                    ❌ PLAYWRIGHT TESTS FAILED
+                    🔴 PLAYWRIGHT TESTS FAILED
                     🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
+                    ⚠️ Flaky: ${env.FLAKY_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -244,10 +253,12 @@ pipeline {
             slackSend(
                 color: 'warning',
                 message: """
-                    ⚠️ PLAYWRIGHT TESTS COMPLETED WITH FAILURES
+                    🟡 PLAYWRIGHT TESTS COMPLETED WITH FAILURES
                     🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
+                    ⚠️ Flaky: ${env.FLAKY_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
