@@ -37,7 +37,7 @@ export default defineConfig({
             token: process.env.QASE_API_TOKEN
           },
           project: process.env.QASE_PROJECT_CODE || 'TAP',
-          uploadAttachments: true,
+          uploadAttachments: false,
           run: {
             complete: true
           }

@@ -34,12 +34,12 @@ pipeline {
                     env.GIT_BRANCH_NAME = env.BRANCH_NAME ?: "main"
 
                     env.GIT_COMMIT_SHORT = bat(
-                        script: 'git rev-parse --short HEAD',
+                        script: '@git rev-parse --short HEAD',
                         returnStdout: true
                     ).trim()
 
                     env.GIT_COMMIT_MESSAGE = bat(
-                        script: 'git log -1 --pretty^=%%s',
+                        script: '@git log -1 --pretty^=%%s',
                         returnStdout: true
                     ).trim()
 
@@ -85,37 +85,38 @@ pipeline {
             }
         }
 
-        stage('Get Test Summary') {
-            steps {
-                script {
-                    def results = readJSON file: 'test-results/results.json'
+        // // Need to install Pipeline Utility Steps Plugin
+        // stage('Get Test Summary') {
+        //     steps {
+        //         script {
+        //             def results = readJSON file: 'test-results/results.json'
 
-                    int passed = 0
-                    int failed = 0
-                    int skipped = 0
+        //             int passed = 0
+        //             int failed = 0
+        //             int skipped = 0
 
-                    results.suites.each { suite ->
-                        suite.specs.each { spec ->
-                            spec.tests.each { test ->
-                                def status = test.results[-1]?.status
+        //             results.suites.each { suite ->
+        //                 suite.specs.each { spec ->
+        //                     spec.tests.each { test ->
+        //                         def status = test.results[-1]?.status
 
-                                if (status == 'passed') {
-                                    passed++
-                                } else if (status == 'failed') {
-                                    failed++
-                                } else if (status == 'skipped') {
-                                    skipped++
-                                }
-                            }
-                        }
-                    }
+        //                         if (status == 'passed') {
+        //                             passed++
+        //                         } else if (status == 'failed') {
+        //                             failed++
+        //                         } else if (status == 'skipped') {
+        //                             skipped++
+        //                         }
+        //                     }
+        //                 }
+        //             }
 
-                    env.PASSED_TESTS = passed.toString()
-                    env.FAILED_TESTS = failed.toString()
-                    env.SKIPPED_TESTS = skipped.toString()
-                }
-            }
-        }
+        //             env.PASSED_TESTS = passed.toString()
+        //             env.FAILED_TESTS = failed.toString()
+        //             env.SKIPPED_TESTS = skipped.toString()
+        //         }
+        //     }
+        // }
 
         stage ('Verify Report') {
             steps {
@@ -146,6 +147,18 @@ pipeline {
                 // testResults: '**/results.xml'
                 healthScaleFactor: 1.0
             )
+
+            script {
+                def action = currentBuild.rawBuild.getAction(
+                    hudson.tasks.junit.TestResultAction
+                )
+
+                if (action) {
+                    env.TOTAL_TESTS = "${action.totalCount}"
+                    env.FAILED_TESTS = "${action.failCount}"
+                    env.PASSED_TESTS = "${action.totalCount - action.failCount}"
+                }
+            }
 
             script {
                 println """
@@ -179,9 +192,9 @@ pipeline {
                 color: 'good',
                 message: """
                     ✅ PLAYWRIGHT TESTS PASSED
+                    🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
@@ -207,9 +220,9 @@ pipeline {
                 color: 'danger',
                 message: """
                     ❌ PLAYWRIGHT TESTS FAILED
+                    🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -232,9 +245,9 @@ pipeline {
                 color: 'warning',
                 message: """
                     ⚠️ PLAYWRIGHT TESTS COMPLETED WITH FAILURES
+                    🧪 Total: ${env.TOTAL_TESTS}
                     ✅ Passed: ${env.PASSED_TESTS}
                     ❌ Failed: ${env.FAILED_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
