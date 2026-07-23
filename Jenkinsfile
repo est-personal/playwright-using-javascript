@@ -85,6 +85,38 @@ pipeline {
             }
         }
 
+        stage('Get Test Summary') {
+            steps {
+                script {
+                    def results = readJSON file: 'test-results/results.json'
+
+                    int passed = 0
+                    int failed = 0
+                    int skipped = 0
+
+                    results.suites.each { suite ->
+                        suite.specs.each { spec ->
+                            spec.tests.each { test ->
+                                def status = test.results[-1]?.status
+
+                                if (status == 'passed') {
+                                    passed++
+                                } else if (status == 'failed') {
+                                    failed++
+                                } else if (status == 'skipped') {
+                                    skipped++
+                                }
+                            }
+                        }
+                    }
+
+                    env.PASSED_TESTS = passed.toString()
+                    env.FAILED_TESTS = failed.toString()
+                    env.SKIPPED_TESTS = skipped.toString()
+                }
+            }
+        }
+
         stage ('Verify Report') {
             steps {
                 bat 'dir playwright-report'
@@ -110,13 +142,13 @@ pipeline {
         always {
             junit (
                 allowEmptyResults: true,
-                // testResults: 'test-results/results.xml'
-                testResults: '**/results.xml'
+                testResults: 'test-results/results.xml',
+                // testResults: '**/results.xml'
+                healthScaleFactor: 1.0
             )
 
             script {
-                echo 
-                """
+                println """
                     🌿 ${env.GIT_BRANCH_NAME}
                     📝 ${env.GIT_COMMIT_SHORT}
                 """
@@ -147,6 +179,9 @@ pipeline {
                 color: 'good',
                 message: """
                     ✅ PLAYWRIGHT TESTS PASSED
+                    ✅ Passed: ${env.PASSED_TESTS}
+                    ❌ Failed: ${env.FAILED_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
@@ -172,6 +207,9 @@ pipeline {
                 color: 'danger',
                 message: """
                     ❌ PLAYWRIGHT TESTS FAILED
+                    ✅ Passed: ${env.PASSED_TESTS}
+                    ❌ Failed: ${env.FAILED_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -194,6 +232,9 @@ pipeline {
                 color: 'warning',
                 message: """
                     ⚠️ PLAYWRIGHT TESTS COMPLETED WITH FAILURES
+                    ✅ Passed: ${env.PASSED_TESTS}
+                    ❌ Failed: ${env.FAILED_TESTS}
+                    ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
