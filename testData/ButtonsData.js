@@ -1,5 +1,5 @@
 // Arrange Alphabetically
-// Test Data for QA PLayground - Buttons Page
+// Test Data for QA Playground - Buttons Page
 const ButtonsData = {
     backgroundText:
         'Background: ',
