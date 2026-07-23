@@ -168,7 +168,7 @@ pipeline {
             steps {
                 script {
                     def results = readJSON file: 'test-results/results.json'
-                    echo "Root keys: ${results.keySet()}"
+                    echo "Stats = ${results.stats}"
                 }
             }
         }
