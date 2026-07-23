@@ -1,5 +1,5 @@
 // Arrange Alphabetically
-// Locators for QA PLayground - Buttons Page
+// Locators for QA Playground - Buttons Page
 const ButtonsLocators = {
     clickAndHoldButton: 
         '[data-testid="btn-click-hold"]',

@@ -1,5 +1,5 @@
 // Arrange Alphabetically
-// Locators for QA PLayground - Input Fields Page
+// Locators for QA Playground - Input Fields Page
 const InputFieldsLocators = {
     appendTabInput: 
         '[id="appendInput"]',

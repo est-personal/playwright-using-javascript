@@ -1,5 +1,5 @@
 // Arrange Alphabetically
-// Keywords for QA PLayground - Input Fields Page
+// Keywords for QA Playground - Input Fields Page
 const { InputFieldsLocators } = require('../locators/InputFieldsLocators');
 
 class InputFieldsPage {
