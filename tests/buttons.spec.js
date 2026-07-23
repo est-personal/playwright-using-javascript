@@ -2,7 +2,6 @@ const { test, expect } = require('@playwright/test');
 const { qase } = require('playwright-qase-reporter');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { ButtonsData } = require('../testData/ButtonsData');
-const { ButtonsLocators } = require('../locators/ButtonsLocators');
 
 test.describe('QA Playground - Buttons Tests', () => {
 
@@ -78,7 +77,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Find Location button
         await buttonsPage.clickFindLocationButton();
         // Validate text is reflected in Get Coordinates result
-        const coordinates = await buttonsPage.getDisplayedCoordinates();
+        const coordinates = 
+            await buttonsPage.getDisplayedCoordinates();
         console.log(coordinates);
         expect(coordinates.x).toBeGreaterThan(0);
         expect(coordinates.y).toBeGreaterThan(0);
@@ -94,7 +94,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getFindLocationButton()
         ).toBeVisible();
         // Get button coordinates
-        const coordinates = await buttonsPage.getButtonCoordinates();
+        const coordinates = 
+            await buttonsPage.getButtonCoordinates();
         console.log(`X: ${coordinates.x}`);
         console.log(`Y: ${coordinates.y}`);
         // Validate button coordinates
@@ -103,7 +104,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Find Location button
         await buttonsPage.clickFindLocationButton();
         // Validate button coordinates vs result
-        const displayedCoordinates = await buttonsPage.getDisplayedCoordinates();
+        const displayedCoordinates = 
+            await buttonsPage.getDisplayedCoordinates();
         expect(displayedCoordinates.x).toBe(coordinates.x);
         expect(displayedCoordinates.y).toBe(coordinates.y);
     }));
@@ -154,7 +156,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Find My Color button
         await buttonsPage.clickFindMyColorButton();
         // Validate text is reflected in Get Color result
-        const color = await buttonsPage.getDisplayedColor();
+        const color = 
+            await buttonsPage.getDisplayedColor();
         console.log(color);
         expect(color.r).toBeTruthy();
         expect(color.g).toBeTruthy();
@@ -171,7 +174,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getFindMyColorButton()
         ).toBeVisible();
         // Get button color
-        const color = await buttonsPage.getButtonColor();
+        const color = 
+            await buttonsPage.getButtonColor();
         console.log(`Button Background Color: ${color.backgroundColor}`);
         console.log(`Button Text Color: ${color.textColor}`);
         console.log(`Button Text Color: ${color.r}`);
@@ -182,7 +186,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Find My Color button
         await buttonsPage.clickFindMyColorButton();
         // Validate button color vs result
-        const displayedColor = await buttonsPage.getDisplayedColor();
+        const displayedColor = 
+            await buttonsPage.getDisplayedColor();
         expect(displayedColor.r).toBe(color.r);
         expect(displayedColor.g).toBe(color.g);
         expect(displayedColor.b).toBe(color.b);
@@ -234,7 +239,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Do You Know My Size button
         await buttonsPage.clickDoYouKnowMySizeButton();
         // Validate text is reflected in Get Size result
-        const size = await buttonsPage.getDisplayedSize();
+        const size = 
+            await buttonsPage.getDisplayedSize();
         console.log(size);
         expect(size.height).toBeGreaterThan(0);
         expect(size.width).toBeGreaterThan(0);
@@ -250,7 +256,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getDoYouKnowMySizeButton()
         ).toBeVisible();
         // Get button size
-        const size = await buttonsPage.getButtonSize();
+        const size = 
+            await buttonsPage.getButtonSize();
         console.log(`Height: ${size.height}`);
         console.log(`Width: ${size.width}`);
         // Validate button size
@@ -259,7 +266,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Click Do You Know My Size button
         await buttonsPage.clickDoYouKnowMySizeButton();
         // Validate button size vs result
-        const displayedSize = await buttonsPage.getDisplayedSize();
+        const displayedSize = 
+            await buttonsPage.getDisplayedSize();
         expect(displayedSize.height).toBe(size.height);
         expect(displayedSize.width).toBe(size.width);
     }));
@@ -308,12 +316,14 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getDisabledButton()
         ).toBeVisible();
         // Get Disabled button Initial State
-        const initialState = await buttonsPage.getDisabledButtonState();
+        const initialState = 
+            await buttonsPage.getDisabledButtonState();
         // Validate Disabled button attribute
         await expect(
             buttonsPage.getDisabledButton()
         ).toBeDisabled();
-        const buttonAttribute = await buttonsPage.getDisabledButtonAttribute();
+        const buttonAttribute = 
+            await buttonsPage.getDisabledButtonAttribute();
         expect(buttonAttribute).not.toBeNull();
         // Click Disabled button
         await buttonsPage.clickDisabledButton();
@@ -322,7 +332,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.isDisabledButtonDisabled
         ).toBeTruthy();
         // Get Disabled button Final State
-        const finalState = await buttonsPage.getDisabledButtonState();
+        const finalState = 
+            await buttonsPage.getDisabledButtonState();
         // Validate no change occurs in the state
         expect(finalState).toBe(initialState);
     }));
@@ -380,7 +391,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             ButtonsData.getClickAndHoldValue
         );
         // Validate success state
-        const result = await buttonsPage.getHoldResultMessage();
+        const result = 
+            await buttonsPage.getHoldResultMessage();
         expect(result).toBeTruthy();
         expect(result).toContain(ButtonsData.heldForText);
         expect(
@@ -408,7 +420,8 @@ test.describe('QA Playground - Buttons Tests', () => {
             ButtonsData.releasedTooEarlyText
         );
         // Validate success state
-        const result = await buttonsPage.getHoldResultMessage();
+        const result = 
+            await buttonsPage.getHoldResultMessage();
         expect(result).not.toContain(ButtonsData.heldForText);
         expect(
             await buttonsPage.isSuccessDisplayed()
@@ -427,7 +440,8 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Action for Click And Hold button
         await buttonsPage.holdButton();
         // Validate Keep Holding text is reflected in Click Hold result
-        const text = await buttonsPage.getClickHoldResult()
+        const text = 
+            await buttonsPage.getClickHoldResult()
             .textContent();
         console.log('Current text:', text);
         expect(text.trim()).toBe(

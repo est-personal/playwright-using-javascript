@@ -1,5 +1,5 @@
 // Arrange Alphabetically
-// Keywords for QA PLayground - Buttons Page
+// Keywords for QA Playground - Buttons Page
 const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
 const { ButtonsLocators } = require('../locators/ButtonsLocators');
 const { ButtonsData } = require('../testData/ButtonsData');
