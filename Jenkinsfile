@@ -153,13 +153,22 @@ pipeline {
             }
         }
 
+        // stage('Debug JSON') {
+        //     steps {
+        //         script {
+        //             def results = readJSON file: 'test-results/results.json'
+        //             echo groovy.json.JsonOutput.prettyPrint(
+        //                 groovy.json.JsonOutput.toJson(results)
+        //             )
+        //         }
+        //     }
+        // }
+
         stage('Debug JSON') {
             steps {
                 script {
                     def results = readJSON file: 'test-results/results.json'
-                    echo groovy.json.JsonOutput.prettyPrint(
-                        groovy.json.JsonOutput.toJson(results)
-                    )
+                    echo "Root keys: ${results.keySet()}"
                 }
             }
         }
