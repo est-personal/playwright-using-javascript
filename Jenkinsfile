@@ -4,7 +4,7 @@ pipeline {
     options {
         timestamps()
         disableConcurrentBuilds()
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 120, unit: 'MINUTES')
         buildDiscarder(logRotator(
             numToKeepStr: '20',
             artifactNumToKeepStr: '10'
@@ -91,6 +91,13 @@ pipeline {
             }
         }
 
+        stage ('Verify Test Report') {
+            steps {
+                bat 'dir test-results /s'
+                bat 'type test-results\\results.xml'
+            }
+        }
+
         stage('Verify Qase') {
             steps {
                 bat 'echo QASE Project: %QASE_PROJECT_CODE%'
@@ -102,11 +109,13 @@ pipeline {
     post {
         always {
             junit (
-                testResults: 'test-results/results.xml', 
-                allowEmptyResults: true
+                allowEmptyResults: true,
+                // testResults: 'test-results/results.xml'
+                testResults: '**/results.xml'
             )
 
             script {
+                echo 
                 """
                     🌿 ${env.GIT_BRANCH_NAME}
                     📝 ${env.GIT_COMMIT_SHORT}
@@ -123,10 +132,11 @@ pipeline {
             ])
 
             archiveArtifacts(
-                artifacts: '''
-                    playwright-report/**,
-                    test-results/**,
-                '''.trim(),
+                // artifacts: '''
+                //     playwright-report/**,
+                //     test-results/**,
+                // '''.trim(),
+                artifacts: 'playwright-report/**,test-results/**',
                 allowEmptyArchive: true
             )
 
