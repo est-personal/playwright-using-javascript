@@ -85,6 +85,34 @@ pipeline {
             }
         }
 
+        // Need to install Pipeline Utility Steps Plugin
+        stage('Get Test Summary') {
+            steps {
+                script {
+                    def results = readJSON file: 'test-results/results.json'
+
+                    env.PASSED_TESTS = results.stats.expected.toString()
+                    env.FAILED_TESTS = results.stats.unexpected.toString()
+                    env.FLAKY_TESTS = results.stats.flaky.toString()
+                    env.SKIPPED_TESTS = results.stats.skipped.toString()
+
+                    env.TOTAL_TESTS =
+                        (
+                            results.stats.expected +
+                            results.stats.unexpected +
+                            results.stats.flaky +
+                            results.stats.skipped
+                        ).toString()
+
+                    echo "Total: ${env.TOTAL_TESTS}"
+                    echo "Passed: ${env.PASSED_TESTS}"
+                    echo "Failed: ${env.FAILED_TESTS}"
+                    echo "Flaky: ${env.FLAKY_TESTS}"
+                    echo "Skipped: ${env.SKIPPED_TESTS}"
+                }
+            }
+        }
+
         // // Need to install Pipeline Utility Steps Plugin
         // stage('Get Test Summary') {
         //     steps {
@@ -124,34 +152,34 @@ pipeline {
         //     }
         // }
 
-        stage('Get Test Summary') {
-            steps {
-                script {
-                    def xml = readFile('test-results/results.xml')
+        // stage('Get Test Summary') {
+        //     steps {
+        //         script {
+        //             def xml = readFile('test-results/results.xml')
 
-                    def totalMatcher = xml =~ /tests="(\d+)"/
-                    def failedMatcher = xml =~ /failures="(\d+)"/
-                    def skippedMatcher = xml =~ /skipped="(\d+)"/
+        //             def totalMatcher = xml =~ /tests="(\d+)"/
+        //             def failedMatcher = xml =~ /failures="(\d+)"/
+        //             def skippedMatcher = xml =~ /skipped="(\d+)"/
 
-                    env.TOTAL_TESTS = totalMatcher[0][1]
-                    env.FAILED_TESTS = failedMatcher[0][1]
-                    env.SKIPPED_TESTS = skippedMatcher[0][1]
-                    env.FLAKY_TESTS = 'N/A'
+        //             env.TOTAL_TESTS = totalMatcher[0][1]
+        //             env.FAILED_TESTS = failedMatcher[0][1]
+        //             env.SKIPPED_TESTS = skippedMatcher[0][1]
+        //             env.FLAKY_TESTS = 'N/A'
 
-                    env.PASSED_TESTS =
-                        (
-                            env.TOTAL_TESTS.toInteger()
-                            - env.FAILED_TESTS.toInteger()
-                            - env.SKIPPED_TESTS.toInteger()
-                        ).toString()
+        //             env.PASSED_TESTS =
+        //                 (
+        //                     env.TOTAL_TESTS.toInteger()
+        //                     - env.FAILED_TESTS.toInteger()
+        //                     - env.SKIPPED_TESTS.toInteger()
+        //                 ).toString()
 
-                    echo "Total: ${env.TOTAL_TESTS}"
-                    echo "Passed: ${env.PASSED_TESTS}"
-                    echo "Failed: ${env.FAILED_TESTS}"
-                    echo "Skipped: ${env.SKIPPED_TESTS}"
-                }
-            }
-        }
+        //             echo "Total: ${env.TOTAL_TESTS}"
+        //             echo "Passed: ${env.PASSED_TESTS}"
+        //             echo "Failed: ${env.FAILED_TESTS}"
+        //             echo "Skipped: ${env.SKIPPED_TESTS}"
+        //         }
+        //     }
+        // }
 
         // stage('Debug JSON') {
         //     steps {
