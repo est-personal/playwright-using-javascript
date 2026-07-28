@@ -1,0 +1,62 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: "✨ Features"
+    labels:
+      - testcase
+
+  - title: "🐛 Fixes"
+    labels:
+      - bugfix
+
+  - title: "🎯 Integration"
+    labels:
+      - integration
+
+  - title: "🔄 CI/CD"
+    labels:
+      - cicd
+
+  - title: "🔧 Refactoring"
+    labels:
+      - refactor
+
+  - title: "📚 Documentation"
+    labels:
+      - documentation
+
+change-template: "- #$NUMBER $TITLE (@$AUTHOR)"
+change-title-escapes: '\<*_&'
+
+template: |
+  # 🚀 Release $RESOLVED_VERSION
+
+  ## Changes
+
+  $CHANGES
+
+  ## Contributors
+
+  $CONTRIBUTORS
+
+version-resolver:
+  major:
+    labels:
+      - breaking-change
+  minor:
+    labels:
+      - testcase
+      - integration
+  patch:
+    labels:
+      - bugfix
+      - cicd
+      - refactor
+      - documentation
+  default: patch
+
+exclude-labels:
+  - skip-release
+
+autolabeler: []
