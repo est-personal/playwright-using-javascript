@@ -10,7 +10,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  update-release-draft:
+  update_release_draft:
     runs-on: ubuntu-latest
 
     steps:
