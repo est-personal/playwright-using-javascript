@@ -1,3 +1,4 @@
+# After creation of version, this will run and automatically created release notes
 name: Release And Test
 
 on:
@@ -47,9 +48,21 @@ jobs:
           echo "Job Status: ${{ job.status }}"
           echo "Tag: ${{ github.ref_name }}"
 
+      - name: Generate dependency list
+        run: |
+          echo "Dependency Versions - ${{ github.ref_name }}" > dependency-versions.txt
+          npm ls --depth=0 --json > deps.json
+          node -e "
+          const d=require('./deps.json');
+          for(const [k,v] of Object.entries(d.dependencies||{}))
+            console.log(`${k}: ${v.version}`);
+          " >> dependency-versions.txt
+
       - name: Create GitHub Release
         if: always()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          generate_release_notes: true
+          name: Playwright - JavaScript Release ${{ github.ref_name }}
+          files: dependency-versions.txt
+          #generate_release_notes: true
