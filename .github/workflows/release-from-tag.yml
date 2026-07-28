@@ -49,8 +49,10 @@ jobs:
           echo "Tag: ${{ github.ref_name }}"
 
       - name: Generate dependency list
+        if: always()
         run: |
           echo "Dependency Versions - ${{ github.ref_name }}" > dependency-versions.txt
+          echo "" >> dependency-versions.txt
           npm ls --depth=0 --json > deps.json
           node -e "
           const d=require('./deps.json');
@@ -58,11 +60,18 @@ jobs:
             console.log(`${k}: ${v.version}`);
           " >> dependency-versions.txt
 
+      - name: Verify dependency file
+        if: always()
+        run: |
+          ls -la
+          cat dependency-versions.txt
+
       - name: Create GitHub Release
         if: always()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Playwright - JavaScript Release ${{ github.ref_name }}
-          files: dependency-versions.txt
+          files: |
+            dependency-versions.txt
           #generate_release_notes: true
