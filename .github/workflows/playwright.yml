@@ -31,6 +31,11 @@ jobs:
       - name: Record Start Time
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
+      - name: Debug connectivity
+        run: |
+          nslookup qaplayground.com
+          curl -Iv https://qaplayground.com/practice/input-fields
+
       - name: Run Playwright Tests
         id: tests
         run: npm test

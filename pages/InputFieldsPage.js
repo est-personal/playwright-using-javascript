@@ -107,7 +107,8 @@ class InputFieldsPage {
         await this.page.goto(
             'https://qaplayground.com/practice/input-fields',
             {
-                waitUntil: 'domcontentloaded'
+                waitUntil: 'domcontentloaded',
+                timeout: 60000
             }
         );
     }
