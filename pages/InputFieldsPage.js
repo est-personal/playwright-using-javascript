@@ -1,5 +1,6 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Input Fields Page
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
 const { InputFieldsLocators } = require('../locators/InputFieldsLocators');
 
 class InputFieldsPage {
@@ -104,14 +105,22 @@ class InputFieldsPage {
     }
 
     async navigateToInputFields() {
-        await this.page.goto(
-            'https://qaplayground.com/practice/input-fields',
-            {
-                waitUntil: 'domcontentloaded',
-                timeout: 60000
-            }
-        );
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+            await this.page.goto(
+                QaPlaygroundUrls.inputFieldsPage,
+                {
+                    waitUntil: 'domcontentloaded',
+                    timeout: 60000
+                }
+            );
+            return;
+        } catch (error) {
+            if (attempt === 3) throw error;
+            console.log(`Navigation attempt ${attempt} failed`);
+        }
     }
+}
 
     async pressTabAppendTextField() {
         await this.page
