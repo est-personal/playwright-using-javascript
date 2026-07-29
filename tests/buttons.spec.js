@@ -411,7 +411,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getClickAndHoldButton()
         ).toBeVisible();
         // Action for Click And Hold button
-        await buttonsPage.clickAndHold(1400);
+        await buttonsPage.clickAndHold(800);
         await buttonsPage.releaseHold()
         // Validate text is reflected in Click Hold result
         await expect(
