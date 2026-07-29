@@ -118,13 +118,18 @@ class DropdownsPage {
     }
 
     async selectCountry(country) {
-        const dropdown = this.page.locator(
-            DropdownsLocators.selectCountryDropdown
-        );
-        await dropdown.selectOption({ 
-            value: country 
-        });
-        await dropdown.dispatchEvent('change');
+        await this.page
+            .locator(DropdownsLocators.selectCountryDropdown)
+            .selectOption({
+                value: country
+            });
+        // const dropdown = this.page.locator(
+        //     DropdownsLocators.selectCountryDropdown
+        // );
+        // await dropdown.selectOption({ 
+        //     value: country 
+        // });
+        // await dropdown.dispatchEvent('change');
     }
 
     async selectFruit(fruit) {
@@ -151,13 +156,18 @@ class DropdownsPage {
     }
 
     async selectLanguage(language) {
-        const dropdown = this.page.locator(
-            DropdownsLocators.selectLanguageDropdown
-        );
-        await dropdown.selectOption({ 
-            label: language 
-        });
-        await dropdown.dispatchEvent('change');
+        await this.page
+            .locator(DropdownsLocators.selectLanguageDropdown)
+            .selectOption({
+                label: language
+            })
+        // const dropdown = this.page.locator(
+        //     DropdownsLocators.selectLanguageDropdown
+        // );
+        // await dropdown.selectOption({ 
+        //     label: language 
+        // });
+        // await dropdown.dispatchEvent('change');
     }
 
     async selectPriority(priority) {
