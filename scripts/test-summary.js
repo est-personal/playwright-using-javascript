@@ -36,25 +36,22 @@ function processSuite(suite) {
         };
       }
 
-      for (const test of spec.tests) {
-        // const outcome = test.outcome;
-        const outcome =
-            typeof test.outcome === 'function'
-                ? test.outcome()
-                : test.outcome;
+    for (const test of spec.tests) {
+        console.log(JSON.stringify(test, null, 2));
+        
+        const result = test.results?.[test.results.length - 1];
 
-        if (outcome === 'expected') {
-          folders[folder].passed++;
-        }
+        console.log('Test:', test.title);
+        console.log('Status:', result?.status);
 
-        if (outcome === 'unexpected') {
-          folders[folder].failed++;
+        if (result?.status === 'passed') {
+            folders[folder].passed++;
+        } else if (result?.status === 'failed') {
+            folders[folder].failed++;
+        } else if (result?.status === 'flaky') {
+            folders[folder].flaky++;
         }
-
-        if (outcome === 'flaky') {
-          folders[folder].flaky++;
-        }
-      }
+    }
     }
   }
 
