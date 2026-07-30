@@ -3,7 +3,7 @@ const { qase } = require('playwright-qase-reporter');
 const { DropdownsPage } = require('../pages/DropdownsPage');
 const { DropdownsData } = require('../testData/DropdownsData');
 
-test.describe('QA Playground - Buttons Tests', () => {
+test.describe('QA Playground - Dropdowns Tests', () => {
 
     let dropdownsPage;
 
