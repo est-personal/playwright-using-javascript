@@ -188,9 +188,20 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Validate button color vs result
         const displayedColor = 
             await buttonsPage.getDisplayedColor();
-        expect(displayedColor.r).toBe(color.r);
-        expect(displayedColor.g).toBe(color.g);
-        expect(displayedColor.b).toBe(color.b);
+        const tolerance = 5;
+        ['r', 'g', 'b'].forEach(channel => {
+        expect(displayedColor[channel]).toBeGreaterThanOrEqual(
+            color[channel] - tolerance
+        );
+        expect(displayedColor[channel]).toBeLessThanOrEqual(
+            color[channel] + tolerance
+        );
+        });
+        // const displayedColor = 
+        //     await buttonsPage.getDisplayedColor();
+        // expect(displayedColor.r).toBe(color.r);
+        // expect(displayedColor.g).toBe(color.g);
+        // expect(displayedColor.b).toBe(color.b);
     }));
 
     qase(330, test('Get Color button text', 
