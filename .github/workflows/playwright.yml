@@ -40,6 +40,11 @@ jobs:
         id: tests
         run: npm test
 
+      - name: Verify Playwright JSON Report
+        if: always()
+        run: |
+          ls -R test-results
+
       - name: Generate Folder Summary
         if: always()
         run: node scripts/test-summary.js

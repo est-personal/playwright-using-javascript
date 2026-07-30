@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const report = JSON.parse(
-  fs.readFileSync('test-results.json', 'utf8')
+  fs.readFileSync('test-results/results.json', 'utf8')
 );
 
 const folders = {};
@@ -37,7 +37,11 @@ function processSuite(suite) {
       }
 
       for (const test of spec.tests) {
-        const outcome = test.outcome;
+        // const outcome = test.outcome;
+        const outcome =
+            typeof test.outcome === 'function'
+                ? test.outcome()
+                : test.outcome;
 
         if (outcome === 'expected') {
           folders[folder].passed++;
