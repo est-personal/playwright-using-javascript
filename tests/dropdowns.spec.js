@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { qase } = require('playwright-qase-reporter');
 const { DropdownsPage } = require('../pages/DropdownsPage');
 const { DropdownsData } = require('../testData/DropdownsData');
 
@@ -12,7 +11,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         await dropdownsPage.navigateToDropdowns();
     });
 
-    qase(589, test('Select Fruit', 
+    test('Select Fruit', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -42,9 +41,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.result.selectFruitResult
         );
-    }));
+    });
 
-    qase(590, test('Select Fruit options', 
+    test('Select Fruit options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -61,9 +60,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         DropdownsData.options.fruit.forEach(option => {
             expect(actualOptions).toContain(option);
         });
-    }));
+    });
 
-    qase(591, test('Default Value of Scenario Select Fruit', 
+    test('Default Value of Scenario Select Fruit', 
         {
             tag: ['@regression', '@positive']
         },
@@ -88,9 +87,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.selectFruitResult
         );
-    }));
+    });
 
-    qase(592, test('Select Country', 
+    test('Select Country', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -117,9 +116,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 DropdownsData.input.country.argentina + ' (' +
                 DropdownsData.valueAttribute.country.argentina + ')'
         );
-    }));
+    });
 
-    qase(593, test('Select Country options', 
+    test('Select Country options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -136,9 +135,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         DropdownsData.options.country.forEach(option => {
             expect(actualOptions).toContain(option);
         });
-    }));
+    });
 
-    qase(594, test('Default Value of Scenario Select Country', 
+    test('Default Value of Scenario Select Country', 
         {
             tag: ['@regression', '@positive']
         },
@@ -163,9 +162,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.selectCountryResult
         );
-    }));
+    });
 
-    qase(595, test('Select Language', 
+    test('Select Language', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -196,9 +195,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.selectedLanguage + 
                 DropdownsData.input.language.javaScript
         );
-    }));
+    });
 
-    qase(596, test('Click Select Last', 
+    test('Click Select Last', 
         {
             tag: ['@regression', '@positive']
         },
@@ -221,9 +220,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.result.selectLanguageAllResult
         );
-    }));
+    });
 
-    qase(597, test('Select Language options', 
+    test('Select Language options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -240,9 +239,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         DropdownsData.options.language.forEach(option => {
             expect(actualOptions).toContain(option);
         });
-    }));
+    });
 
-    qase(598, test('Default Value of Scenario Select Language', 
+    test('Default Value of Scenario Select Language', 
         {
             tag: ['@regression', '@positive']
         },
@@ -264,9 +263,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.selectLanguageResult
         );
-    }));
+    });
 
-    qase(599, test('Select Heroes', 
+    test('Select Heroes', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -296,9 +295,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.result.multiSelectHeroesResult
         );
-    }));
+    });
 
-    qase(600, test('Deselect Heroes', 
+    test('Deselect Heroes', 
         {
             tag: ['@regression', '@negative']
         },
@@ -343,9 +342,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.selectedHeroes +
                 DropdownsData.input.heroesAfterDeselect.join(', ')
         );
-    }));
+    });
 
-    qase(601, test('Multi-Select Heroes options', 
+    test('Multi-Select Heroes options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -362,9 +361,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         DropdownsData.options.heroes.forEach(option => {
             expect(actualOptions).toContain(option);
         });
-    }));
+    });
 
-    qase(602, test('Default Value of Scenario Multi-Select Heroes', 
+    test('Default Value of Scenario Multi-Select Heroes', 
         {
             tag: ['@regression', '@positive']
         },
@@ -388,9 +387,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.multiSelectHeroesResult
         );
-    }));
+    });
 
-    qase(603, test('Select Priority', 
+    test('Select Priority', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -415,9 +414,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.prioritySelected +
                 DropdownsData.input.priority.highPriority
         );
-    }));
+    });
 
-    qase(604, test('Select Priority via getter', 
+    test('Select Priority via getter', 
         {
             tag: ['@regression', '@positive']
         },
@@ -443,9 +442,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.prioritySelected +
                 DropdownsData.input.priority.mediumPriority
         );
-    }));
+    });
 
-    qase(605, test('Custom Priority options', 
+    test('Custom Priority options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -462,9 +461,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         DropdownsData.options.priority.forEach(option => {
             expect(actualOptions).toContain(option);
         });
-    }));
+    });
 
-    qase(606, test('Default Value of Scenario Custom Priority', 
+    test('Default Value of Scenario Custom Priority', 
         {
             tag: ['@regression', '@positive']
         },
@@ -485,9 +484,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.customPriorityResult
         );
-    }));
+    });
 
-    qase(607, test('Select City', 
+    test('Select City', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -508,9 +507,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 DropdownsData.input.city.pune +
                 ' (' + DropdownsData.valueAttribute.city.pune + ')'
         );
-    }));
+    });
 
-    qase(608, test('Select City options', 
+    test('Select City options', 
         {
             tag: ['@regression', '@positive']
         },
@@ -531,9 +530,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 )
             ).toBeTruthy();
         });
-    }));
+    });
 
-    qase(609, test('Default Value of Scenario Select City', 
+    test('Default Value of Scenario Select City', 
         {
             tag: ['@regression', '@positive']
         },
@@ -554,6 +553,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         ).toHaveText(
             DropdownsData.defaultValue.searchCityResult
         );
-    }));
+    });
 
 });
