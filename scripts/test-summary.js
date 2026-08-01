@@ -22,23 +22,43 @@ function processSuite(suite) {
         };
       }
 
+      // for (const test of spec.tests) {
+      //   const result = test.results?.[test.results.length - 1];
+
+      //   console.log('Test:', test.title);
+      //   console.log('Outcome:', test.outcome);
+      //   console.log('Final Status:', result?.status);
+
+      //   // Playwright flaky detection
+      //   if (
+      //     test.outcome === 'flaky' ||
+      //     test.outcome?.() === 'flaky'
+      //   ) {
+      //     folders[folder].flaky++;
+      //   } else if (result?.status === 'passed') {
+      //     folders[folder].passed++;
+      //   } else if (result?.status === 'failed') {
+      //     folders[folder].failed++;
+      //   }
+      // }
       for (const test of spec.tests) {
-        const result = test.results?.[test.results.length - 1];
+
+        console.log(JSON.stringify(test, null, 2));
+        
+        const statuses = test.results?.map(r => r.status) || [];
 
         console.log('Test:', test.title);
-        console.log('Outcome:', test.outcome);
-        console.log('Final Status:', result?.status);
+        console.log('Statuses:', statuses);
 
-        // Playwright flaky detection
-        if (
-          test.outcome === 'flaky' ||
-          test.outcome?.() === 'flaky'
-        ) {
+        const hasFailed = statuses.includes('failed');
+        const hasPassed = statuses.includes('passed');
+
+        if (hasFailed && hasPassed) {
           folders[folder].flaky++;
-        } else if (result?.status === 'passed') {
-          folders[folder].passed++;
-        } else if (result?.status === 'failed') {
+        } else if (hasFailed) {
           folders[folder].failed++;
+        } else if (hasPassed) {
+          folders[folder].passed++;
         }
       }
     }
