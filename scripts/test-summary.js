@@ -16,35 +16,18 @@ function processSuite(suite) {
 
       if (!folders[folder]) {
         folders[folder] = {
+          total: 0,
           passed: 0,
           failed: 0,
           flaky: 0
         };
       }
 
-      // for (const test of spec.tests) {
-      //   const result = test.results?.[test.results.length - 1];
-
-      //   console.log('Test:', test.title);
-      //   console.log('Outcome:', test.outcome);
-      //   console.log('Final Status:', result?.status);
-
-      //   // Playwright flaky detection
-      //   if (
-      //     test.outcome === 'flaky' ||
-      //     test.outcome?.() === 'flaky'
-      //   ) {
-      //     folders[folder].flaky++;
-      //   } else if (result?.status === 'passed') {
-      //     folders[folder].passed++;
-      //   } else if (result?.status === 'failed') {
-      //     folders[folder].failed++;
-      //   }
-      // }
       for (const test of spec.tests) {
+        folders[folder].total++;
 
         console.log(JSON.stringify(test, null, 2));
-        
+
         const statuses = test.results?.map(r => r.status) || [];
 
         console.log('Test:', test.title);
@@ -76,10 +59,10 @@ let output = '';
 
 for (const [folder, stats] of Object.entries(folders)) {
   output += `📁 ${folder.padEnd(12)}\n`;
+  output += `🧪 Total: ${stats.total}\n`;
   output += `✅ Passed: ${String(stats.passed).padEnd(3)}\n`;
   output += `❌ Failed: ${String(stats.failed).padEnd(3)}\n`;
   output += `⚠️ Flaky: ${String(stats.flaky).padEnd(3)}\n\n`;
-  // output += `${folder.padEnd(12)} ✅ Passed: ${String(stats.passed).padEnd(3)} ❌ Failed: ${String(stats.failed).padEnd(3)} ⚠️ Flaky: ${String(stats.flaky).padEnd(3)}\n`;
 }
 
 console.log(output);
