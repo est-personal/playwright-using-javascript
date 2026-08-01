@@ -106,9 +106,7 @@ jobs:
 
               📦 Repository: ${{ github.repository }}
 
-              ```
               ${{ steps.summary.outputs.SUMMARY }}
-              ```
 
               🔀 *PR:* #${{ github.event.pull_request.number }}
               📝 *Title:* ${{ github.event.pull_request.title }}
