@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { qase } = require('playwright-qase-reporter');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { ButtonsData } = require('../testData/ButtonsData');
 
@@ -12,7 +11,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         await buttonsPage.navigateToButtons();
     });
 
-    qase(321, test('Click Go To Home', 
+    test('Click Go To Home', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -29,9 +28,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.navigatedToHomePageText
         );
-    }));
+    });
 
-    qase(322, test('Navigation Home button text', 
+    test('Navigation Home button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -46,9 +45,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.navigateHomeButtonText
         );
-    }));
+    });
 
-    qase(323, test('Default Value of Scenario Navigate Home', 
+    test('Default Value of Scenario Navigate Home', 
         {
             tag: ['@regression', '@positive']
         },
@@ -63,9 +62,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.noNavigationYetText
         );
-    }));
+    });
 
-    qase(324, test('Click Find Location', 
+    test('Click Find Location', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -82,9 +81,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         console.log(coordinates);
         expect(coordinates.x).toBeGreaterThan(0);
         expect(coordinates.y).toBeGreaterThan(0);
-    }));
+    });
 
-    qase(325, test('Get Button Coordinates', 
+    test('Get Button Coordinates', 
         {
             tag: ['@regression', '@positive']
         },
@@ -108,9 +107,9 @@ test.describe('QA Playground - Buttons Tests', () => {
             await buttonsPage.getDisplayedCoordinates();
         expect(displayedCoordinates.x).toBe(coordinates.x);
         expect(displayedCoordinates.y).toBe(coordinates.y);
-    }));
+    });
 
-    qase(326, test('Get Coordinates button text', 
+    test('Get Coordinates button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -125,9 +124,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.getCoordinatesButtonText
         );
-    }));
+    });
 
-    qase(327, test('Default Value of Scenario Get Coordinates', 
+    test('Default Value of Scenario Get Coordinates', 
         {
             tag: ['@regression', '@positive']
         },
@@ -142,9 +141,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.coodinatesText
         );
-    }));
+    });
 
-    qase(328, test('Click Find My Color', 
+    test('Click Find My Color', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -162,9 +161,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         expect(color.r).toBeTruthy();
         expect(color.g).toBeTruthy();
         expect(color.b).toBeTruthy();
-    }));
+    });
     
-    qase(329, test('Get Button Color', 
+    test('Get Button Color', 
         {
             tag: ['@regression', '@positive']
         },
@@ -202,9 +201,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         // expect(displayedColor.r).toBe(color.r);
         // expect(displayedColor.g).toBe(color.g);
         // expect(displayedColor.b).toBe(color.b);
-    }));
+    });
 
-    qase(330, test('Get Color button text', 
+    test('Get Color button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -219,9 +218,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.getColorButtonText
         );
-    }));
+    });
 
-    qase(331, test('Default Value of Scenario Get Color', 
+    test('Default Value of Scenario Get Color', 
         {
             tag: ['@regression', '@positive']
         },
@@ -236,9 +235,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.colorText
         );
-    }));
+    });
 
-    qase(332, test('Click Do You Know My Size', 
+    test('Click Do You Know My Size', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -255,9 +254,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         console.log(size);
         expect(size.height).toBeGreaterThan(0);
         expect(size.width).toBeGreaterThan(0);
-    }));
+    });
 
-    qase(333, test('Get Button Size', 
+    test('Get Button Size', 
         {
             tag: ['@regression', '@positive']
         },
@@ -281,9 +280,9 @@ test.describe('QA Playground - Buttons Tests', () => {
             await buttonsPage.getDisplayedSize();
         expect(displayedSize.height).toBe(size.height);
         expect(displayedSize.width).toBe(size.width);
-    }));
+    });
 
-    qase(334, test('Get Size button text', 
+    test('Get Size button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -298,9 +297,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.getSizeButtonText
         );
-    }));
+    });
 
-    qase(335, test('Default Value of Scenario Get Size', 
+    test('Default Value of Scenario Get Size', 
         {
             tag: ['@regression', '@positive']
         },
@@ -315,9 +314,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.sizeText
         );
-    }));
+    });
 
-    qase(336, test('Click Disabled', 
+    test('Click Disabled', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -347,9 +346,9 @@ test.describe('QA Playground - Buttons Tests', () => {
             await buttonsPage.getDisabledButtonState();
         // Validate no change occurs in the state
         expect(finalState).toBe(initialState);
-    }));
+    });
 
-    qase(337, test('Disabled button text', 
+    test('Disabled button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -364,9 +363,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.disabledButtonText
         );
-    }));
+    });
 
-    qase(338, test('Default Value of Scenario Disabled', 
+    test('Default Value of Scenario Disabled', 
         {
             tag: ['@regression', '@positive']
         },
@@ -381,9 +380,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.disabledText
         );
-    }));
+    });
 
-    qase(339, test('Click And Hold for more than 1.5 sec', 
+    test('Click And Hold for more than 1.5 sec', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -410,9 +409,9 @@ test.describe('QA Playground - Buttons Tests', () => {
             await buttonsPage.isSuccessDisplayed()
         ).toBeTruthy();
 
-    }));
+    });
 
-    qase(340, test('Click And Hold for less than 1.5 sec', 
+    test('Click And Hold for less than 1.5 sec', 
         {
             tag: ['@regression', '@negative']
         },
@@ -437,9 +436,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         expect(
             await buttonsPage.isSuccessDisplayed()
         ).toBeFalsy();
-    }));
+    });
 
-    qase(341, test('Value of Scenario Click Hold when holding the button', 
+    test('Value of Scenario Click Hold when holding the button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -466,9 +465,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).not.toHaveText(
             ButtonsData.holdingText
         );
-    }));
+    });
     
-    qase(342, test('Click Hold button text', 
+    test('Click Hold button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -483,9 +482,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.clickHoldButtonText
         );
-    }));
+    });
 
-    qase(343, test('Default Value of Scenario Click Hold', 
+    test('Default Value of Scenario Click Hold', 
         {
             tag: ['@regression', '@positive']
         },
@@ -500,9 +499,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.notHoldYetText
         );
-    }));
+    });
 
-    qase(344, test('Action Double Click', 
+    test('Action Double Click', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -519,9 +518,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.doubleClickText
         );
-    }));
+    });
 
-    qase(345, test('Click Double Click Me', 
+    test('Click Double Click Me', 
         {
             tag: ['@regression', '@negative']
         },
@@ -538,9 +537,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.notDoubleClickYetText
         );
-    }));
+    });
 
-    qase(346, test('Right Click Double Click Me', 
+    test('Right Click Double Click Me', 
         {
             tag: ['@regression', '@negative']
         },
@@ -557,9 +556,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.notDoubleClickYetText
         );
-    }));
+    });
 
-    qase(347, test('Double Click button text', 
+    test('Double Click button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -574,9 +573,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.doubleClickButtonText
         );
-    }));
+    });
 
-    qase(348, test('Default Value of Scenario Double Click', 
+    test('Default Value of Scenario Double Click', 
         {
             tag: ['@regression', '@positive']
         },
@@ -591,9 +590,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.notDoubleClickYetText
         );
-    }));
+    });
 
-    qase(349, test('Action Right Click', 
+    test('Action Right Click', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -610,9 +609,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.contextMenuTriggered
         );
-    }));
+    });
 
-    qase(350, test('Click Right Click Me', 
+    test('Click Right Click Me', 
         {
             tag: ['@regression', '@negative']
         },
@@ -623,15 +622,15 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toBeVisible();
         // Single Click Right Click Me button
         await buttonsPage.clickRightClickMeButton();
-        // Validate text is reflected in Double Click result
+        // Validate text is reflected in Right Click result
         await expect(
             buttonsPage.getRightClickResult()
         ).toHaveText(
             ButtonsData.noActionPerformedText
         );
-    }));
+    });
 
-    qase(351, test('Double Click Right Click Me', 
+    test('Double Click Right Click Me', 
         {
             tag: ['@regression', '@negative']
         },
@@ -648,9 +647,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.noActionPerformedText
         );
-    }));
+    });
 
-    qase(352, test('Right Click button text', 
+    test('Right Click button text', 
         {
             tag: ['@regression', '@positive']
         },
@@ -665,9 +664,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.rightClickButtonText
         );
-    }));
+    });
 
-    qase(353, test('Default Value of Scenario Right Click', 
+    test('Default Value of Scenario Right Click', 
         {
             tag: ['@regression', '@positive']
         },
@@ -682,6 +681,6 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toHaveText(
             ButtonsData.noActionPerformedText
         );
-    }));
+    });
 
 });

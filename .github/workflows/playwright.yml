@@ -9,10 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    env:
-        QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-        QASE_PROJECT_CODE: ${{ secrets.QASE_PROJECT_CODE }}
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -40,6 +36,25 @@ jobs:
         id: tests
         run: npm test
 
+      - name: Verify Playwright JSON Report
+        if: always()
+        run: |
+          ls -R test-results
+
+      - name: Generate Folder Summary
+        if: always()
+        run: node scripts/test-summary.js
+
+      - name: Read Folder Summary
+        if: always()
+        id: summary
+        run: |
+          {
+            echo 'SUMMARY<<EOF'
+            cat folder-summary.txt
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
       - name: Calculate Duration
         if: always()
         run: |
@@ -59,10 +74,12 @@ jobs:
 
                 📦 Repository: ${{ github.repository }}
 
-                🔀 PR #${{ github.event.pull_request.number }}
-                📝 Title: ${{ github.event.pull_request.title }}
-                👤 Author: ${{ github.event.pull_request.user.login }}
-                🌿 Branch: ${{ github.head_ref }}
+                ${{ steps.summary.outputs.SUMMARY }}
+
+                🔀 *PR:* #${{ github.event.pull_request.number }}
+                📝 *Title:* ${{ github.event.pull_request.title }}
+                👤 *Author:* ${{ github.event.pull_request.user.login }}
+                🌿 *Branch:* ${{ github.head_ref }}
 
                 ⏱ Duration: ${{ env.DURATION }} seconds
 
@@ -85,10 +102,12 @@ jobs:
 
               📦 Repository: ${{ github.repository }}
 
-              🔀 PR #${{ github.event.pull_request.number }}
-              📝 Title: ${{ github.event.pull_request.title }}
-              👤 Author: ${{ github.event.pull_request.user.login }}
-              🌿 Branch: ${{ github.head_ref }}
+              ${{ steps.summary.outputs.SUMMARY }}
+
+              🔀 *PR:* #${{ github.event.pull_request.number }}
+              📝 *Title:* ${{ github.event.pull_request.title }}
+              👤 *Author:* ${{ github.event.pull_request.user.login }}
+              🌿 *Branch:* ${{ github.head_ref }}
 
               ⏱ Duration: ${{ env.DURATION }} seconds
 
@@ -98,35 +117,3 @@ jobs:
               🔗 Workflow:
               https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
-
-      - name: Verify Qase Secrets
-        run: |
-          if [ -n "$QASE_TESTOPS_API_TOKEN" ]; then
-            echo "✅ QASE_API_TOKEN is configured"
-          else
-            echo "❌ QASE_API_TOKEN is missing"
-            exit 1
-          fi
-
-          if [ -n "$QASE_TESTOPS_PROJECT" ]; then
-            echo "✅ QASE_PROJECT_CODE is configured"
-          else
-            echo "❌ QASE_PROJECT_CODE is missing"
-            exit 1
-          fi
-        env:
-          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-          QASE_TESTOPS_PROJECT: ${{ secrets.QASE_PROJECT_CODE }}
- 
-      - name: Check Token Length
-        run: |
-          echo "Token length: ${#QASE_TESTOPS_API_TOKEN}"
-        env:
-          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-
-      - name: Verify Project Code
-        run: |
-          echo "Project: $QASE_TESTOPS_PROJECT"
-        env:
-          QASE_TESTOPS_PROJECT: ${{ secrets.QASE_PROJECT_CODE }}
-
