@@ -40,6 +40,25 @@ jobs:
         id: tests
         run: npm test
 
+      - name: Verify Playwright JSON Report
+        if: always()
+        run: |
+          ls -R test-results
+
+      - name: Generate Folder Summary
+        if: always()
+        run: node scripts/test-summary.js
+
+      - name: Read Folder Summary
+        if: always()
+        id: summary
+        run: |
+          {
+            echo 'SUMMARY<<EOF'
+            cat folder-summary.txt
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
       - name: Calculate Duration
         if: always()
         run: |
@@ -58,6 +77,8 @@ jobs:
               "text": "✅ Playwright Tests Passed
 
                 📦 Repository: ${{ github.repository }}
+
+                ${{ steps.summary.outputs.SUMMARY }}
 
                 🔀 PR #${{ github.event.pull_request.number }}
                 📝 Title: ${{ github.event.pull_request.title }}
@@ -84,6 +105,8 @@ jobs:
               "text": "❌ Playwright Tests Failed
 
               📦 Repository: ${{ github.repository }}
+
+              ${{ steps.summary.outputs.SUMMARY }}
 
               🔀 PR #${{ github.event.pull_request.number }}
               📝 Title: ${{ github.event.pull_request.title }}
