@@ -12,10 +12,7 @@ pipeline {
     }
 
     environment {
-        QASE_API_TOKEN = credentials('QASE_API_TOKEN')
-        QASE_PROJECT_CODE = 'TAP'
         REPOSITORY_NAME = 'playwright-using-javascript'
-        QASE_PROJECT_URL = 'https://app.qase.io/project/TAP'
     }
 
     stages {
@@ -214,12 +211,6 @@ pipeline {
             }
         }
 
-        stage('Verify Qase') {
-            steps {
-                bat 'echo QASE Project: %QASE_PROJECT_CODE%'
-            }
-        }
-
     }
     
     post {
@@ -283,7 +274,6 @@ pipeline {
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
-                    🧪 Qase: ${env.QASE_PROJECT_URL}
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
@@ -340,7 +330,6 @@ pipeline {
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
-                    🧪 Qase: ${env.QASE_PROJECT_URL}
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}

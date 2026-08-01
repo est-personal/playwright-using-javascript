@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { qase } = require('playwright-qase-reporter');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 const { InputFieldsData } = require('../testData/InputFieldsData');
 
@@ -12,7 +11,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await inputFieldsPage.navigateToInputFields();
     });
 
-    qase(195, test('Type a Movie Name', 
+    test('Type a Movie Name', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -51,9 +50,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
             InputFieldsData.movieValueText,
             { timeout: 10000 }
         );
-    }));
+    });
 
-    qase(199, test('No movie entered', 
+    test('No movie entered', 
         {
             tag: ['@regression', '@negative']
         },
@@ -71,9 +70,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
             InputFieldsData.defaultMovieNameResultNoneEntered,
             { timeout: 10000 }
         );
-    }));
+    });
 
-    qase(200, test('Default Value of Scenario Type Movie', 
+    test('Default Value of Scenario Type Movie', 
         {
             tag: ['@regression', '@positive']
         },
@@ -94,9 +93,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultMovieNameResult
         );
-    }));
+    });
 
-    qase(201, test('Append Text and Press Tab', 
+    test('Append Text and Press Tab', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -125,9 +124,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.appendValueText
         );
-    }));
+    });
 
-    qase(202, test('Focus after pressing Tab', 
+    test('Focus after pressing Tab', 
         {
             tag: ['@regression', '@positive']
         },
@@ -148,9 +147,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await expect(
             inputFieldsPage.getAppendTabInput()
         ).not.toBeFocused();
-    }));
+    });
 
-    qase(203, test('No Append Text then Press Tab', 
+    test('No Append Text then Press Tab', 
         {
             tag: ['@regression', '@negative']
         },
@@ -169,9 +168,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultAppendValueTextResult
         );
-    }));
+    });
 
-    qase(204, test('Default Value of Scenario Append Tab', 
+    test('Default Value of Scenario Append Tab', 
         {
             tag: ['@regression', '@positive']
         },
@@ -192,9 +191,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultAppendValueTextResult
         );
-    }));
+    });
 
-    qase(205, test('Read Value Field', 
+    test('Read Value Field', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -214,9 +213,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.valueText + readValueFieldText
         );
-    }));
+    });
 
-    qase(206, test('Read Field Input is Read-Only', 
+    test('Read Field Input is Read-Only', 
         {
             tag: ['@regression', '@positive']
         },
@@ -231,9 +230,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveAttribute(
             InputFieldsData.readOnly
         );
-    }));
+    });
 
-    qase(207, test('Default Value of Scenario Read Value', 
+    test('Default Value of Scenario Read Value', 
         {
             tag: ['@regression', '@positive']
         },
@@ -254,9 +253,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultReadValueResult
         );
-    }));
+    });
 
-    qase(208, test('Clear Input Field via button', 
+    test('Clear Input Field via button', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -281,9 +280,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
             InputFieldsData.fieldClearedText,
             { timeout: 10000 }
         );
-    }));
+    });
 
-    qase(209, test('Clear Input Field via clear()', 
+    test('Clear Input Field via clear()', 
         {
             tag: ['@regression', '@positive']
         },
@@ -310,9 +309,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.fieldClearedText
         );
-    }));
+    });
 
-    qase(210, test('Entered text will be cleared', 
+    test('Entered text will be cleared', 
         {
             tag: ['@regression', '@positive']
         },
@@ -338,9 +337,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.fieldClearedText
         );
-    }));
+    });
 
-    qase(211, test('Default Value of Scenario Clear Field', 
+    test('Default Value of Scenario Clear Field', 
         {
             tag: ['@regression', '@positive']
         },
@@ -361,9 +360,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultClearFieldResult
         );
-    }));
+    });
 
-    qase(212, test('Disabled Field', 
+    test('Disabled Field', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -376,9 +375,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await expect(
             inputFieldsPage.getDisabledFieldInput()
         ).toBeDisabled();
-    }));
+    });
 
-    qase(213, test('Default Value of Scenario Disabled Input', 
+    test('Default Value of Scenario Disabled Input', 
         {
             tag: ['@regression', '@positive']
         },
@@ -399,9 +398,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultDisabledFieldResult
         );
-    }));
+    });
 
-    qase(214, test('Read-Only Field', 
+    test('Read-Only Field', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -416,9 +415,9 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveAttribute(
             InputFieldsData.readOnly
         );
-    }));
+    });
 
-    qase(215, test('Default Value of Scenario Read-only Input', 
+    test('Default Value of Scenario Read-only Input', 
         {
             tag: ['@regression', '@positive']
         },
@@ -439,6 +438,6 @@ test.describe('QA Playground - Input Fields Tests', () => {
         ).toHaveText(
             InputFieldsData.defaultReadonlyFieldResult
         );
-    }));
+    });
 
 });

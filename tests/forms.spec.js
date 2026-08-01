@@ -1,5 +1,4 @@
 const { test, expect } = require('@playwright/test');
-const { qase } = require('playwright-qase-reporter');
 const { FormsPage } = require('../pages/FormsPage');
 const { FormsData } = require('../testData/FormsData');
 const { GenericData } = require('../testData/GenericData');
@@ -13,7 +12,7 @@ test.describe('QA Playground - Forms Tests', () => {
         await formsPage.navigateToForms();
     });
 
-    qase(453, test('Successful Login', 
+    test('Successful Login', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -51,9 +50,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             FormsData.positive.expectedResults.loginSuccessUserMessage
         );
-    }));
+    });
 
-    qase(454, test('Blank Email and Password', 
+    test('Blank Email and Password', 
         {
             tag: ['@regression', '@negative']
         },
@@ -80,9 +79,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getLoginResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(455, test('Invalid Email', 
+    test('Invalid Email', 
         {
             tag: ['@regression', '@negative']
         },
@@ -121,9 +120,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getLoginResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(456, test('Login Reset Button', 
+    test('Login Reset Button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -164,9 +163,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getLoginResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(457, test('Login Section Placeholder', 
+    test('Login Section Placeholder', 
         {
             tag: ['@regression', '@positive']
         },
@@ -187,9 +186,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveAttribute(
             GenericData.placeholder, FormsData.placeholder.loginPasswordPlaceholder
         );
-    }));
+    });
 
-    qase(458, test('Successful Personal Details', 
+    test('Successful Personal Details', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -249,9 +248,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             FormsData.positive.expectedResults.personalSuccessUserMessage
         );
-    }));
+    });
 
-    qase(459, test('Blank First Name', 
+    test('Blank First Name', 
         {
             tag: ['@regression', '@negative']
         },
@@ -303,9 +302,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(460, test('Blank Last Name', 
+    test('Blank Last Name', 
         {
             tag: ['@regression', '@negative']
         },
@@ -357,9 +356,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(461, test('Blank Phone', 
+    test('Blank Phone', 
         {
             tag: ['@regression', '@negative']
         },
@@ -411,9 +410,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(462, test('Blank Date of Birth', 
+    test('Blank Date of Birth', 
         {
             tag: ['@regression', '@negative']
         },
@@ -465,9 +464,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(463, test('Blank Gender', 
+    test('Blank Gender', 
         {
             tag: ['@regression', '@negative']
         },
@@ -524,9 +523,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(464, test('Invalid Phone', 
+    test('Invalid Phone', 
         {
             tag: ['@regression', '@negative']
         },
@@ -587,9 +586,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(465, test('Phone is less than required', 
+    test('Phone is less than required', 
         {
             tag: ['@regression', '@negative']
         },
@@ -650,9 +649,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(466, test('Personal Reset Button', 
+    test('Personal Reset Button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -733,9 +732,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getPersonalResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(467, test('Personal Section Placeholder', 
+    test('Personal Section Placeholder', 
         {
             tag: ['@regression', '@positive']
         },
@@ -768,9 +767,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             ''
         );
-    }));
+    });
     
-    qase(468, test('Successful Address', 
+    test('Successful Address', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -817,9 +816,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             FormsData.positive.expectedResults.addressSuccessUserMessage
         );
-    }));
+    });
 
-    qase(469, test('Blank Country', 
+    test('Blank Country', 
         {
             tag: ['@regression', '@negative']
         },
@@ -858,9 +857,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAddressResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(470, test('Blank City', 
+    test('Blank City', 
         {
             tag: ['@regression', '@negative']
         },
@@ -899,9 +898,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAddressResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(471, test('Blank About You', 
+    test('Blank About You', 
         {
             tag: ['@regression', '@positive']
         },
@@ -939,9 +938,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             FormsData.positive.expectedResults.addressSuccessUserMessage
         );
-    }));
+    });
 
-    qase(472, test('Address Reset Button', 
+    test('Address Reset Button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -997,9 +996,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAddressResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(473, test('Address Section Placeholder', 
+    test('Address Section Placeholder', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1026,9 +1025,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveAttribute(
             GenericData.placeholder, FormsData.placeholder.aboutYouPlaceholder
         );
-    }));
+    });
 
-    qase(474, test('Successful Interests Form', 
+    test('Successful Interests Form', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -1055,9 +1054,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             expectedInterests
         );
-    }));
+    });
 
-    qase(475, test('One Interest selected', 
+    test('One Interest selected', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1084,9 +1083,9 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveText(
             expectedInterests
         );
-    }));
+    });
 
-    qase(476, test('All Interests selected', 
+    test('All Interests selected', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1110,9 +1109,9 @@ test.describe('QA Playground - Forms Tests', () => {
         for (const interest of FormsData.positive.validUser.interests) {
             expect(resultText).toContain(interest);
         }
-    }));
+    });
 
-    qase(477, test('No Interests selected', 
+    test('No Interests selected', 
         {
             tag: ['@regression', '@negative']
         },
@@ -1133,9 +1132,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getInterestsResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(478, test('Interests Reset Button', 
+    test('Interests Reset Button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1156,9 +1155,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getInterestsResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(479, test('Successful Account Setup', 
+    test('Successful Account Setup', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -1206,9 +1205,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountSection()
         ).toBeVisible();
-    }));
+    });
 
-    qase(480, test('Click Fill Again', 
+    test('Click Fill Again', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1256,9 +1255,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountSection()
         ).toBeVisible();
-    }));
+    });
 
-    qase(481, test('Blank Password', 
+    test('Blank Password', 
         {
             tag: ['@regression', '@negative']
         },
@@ -1290,9 +1289,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(482, test('Blank Confirm Password', 
+    test('Blank Confirm Password', 
         {
             tag: ['@regression', '@negative']
         },
@@ -1324,9 +1323,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(483, test('Unchecked Terms and Condition', 
+    test('Unchecked Terms and Condition', 
         {
             tag: ['@regression', '@negative']
         },
@@ -1365,9 +1364,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(484, test('Mismatched Password', 
+    test('Mismatched Password', 
         {
             tag: ['@regression', '@negative']
         },
@@ -1408,9 +1407,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(485, test('Account Reset Button', 
+    test('Account Reset Button', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1457,9 +1456,9 @@ test.describe('QA Playground - Forms Tests', () => {
         await expect(
             formsPage.getAccountResult()
         ).not.toBeVisible();
-    }));
+    });
 
-    qase(486, test('Account Section Placeholder', 
+    test('Account Section Placeholder', 
         {
             tag: ['@regression', '@positive']
         },
@@ -1480,6 +1479,6 @@ test.describe('QA Playground - Forms Tests', () => {
         ).toHaveAttribute(
             GenericData.placeholder, FormsData.placeholder.confirmPasswordPlaceholder
         );
-    }));
+    });
 
 });
