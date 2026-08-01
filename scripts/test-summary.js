@@ -9,49 +9,41 @@ const folders = {};
 function processSuite(suite) {
   if (suite.specs) {
     for (const spec of suite.specs) {
-
-    //   const parts = spec.file.split(/[/\\]/);
-
-    //   // Example:
-    //   // tests/buttons/buttons.spec.js
-    //   // Folder = buttons
-
-    //   const folder = parts.length >= 2
-    //     ? parts[parts.length - 2]
-    //     : 'root';
-
-    const folder = spec.file
+      const folder = spec.file
         .split(/[/\\]/)
         .pop()
         .replace('.spec.js', '');
 
-    console.log('File:', spec.file);
-    console.log('Group:', folder);
-
       if (!folders[folder]) {
         folders[folder] = {
+          total: 0,
           passed: 0,
           failed: 0,
           flaky: 0
         };
       }
 
-    for (const test of spec.tests) {
+      for (const test of spec.tests) {
+        folders[folder].total++;
+
         console.log(JSON.stringify(test, null, 2));
-        
-        const result = test.results?.[test.results.length - 1];
+
+        const statuses = test.results?.map(r => r.status) || [];
 
         console.log('Test:', test.title);
-        console.log('Status:', result?.status);
+        console.log('Statuses:', statuses);
 
-        if (result?.status === 'passed') {
-            folders[folder].passed++;
-        } else if (result?.status === 'failed') {
-            folders[folder].failed++;
-        } else if (result?.status === 'flaky') {
-            folders[folder].flaky++;
+        const hasFailed = statuses.includes('failed');
+        const hasPassed = statuses.includes('passed');
+
+        if (hasFailed && hasPassed) {
+          folders[folder].flaky++;
+        } else if (hasFailed) {
+          folders[folder].failed++;
+        } else if (hasPassed) {
+          folders[folder].passed++;
         }
-    }
+      }
     }
   }
 
@@ -62,13 +54,15 @@ function processSuite(suite) {
 
 report.suites.forEach(processSuite);
 
+// Generate Slack-friendly aligned output
 let output = '';
 
 for (const [folder, stats] of Object.entries(folders)) {
-  output += `📁 ${folder}\n`;
-  output += `✅ Passed: ${stats.passed}\n`;
-  output += `❌ Failed: ${stats.failed}\n`;
-  output += `⚠️ Flaky: ${stats.flaky}\n\n`;
+  output += `📁 ${folder.padEnd(12)}\n`;
+  output += `🧪 Total: ${stats.total}\n`;
+  output += `✅ Passed: ${String(stats.passed).padEnd(3)}\n`;
+  output += `❌ Failed: ${String(stats.failed).padEnd(3)}\n`;
+  output += `⚠️ Flaky: ${String(stats.flaky).padEnd(3)}\n\n`;
 }
 
 console.log(output);

@@ -80,10 +80,10 @@ jobs:
 
                 ${{ steps.summary.outputs.SUMMARY }}
 
-                🔀 PR #${{ github.event.pull_request.number }}
-                📝 Title: ${{ github.event.pull_request.title }}
-                👤 Author: ${{ github.event.pull_request.user.login }}
-                🌿 Branch: ${{ github.head_ref }}
+                🔀 *PR:* #${{ github.event.pull_request.number }}
+                📝 *Title:* ${{ github.event.pull_request.title }}
+                👤 *Author:* ${{ github.event.pull_request.user.login }}
+                🌿 *Branch:* ${{ github.head_ref }}
 
                 ⏱ Duration: ${{ env.DURATION }} seconds
 
@@ -108,10 +108,10 @@ jobs:
 
               ${{ steps.summary.outputs.SUMMARY }}
 
-              🔀 PR #${{ github.event.pull_request.number }}
-              📝 Title: ${{ github.event.pull_request.title }}
-              👤 Author: ${{ github.event.pull_request.user.login }}
-              🌿 Branch: ${{ github.head_ref }}
+              🔀 *PR:* #${{ github.event.pull_request.number }}
+              📝 *Title:* ${{ github.event.pull_request.title }}
+              👤 *Author:* ${{ github.event.pull_request.user.login }}
+              🌿 *Branch:* ${{ github.head_ref }}
 
               ⏱ Duration: ${{ env.DURATION }} seconds
 
