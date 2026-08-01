@@ -55,7 +55,11 @@ report.suites.forEach(processSuite);
 let output = '';
 
 for (const [folder, stats] of Object.entries(folders)) {
-  output += `${folder.padEnd(12)} ✅ Passed: ${String(stats.passed).padEnd(3)} ❌ Failed: ${String(stats.failed).padEnd(3)} ⚠️ Flaky: ${stats.flaky}\n`;
+  output += `📁 ${folder.padEnd(12)}\n`;
+  output += `✅ Passed: ${String(stats.passed).padEnd(3)}\n`;
+  output += `❌ Failed: ${String(stats.failed).padEnd(3)}\n`;
+  output += `⚠️ Flaky: ${String(stats.flaky).padEnd(3)}\n\n`;
+  // output += `${folder.padEnd(12)} ✅ Passed: ${String(stats.passed).padEnd(3)} ❌ Failed: ${String(stats.failed).padEnd(3)} ⚠️ Flaky: ${String(stats.flaky).padEnd(3)}\n`;
 }
 
 console.log(output);
