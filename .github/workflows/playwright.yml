@@ -102,24 +102,26 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "❌ Playwright Tests Failed \n\n
+              "text": "❌ Playwright Tests Failed
 
-              📦 Repository: ${{ github.repository }}\n\n
+              📦 Repository: ${{ github.repository }}
 
-              ${{ steps.summary.outputs.SUMMARY }}\n\n
+              ```
+              ${{ steps.summary.outputs.SUMMARY }}
+              ```
 
-              🔀 PR #${{ github.event.pull_request.number }}\n
-              📝 Title: ${{ github.event.pull_request.title }}\n
-              👤 Author: ${{ github.event.pull_request.user.login }}\n
-              🌿 Branch: ${{ github.head_ref }}\n\n
+              🔀 *PR:* #${{ github.event.pull_request.number }}
+              📝 *Title:* ${{ github.event.pull_request.title }}
+              👤 *Author:* ${{ github.event.pull_request.user.login }}
+              🌿 *Branch:* ${{ github.head_ref }}
 
-              ⏱ Duration: ${{ env.DURATION }} seconds \n\n
+              ⏱ Duration: ${{ env.DURATION }} seconds
 
               🔗 PR:
-              ${{ github.event.pull_request.html_url }}\n\n
+              ${{ github.event.pull_request.html_url }}
 
               🔗 Workflow:
-              https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"\n\n
+              https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
 
       - name: Verify Qase Secrets
