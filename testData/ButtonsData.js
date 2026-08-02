@@ -9,7 +9,7 @@ const ButtonsData = {
         'Color: —',
     contextMenuTriggered:
         'Context menu triggered!',
-    coodinatesText:
+    coordinatesText:
         'Coordinates: —',
     disabledButtonText:
         'Disabled',
@@ -71,10 +71,10 @@ const ButtonsData = {
         return  this.heldForText + this.expectedSeconds;
     },
     get getColorValue() {
-        return  this.xText + this.expectedYCoordinate + ',' + this.yText + this.expectedYCoordinate;
+        return  this.xText + this.expectedXCoordinate + ',' + this.yText + this.expectedYCoordinate;
     },
     get getCoordinatesValue() {
-        return  this.backgroundText + this.expectedColor;
+        return  this.coordinatesText + this.expectedXCoordinate + ',' + this.expectedYCoordinate;
     },
 };
 
