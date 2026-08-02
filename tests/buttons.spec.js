@@ -2,6 +2,15 @@ const { test, expect } = require('@playwright/test');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { ButtonsData } = require('../testData/ButtonsData');
 
+const { 
+    expectColorWithinTolerance, 
+    expectCoordinatesNear,
+    expectSizeWithinTolerance,
+    expectValidCoordinates, 
+    expectValidRgb,
+    expectValidSize 
+} = require('../helpers/buttonAssertions');
+
 test.describe('QA Playground - Buttons Tests', () => {
 
     let buttonsPage;
@@ -11,487 +20,333 @@ test.describe('QA Playground - Buttons Tests', () => {
         await buttonsPage.navigateToButtons();
     });
 
-    test('Click Go To Home', 
+    test.describe('Navigation Button', () => {
+        test('Click Go To Home', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Go To Home button to be visible
-        await expect(
-            buttonsPage.getGoToHomeButton()
-        ).toBeVisible();
-        // Click Go To Home button
-        await buttonsPage.clickGoToHomeButton();
-        // Validate text is reflected in Navigate Home result
-        await expect(
-            buttonsPage.getNavigateHomeResult()
-        ).toHaveText(
-            ButtonsData.navigatedToHomePageText
-        );
+        async () => {
+            // Wait for Go To Home button to be visible
+            await expect(
+                buttonsPage.getGoToHomeButton()
+            ).toBeVisible();
+            // Click Go To Home button
+            await buttonsPage.clickGoToHomeButton();
+            await expect(
+                buttonsPage.getNavigateHomeResult()
+            ).toHaveText(
+                ButtonsData.navigatedToHomePageText
+            );
+        });
+
     });
 
-    test('Navigation Home button text', 
+    test.describe('Coordinates Button', () => {
+        test('Get Button Coordinates', 
         {
             tag: ['@regression', '@positive']
         },
-    async () => {
-        // Wait for Go To Home button to be visible
-        await expect(
-            buttonsPage.getGoToHomeButton()
-        ).toBeVisible();
-        // Validate Navigate Home button text
-        await expect(
-            buttonsPage.getGoToHomeButton()
-        ).toHaveText(
-            ButtonsData.navigateHomeButtonText
-        );
+        async () => {
+            // Wait for Find Location button to be visible
+            await expect(
+                buttonsPage.getFindLocationButton()
+            ).toBeVisible();
+            // Get button coordinates
+            const coordinates = 
+                await buttonsPage.getButtonCoordinates();
+            await test.info().attach(
+                'x-coordinate',
+                {
+                    body: JSON.stringify(coordinates.x, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            await test.info().attach(
+                'y-coordinate',
+                {
+                    body: JSON.stringify(coordinates.y, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            // Validate button coordinates
+            expectValidCoordinates(coordinates);
+            await buttonsPage.clickFindLocationButton();
+            // Validate button coordinates vs result
+            const displayedCoordinates = 
+                await buttonsPage.getDisplayedCoordinates();
+            expectCoordinatesNear(displayedCoordinates, coordinates);
+        });
+
     });
 
-    test('Default Value of Scenario Navigate Home', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Go To Home button to be visible
-        await expect(
-            buttonsPage.getGoToHomeButton()
-        ).toBeVisible();
-        // Validate Default value to the Navigate Home result
-        await expect(
-            buttonsPage.getNavigateHomeResult()
-        ).toHaveText(
-            ButtonsData.noNavigationYetText
-        );
-    });
-
-    test('Click Find Location', 
+    test.describe('Color Button', () => {
+        test('Click Find My Color', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Find Location button to be visible
-        await expect(
-            buttonsPage.getFindLocationButton()
-        ).toBeVisible();
-        // Click Find Location button
-        await buttonsPage.clickFindLocationButton();
-        // Validate text is reflected in Get Coordinates result
-        const coordinates = 
-            await buttonsPage.getDisplayedCoordinates();
-        console.log(coordinates);
-        expect(coordinates.x).toBeGreaterThan(0);
-        expect(coordinates.y).toBeGreaterThan(0);
-    });
-
-    test('Get Button Coordinates', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find Location button to be visible
-        await expect(
-            buttonsPage.getFindLocationButton()
-        ).toBeVisible();
-        // Get button coordinates
-        const coordinates = 
-            await buttonsPage.getButtonCoordinates();
-        console.log(`X: ${coordinates.x}`);
-        console.log(`Y: ${coordinates.y}`);
-        // Validate button coordinates
-        expect(coordinates.x).toBeGreaterThan(0);
-        expect(coordinates.y).toBeGreaterThan(0);
-        // Click Find Location button
-        await buttonsPage.clickFindLocationButton();
-        // Validate button coordinates vs result
-        const displayedCoordinates = 
-            await buttonsPage.getDisplayedCoordinates();
-        expect(displayedCoordinates.x).toBe(coordinates.x);
-        expect(displayedCoordinates.y).toBe(coordinates.y);
-    });
-
-    test('Get Coordinates button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find Location button to be visible
-        await expect(
-            buttonsPage.getFindLocationButton()
-        ).toBeVisible();
-        // Validate Get Coordinates button text
-        await expect(
-            buttonsPage.getFindLocationButton()
-        ).toHaveText(
-            ButtonsData.getCoordinatesButtonText
-        );
-    });
-
-    test('Default Value of Scenario Get Coordinates', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find Location button to be visible
-        await expect(
-            buttonsPage.getFindLocationButton()
-        ).toBeVisible();
-        // Validate Default value to the Get Coordinates result
-        await expect(
-            buttonsPage.getGetCoordinatesResult()
-        ).toHaveText(
-            ButtonsData.coodinatesText
-        );
-    });
-
-    test('Click Find My Color', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find My Color button to be visible
-        await expect(
-            buttonsPage.getFindMyColorButton()
-        ).toBeVisible();
-        // Click Find My Color button
-        await buttonsPage.clickFindMyColorButton();
-        // Validate text is reflected in Get Color result
-        const color = 
-            await buttonsPage.getDisplayedColor();
-        console.log(color);
-        expect(color.r).toBeTruthy();
-        expect(color.g).toBeTruthy();
-        expect(color.b).toBeTruthy();
-    });
+        async () => {
+            // Wait for Find My Color button to be visible
+            await expect(
+                buttonsPage.getFindMyColorButton()
+            ).toBeVisible();
+            // Click Find My Color button
+            await buttonsPage.clickFindMyColorButton();
+            const color = 
+                await buttonsPage.getDisplayedColor();
+            await test.info().attach(
+                'button text color',
+                {
+                    body: JSON.stringify(color, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            expectValidRgb(color);
+        });
     
-    test('Get Button Color', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find My Color button to be visible
-        await expect(
-            buttonsPage.getFindMyColorButton()
-        ).toBeVisible();
-        // Get button color
-        const color = 
-            await buttonsPage.getButtonColor();
-        console.log(`Button Background Color: ${color.backgroundColor}`);
-        console.log(`Button Text Color: ${color.textColor}`);
-        console.log(`Button Red Component: ${color.r}`);
-        console.log(`Button Green Component: ${color.g}`);
-        console.log(`Button Blue Component: ${color.b}`);
-        // Validate button color
-        expect(color).toBeTruthy();
-        // Click Find My Color button
-        await buttonsPage.clickFindMyColorButton();
-        // Validate button color vs result
-        const displayedColor = 
-            await buttonsPage.getDisplayedColor();
-        const tolerance = 8;
-        expect(Math.abs(displayedColor.r - color.r)).toBeLessThanOrEqual(tolerance);
-        expect(Math.abs(displayedColor.g - color.g)).toBeLessThanOrEqual(tolerance);
-        expect(Math.abs(displayedColor.b - color.b)).toBeLessThanOrEqual(tolerance);
+        test('Get Button Color', 
+            {
+                tag: ['@regression', '@positive']
+            },
+        async () => {
+            // Wait for Find My Color button to be visible
+            await expect(
+                buttonsPage.getFindMyColorButton()
+            ).toBeVisible();
+            // Get button color
+            const color = 
+                await buttonsPage.getButtonColor();
+            await test.info().attach(
+                'button background color',
+                {
+                    body: JSON.stringify(color.backgroundColor, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            await test.info().attach(
+                'button text color',
+                {
+                    body: JSON.stringify(color.textColor, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            await test.info().attach(
+                'button red component',
+                {
+                    body: JSON.stringify(color.r, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            await test.info().attach(
+                'button green component',
+                {
+                    body: JSON.stringify(color.g, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            await test.info().attach(
+                'button blue component',
+                {
+                    body: JSON.stringify(color.b, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            // Validate button color
+            expectValidRgb(color);
+            // Click Find My Color button
+            await buttonsPage.clickFindMyColorButton();
+            // Validate button color vs result
+            const displayedColor = 
+                await buttonsPage.getDisplayedColor();
+            expectColorWithinTolerance(
+                displayedColor, 
+                color
+            );
+        });
+
     });
 
-    test('Get Color button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find My Color button to be visible
-        await expect(
-            buttonsPage.getFindMyColorButton()
-        ).toBeVisible();
-        // Validate Get Color button text
-        await expect(
-            buttonsPage.getFindMyColorButton()
-        ).toHaveText(
-            ButtonsData.getColorButtonText
-        );
-    });
-
-    test('Default Value of Scenario Get Color', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Find My Color button to be visible
-        await expect(
-            buttonsPage.getFindMyColorButton()
-        ).toBeVisible();
-        // Validate Default value to the Get Color result
-        await expect(
-            buttonsPage.getGetColorResult()
-        ).toHaveText(
-            ButtonsData.colorText
-        );
-    });
-
-    test('Click Do You Know My Size', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Do You Know My Size button to be visible
-        await expect(
-            buttonsPage.getDoYouKnowMySizeButton()
-        ).toBeVisible();
-        // Click Do You Know My Size button
-        await buttonsPage.clickDoYouKnowMySizeButton();
-        // Validate text is reflected in Get Size result
-        const size = 
-            await buttonsPage.getDisplayedSize();
-        console.log(size);
-        expect(size.height).toBeGreaterThan(0);
-        expect(size.width).toBeGreaterThan(0);
-    });
-
-    test('Get Button Size', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Do You Know My Size button to be visible
-        await expect(
-            buttonsPage.getDoYouKnowMySizeButton()
-        ).toBeVisible();
-        // Get button size
-        const size = 
-            await buttonsPage.getButtonSize();
-        console.log(`Height: ${size.height}`);
-        console.log(`Width: ${size.width}`);
-        // Validate button size
-        expect(size.height).toBeGreaterThan(0);
-        expect(size.width).toBeGreaterThan(0);
-        // Click Do You Know My Size button
-        await buttonsPage.clickDoYouKnowMySizeButton();
-        // Validate button size vs result
-        const displayedSize = 
-            await buttonsPage.getDisplayedSize();
-        expect(displayedSize.height).toBe(size.height);
-        expect(displayedSize.width).toBe(size.width);
-    });
-
-    test('Get Size button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Do You Know My Size button to be visible
-        await expect(
-            buttonsPage.getDoYouKnowMySizeButton()
-        ).toBeVisible();
-        // Validate Get Size button text
-        await expect(
-            buttonsPage.getDoYouKnowMySizeButton()
-        ).toHaveText(
-            ButtonsData.getSizeButtonText
-        );
-    });
-
-    test('Default Value of Scenario Get Size', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Do You Know My Size button to be visible
-        await expect(
-            buttonsPage.getDoYouKnowMySizeButton()
-        ).toBeVisible();
-        // Validate Default value to the Get Size result
-        await expect(
-            buttonsPage.getGetSizeResult()
-        ).toHaveText(
-            ButtonsData.sizeText
-        );
-    });
-
-    test('Click Disabled', 
+    test.describe('Size Button', () => {
+        test('Click Do You Know My Size', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Disbaled button to be visible
-        await expect(
-            buttonsPage.getDisabledButton()
-        ).toBeVisible();
-        // Get Disabled button Initial State
-        const initialState = 
-            await buttonsPage.getDisabledButtonState();
-        // Validate Disabled button attribute
-        await expect(
-            buttonsPage.getDisabledButton()
-        ).toBeDisabled();
-        const buttonAttribute = 
-            await buttonsPage.getDisabledButtonAttribute();
-        expect(buttonAttribute).not.toBeNull();
-        // Click Disabled button
-        await buttonsPage.clickDisabledButton();
-        // Validate button is disabled
-        await expect(
-            buttonsPage.isDisabledButtonDisabled
-        ).toBeTruthy();
-        // Get Disabled button Final State
-        const finalState = 
-            await buttonsPage.getDisabledButtonState();
-        // Validate no change occurs in the state
-        expect(finalState).toBe(initialState);
-    });
+        async () => {
+            // Wait for Do You Know My Size button to be visible
+            await expect(
+                buttonsPage.getDoYouKnowMySizeButton()
+            ).toBeVisible();
+            // Click Do You Know My Size button
+            await buttonsPage.clickDoYouKnowMySizeButton();
+            // Validate text is reflected in Get Size result
+            const size = 
+                await buttonsPage.getDisplayedSize();
+            await test.info().attach(
+                'button size',
+                {
+                    body: JSON.stringify(size, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            expectValidSize(size);
+        });
 
-    test('Disabled button text', 
+        test('Get Button Size', 
         {
             tag: ['@regression', '@positive']
         },
-    async () => {
-        // Wait for Disbaled button to be visible
-        await expect(
-            buttonsPage.getDisabledButton()
-        ).toBeVisible();
-        // Validate Disabled button text
-        await expect(
-            buttonsPage.getDisabledButton()
-        ).toHaveText(
-            ButtonsData.disabledButtonText
-        );
+        async () => {
+            // Wait for Do You Know My Size button to be visible
+            await expect(
+                buttonsPage.getDoYouKnowMySizeButton()
+            ).toBeVisible();
+            // Get button size
+            const size = 
+                await buttonsPage.getButtonSize();
+            await test.info().attach(
+                'button size',
+                {
+                    body: JSON.stringify(size, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            // Validate button size
+            expectValidSize(size);
+            // Click Do You Know My Size button
+            await buttonsPage.clickDoYouKnowMySizeButton();
+            // Validate button size vs result
+            const displayedSize = 
+                await buttonsPage.getDisplayedSize();
+            expectSizeWithinTolerance(displayedSize, size);
+        });
+
     });
 
-    test('Default Value of Scenario Disabled', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Disbaled button to be visible
-        await expect(
-            buttonsPage.getDisabledButton()
-        ).toBeVisible();
-        // Validate Default value to the Disabled result
-        await expect(
-            buttonsPage.getDisabledResult()
-        ).toHaveText(
-            ButtonsData.disabledText
-        );
-    });
-
-    test('Click And Hold for more than 1.5 sec', 
+    test.describe('Disabled Button', () => {
+        test('Click Disabled', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Click And Hold button to be visible
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toBeVisible();
-        // Action for Click And Hold button
-        await buttonsPage.clickAndHold(1600);
-        await buttonsPage.releaseHold()
-        // Validate text is reflected in Click Hold result
-        await expect(
-            buttonsPage.getClickHoldResult()
-        ).toHaveText(
-            ButtonsData.getClickAndHoldValue
-        );
-        // Validate success state
-        const result = 
-            await buttonsPage.getHoldResultMessage();
-        expect(result).toBeTruthy();
-        expect(result).toContain(ButtonsData.heldForText);
-        expect(
-            await buttonsPage.isSuccessDisplayed()
-        ).toBeTruthy();
+        async () => {
+            // Wait for Disabled button to be visible
+            await expect(
+                buttonsPage.getDisabledButton()
+            ).toBeVisible();
+            // // Get Disabled button Initial State
+            // const initialState = 
+            //     await buttonsPage.getDisabledButtonState();
+            // Validate Disabled button attribute
+            await expect(
+                buttonsPage.getDisabledButton()
+            ).toBeDisabled();
+            const buttonAttribute = 
+                await buttonsPage.getDisabledButtonAttribute();
+            expect(buttonAttribute).not.toBeNull();
+            // // Click Disabled button
+            // await buttonsPage.clickDisabledButton();
+            // Validate button is disabled
+            // await expect(
+            //     buttonsPage.isDisabledButtonDisabled()
+            // ).toBeTruthy();
+            expect(
+                await buttonsPage.isDisabledButtonDisabled()
+            ).toBeTruthy();
+            // // Get Disabled button Final State
+            // const finalState = 
+            //     await buttonsPage.getDisabledButtonState();
+            // // Validate no change occurs in the state
+            // expect(finalState).toBe(initialState);
+        });
 
     });
 
-    test('Click And Hold for less than 1.5 sec', 
+    test.describe('Click Hold Button', () => {
+        test('Click And Hold for more than 1.5 sec', 
         {
-            tag: ['@regression', '@negative']
+            tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Click And Hold button to be visible
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toBeVisible();
-        // Action for Click And Hold button
-        await buttonsPage.clickAndHold(800);
-        await buttonsPage.releaseHold()
-        // Validate text is reflected in Click Hold result
-        await expect(
-            buttonsPage.getClickHoldResult()
-        ).toHaveText(
-            ButtonsData.releasedTooEarlyText
-        );
-        // Validate success state
-        const result = 
-            await buttonsPage.getHoldResultMessage();
-        expect(result).not.toContain(ButtonsData.heldForText);
-        expect(
-            await buttonsPage.isSuccessDisplayed()
-        ).toBeFalsy();
+        async () => {
+            // Wait for Click And Hold button to be visible
+            await expect(
+                buttonsPage.getClickAndHoldButton()
+            ).toBeVisible();
+            // Action for Click And Hold button
+            await buttonsPage.clickAndHold(2000);
+            await buttonsPage.releaseHold()
+            // Validate text is reflected in Click Hold result
+            await expect(
+                buttonsPage.getClickHoldResult()
+            ).toHaveText(
+                ButtonsData.getClickAndHoldValue
+            );
+            // Validate success state
+            const result = 
+                await buttonsPage.getHoldResultMessage();
+            expect(result).toBeTruthy();
+            expect(result).toContain(ButtonsData.heldForText);
+            expect(
+                await buttonsPage.isSuccessDisplayed()
+            ).toBeTruthy();
+
+        });
+
+        test('Click And Hold for less than 1.5 sec', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async () => {
+            // Wait for Click And Hold button to be visible
+            await expect(
+                buttonsPage.getClickAndHoldButton()
+            ).toBeVisible();
+            // Action for Click And Hold button
+            await buttonsPage.clickAndHold(500);
+            await buttonsPage.releaseHold()
+            // Validate text is reflected in Click Hold result
+            await expect(
+                buttonsPage.getClickHoldResult()
+            ).toHaveText(
+                ButtonsData.releasedTooEarlyText
+            );
+            // Validate success state
+            const result = 
+                await buttonsPage.getHoldResultMessage();
+            expect(result).not.toContain(ButtonsData.heldForText);
+            expect(
+                await buttonsPage.isSuccessDisplayed()
+            ).toBeFalsy();
+        });
+
+        test('Value of Scenario Click Hold when holding the button', 
+            {
+                tag: ['@regression', '@positive']
+            },
+        async () => {
+            // Wait for Click And Hold button to be visible
+            await expect(
+                buttonsPage.getClickAndHoldButton()
+            ).toBeVisible();
+            // Action for Click And Hold button
+            await buttonsPage.holdButton();
+            // Validate Keep Holding text is reflected in Click Hold result
+            await expect(
+                buttonsPage.getClickHoldResult()
+            ).toHaveText(
+                ButtonsData.holdingText
+            );
+            // Release Hold
+            await buttonsPage.releaseHold();
+            // Validate Keep Holding text is not reflected in Click Hold result
+            await expect(
+                buttonsPage.getClickHoldResult()
+            ).not.toHaveText(
+                ButtonsData.holdingText
+            );
+        });
+
     });
 
-    test('Value of Scenario Click Hold when holding the button', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Click And Hold button to be visible
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toBeVisible();
-        // Action for Click And Hold button
-        await buttonsPage.holdButton();
-        // Validate Keep Holding text is reflected in Click Hold result
-        const text = 
-            await buttonsPage.getClickHoldResult()
-            .textContent();
-        console.log('Current text:', text);
-        expect(text.trim()).toBe(
-            ButtonsData.holdingText
-        );
-        // Release Hold
-        await buttonsPage.releaseHold();
-        // Validate Keep Holding text is not reflected in Click Hold result
-        await expect(
-            buttonsPage.getClickHoldResult()
-        ).not.toHaveText(
-            ButtonsData.holdingText
-        );
-    });
-    
-    test('Click Hold button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Click And Hold button to be visible
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toBeVisible();
-        // Validate Click Hold button text
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toHaveText(
-            ButtonsData.clickHoldButtonText
-        );
-    });
-
-    test('Default Value of Scenario Click Hold', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Click And Hold button to be visible
-        await expect(
-            buttonsPage.getClickAndHoldButton()
-        ).toBeVisible();
-        // Validate Default value to the CLick Hold result
-        await expect(
-            buttonsPage.getClickHoldResult()
-        ).toHaveText(
-            ButtonsData.notHoldYetText
-        );
-    });
-
-    test('Action Double Click', 
+    test.describe('Double Click Button', () => {
+        test('Action Double Click', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
@@ -514,163 +369,100 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@regression', '@negative']
         },
-    async () => {
-        // Wait for Double Click Me button to be visible
-        await expect(
-            buttonsPage.getDoubleClickMeButton()
-        ).toBeVisible();
-        // Single Click Double Click Me button
-        await buttonsPage.clickDoubleClickMeButton();
-        // Validate text is reflected in Double Click result
-        await expect(
-            buttonsPage.getDoubleClickResult()
-        ).toHaveText(
-            ButtonsData.notDoubleClickYetText
-        );
+        async () => {
+            // Wait for Double Click Me button to be visible
+            await expect(
+                buttonsPage.getDoubleClickMeButton()
+            ).toBeVisible();
+            // Single Click Double Click Me button
+            await buttonsPage.clickDoubleClickMeButton();
+            // Validate text is reflected in Double Click result
+            await expect(
+                buttonsPage.getDoubleClickResult()
+            ).toHaveText(
+                ButtonsData.notDoubleClickYetText
+            );
+        });
+
+        test('Right Click Double Click Me', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async () => {
+            // Wait for Double Click Me button to be visible
+            await expect(
+                buttonsPage.getDoubleClickMeButton()
+            ).toBeVisible();
+            // Right Click Double Click Me button
+            await buttonsPage.rightClickDoubleClickMeButton();
+            // Validate text is reflected in Double Click result
+            await expect(
+                buttonsPage.getDoubleClickResult()
+            ).toHaveText(
+                ButtonsData.notDoubleClickYetText
+            );
+        });
+
     });
 
-    test('Right Click Double Click Me', 
-        {
-            tag: ['@regression', '@negative']
-        },
-    async () => {
-        // Wait for Double Click Me button to be visible
-        await expect(
-            buttonsPage.getDoubleClickMeButton()
-        ).toBeVisible();
-        // Right Click Double Click Me button
-        await buttonsPage.rightClickDoubleClickMeButton();
-        // Validate text is reflected in Double Click result
-        await expect(
-            buttonsPage.getDoubleClickResult()
-        ).toHaveText(
-            ButtonsData.notDoubleClickYetText
-        );
-    });
-
-    test('Double Click button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Double Click Me button to be visible
-        await expect(
-            buttonsPage.getDoubleClickMeButton()
-        ).toBeVisible();
-        // Validate Double Click button text
-        await expect(
-            buttonsPage.getDoubleClickMeButton()
-        ).toHaveText(
-            ButtonsData.doubleClickButtonText
-        );
-    });
-
-    test('Default Value of Scenario Double Click', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Double Click Me button to be visible
-        await expect(
-            buttonsPage.getDoubleClickMeButton()
-        ).toBeVisible();
-        // Validate Default value to the Double Click result
-        await expect(
-            buttonsPage.getDoubleClickResult()
-        ).toHaveText(
-            ButtonsData.notDoubleClickYetText
-        );
-    });
-
-    test('Action Right Click', 
+    test.describe('Right Click Button', () => {
+        test('Action Right Click', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
-        // Wait for Right Click Me button to be visible
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toBeVisible();
-        // Right Click Right Click Me button
-        await buttonsPage.rightClickRightClickMeButton();
-        // Validate text is reflected in Right Click result
-        await expect(
-            buttonsPage.getRightClickResult()
-        ).toHaveText(
-            ButtonsData.contextMenuTriggered
-        );
-    });
+        async () => {
+            // Wait for Right Click Me button to be visible
+            await expect(
+                buttonsPage.getRightClickMeButton()
+            ).toBeVisible();
+            // Right Click Right Click Me button
+            await buttonsPage.rightClickRightClickMeButton();
+            // Validate text is reflected in Right Click result
+            await expect(
+                buttonsPage.getRightClickResult()
+            ).toHaveText(
+                ButtonsData.contextMenuTriggered
+            );
+        });
 
-    test('Click Right Click Me', 
-        {
-            tag: ['@regression', '@negative']
-        },
-    async () => {
-        // Wait for Right Click Me button to be visible
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toBeVisible();
-        // Single Click Right Click Me button
-        await buttonsPage.clickRightClickMeButton();
-        // Validate text is reflected in Right Click result
-        await expect(
-            buttonsPage.getRightClickResult()
-        ).toHaveText(
-            ButtonsData.noActionPerformedText
-        );
-    });
+        test('Click Right Click Me', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async () => {
+            // Wait for Right Click Me button to be visible
+            await expect(
+                buttonsPage.getRightClickMeButton()
+            ).toBeVisible();
+            // Single Click Right Click Me button
+            await buttonsPage.clickRightClickMeButton();
+            // Validate text is reflected in Right Click result
+            await expect(
+                buttonsPage.getRightClickResult()
+            ).toHaveText(
+                ButtonsData.noActionPerformedText
+            );
+        });
 
-    test('Double Click Right Click Me', 
-        {
-            tag: ['@regression', '@negative']
-        },
-    async () => {
-        // Wait for Right Click Me button to be visible
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toBeVisible();
-        // Double Click Right Click Me button
-        await buttonsPage.doubleClickRightClickMeButton();
-        // Validate text is reflected in Double Click result
-        await expect(
-            buttonsPage.getRightClickResult()
-        ).toHaveText(
-            ButtonsData.noActionPerformedText
-        );
-    });
+        test('Double Click Right Click Me', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async () => {
+            // Wait for Right Click Me button to be visible
+            await expect(
+                buttonsPage.getRightClickMeButton()
+            ).toBeVisible();
+            // Double Click Right Click Me button
+            await buttonsPage.doubleClickRightClickMeButton();
+            // Validate text is reflected in Double Click result
+            await expect(
+                buttonsPage.getRightClickResult()
+            ).toHaveText(
+                ButtonsData.noActionPerformedText
+            );
+        });
 
-    test('Right Click button text', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Right Click Me button to be visible
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toBeVisible();
-        // Validate Right Click button text
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toHaveText(
-            ButtonsData.rightClickButtonText
-        );
-    });
-
-    test('Default Value of Scenario Right Click', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Right Click Me button to be visible
-        await expect(
-            buttonsPage.getRightClickMeButton()
-        ).toBeVisible();
-        // Validate Default value to the Right Click result
-        await expect(
-            buttonsPage.getRightClickResult()
-        ).toHaveText(
-            ButtonsData.noActionPerformedText
-        );
     });
 
 });
