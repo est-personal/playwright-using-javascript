@@ -177,9 +177,9 @@ test.describe('QA Playground - Buttons Tests', () => {
             await buttonsPage.getButtonColor();
         console.log(`Button Background Color: ${color.backgroundColor}`);
         console.log(`Button Text Color: ${color.textColor}`);
-        console.log(`Button Text Color: ${color.r}`);
-        console.log(`Button Text Color: ${color.g}`);
-        console.log(`Button Text Color: ${color.b}`);
+        console.log(`Button Red Component: ${color.r}`);
+        console.log(`Button Green Component: ${color.g}`);
+        console.log(`Button Blue Component: ${color.b}`);
         // Validate button color
         expect(color).toBeTruthy();
         // Click Find My Color button
@@ -188,9 +188,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         const displayedColor = 
             await buttonsPage.getDisplayedColor();
         const tolerance = 8;
-        expect(displayedColor.r).toBeCloseTo(color.r, 0);
-        expect(displayedColor.g).toBeCloseTo(color.g, 0);
-        expect(displayedColor.b).toBeCloseTo(color.b, 0);
+        expect(Math.abs(displayedColor.r - color.r)).toBeLessThanOrEqual(tolerance);
+        expect(Math.abs(displayedColor.g - color.g)).toBeLessThanOrEqual(tolerance);
+        expect(Math.abs(displayedColor.b - color.b)).toBeLessThanOrEqual(tolerance);
     });
 
     test('Get Color button text', 
