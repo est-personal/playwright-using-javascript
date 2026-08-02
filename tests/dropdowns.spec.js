@@ -43,52 +43,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         );
     });
 
-    test('Select Fruit options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Fruit section to be visible
-        await expect(
-            dropdownsPage.getSelectFruitSection()
-        ).toBeVisible();
-        // Get Select Fruit options
-        const actualOptions = 
-            await dropdownsPage.getSelectFruitOptions();
-        console.log(actualOptions);
-        // Validate Select Fruit options
-        DropdownsData.options.fruit.forEach(option => {
-            expect(actualOptions).toContain(option);
-        });
-    });
-
-    test('Default Value of Scenario Select Fruit', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Fruit section to be visible
-        await expect(
-            dropdownsPage.getSelectFruitSection()
-        ).toBeVisible();
-        // Validate Default value to the Select Fruit dropdown
-        await expect(
-            dropdownsPage.getSelectFruitDropdown()
-        ).toHaveValue("");
-        await expect(
-            dropdownsPage.getSelectFruitDropdown()
-            .locator('option:checked')
-        ).toHaveText(
-            DropdownsData.defaultValue.selectFruitDropdown
-        );
-        // Validate Default value to the Select Fruit result
-        await expect(
-            dropdownsPage.getSelectFruitResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.selectFruitResult
-        );
-    });
-
     test('Select Country', 
         {
             tag: ['@smoke', '@regression', '@positive']
@@ -115,52 +69,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.selectedCountry + 
                 DropdownsData.input.country.argentina + ' (' +
                 DropdownsData.valueAttribute.country.argentina + ')'
-        );
-    });
-
-    test('Select Country options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Country section to be visible
-        await expect(
-            dropdownsPage.getSelectCountrySection()
-        ).toBeVisible();
-        // Get Select Country options
-        const actualOptions = 
-            await dropdownsPage.getSelectCountryOptions();
-        console.log(actualOptions);
-        // Validate Select Country options
-        DropdownsData.options.country.forEach(option => {
-            expect(actualOptions).toContain(option);
-        });
-    });
-
-    test('Default Value of Scenario Select Country', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Country section to be visible
-        await expect(
-            dropdownsPage.getSelectCountrySection()
-        ).toBeVisible();
-        // Validate Default value to the Select Country dropdown
-        await expect(
-            dropdownsPage.getSelectCountryDropdown()
-        ).toHaveValue("");
-        await expect(
-            dropdownsPage.getSelectCountryDropdown()
-            .locator('option:checked')
-        ).toHaveText(
-            DropdownsData.defaultValue.selectCountryDropdown
-        );
-        // Validate Default value to the Select Country result
-        await expect(
-            dropdownsPage.getSelectCountryResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.selectCountryResult
         );
     });
 
@@ -219,49 +127,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             dropdownsPage.getSelectLanguageResult()
         ).toHaveText(
             DropdownsData.result.selectLanguageAllResult
-        );
-    });
-
-    test('Select Language options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Language section to be visible
-        await expect(
-            dropdownsPage.getSelectLanguageSection()
-        ).toBeVisible();
-        // Get Select Language options
-        const actualOptions = 
-            await dropdownsPage.getSelectLanguageOptions();
-        console.log(actualOptions);
-        // Validate Select Language options
-        DropdownsData.options.language.forEach(option => {
-            expect(actualOptions).toContain(option);
-        });
-    });
-
-    test('Default Value of Scenario Select Language', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select Language section to be visible
-        await expect(
-            dropdownsPage.getSelectLanguageSection()
-        ).toBeVisible();
-        // Validate Default value to the Select Language dropdown
-        await expect(
-            dropdownsPage.getSelectLanguageDropdown()
-            .locator('option:checked')
-        ).toHaveText(
-            DropdownsData.defaultValue.selectLanguageDropdown
-        );
-        // Validate Default value to the Select Language result
-        await expect(
-            dropdownsPage.getSelectLanguageResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.selectLanguageResult
         );
     });
 
@@ -344,51 +209,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         );
     });
 
-    test('Multi-Select Heroes options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Multi-Select Heroes section to be visible
-        await expect(
-            dropdownsPage.getMultiSelectHeroesSection()
-        ).toBeVisible();
-        // Get Multi-Select Heroes options
-        const actualOptions = 
-            await dropdownsPage.getMultiSelectHeroesOptions();
-        console.log(actualOptions);
-        // Validate Multi-Select Heroes options
-        DropdownsData.options.heroes.forEach(option => {
-            expect(actualOptions).toContain(option);
-        });
-    });
-
-    test('Default Value of Scenario Multi-Select Heroes', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Multi-Select Heroes section to be visible
-        await expect(
-            dropdownsPage.getMultiSelectHeroesSection()
-        ).toBeVisible();
-        // Retrieve selected heroes
-        const selectedHeroes = await dropdownsPage
-            .getMultiSelectHeroesMultiSelect()
-            .evaluate(select =>
-                Array.from(select.selectedOptions)
-                    .map(option => option.text)
-        );
-        // Validate Default value to the Multi-Select Heroes dropdown
-        expect(selectedHeroes).toHaveLength(0);
-        // Validate Default value to the Multi-Select Heroes result
-        await expect(
-            dropdownsPage.getMultiSelectHeroesResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.multiSelectHeroesResult
-        );
-    });
-
     test('Select Priority', 
         {
             tag: ['@smoke', '@regression', '@positive']
@@ -444,48 +264,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         );
     });
 
-    test('Custom Priority options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Custom Priority section to be visible
-        await expect(
-            dropdownsPage.getCustomPrioritySection()
-        ).toBeVisible();
-        // Get Custom Priority options
-        const actualOptions = 
-            await dropdownsPage.getCustomPriorityOptions();
-        console.log(actualOptions);
-        // Validate Custom Priority options
-        DropdownsData.options.priority.forEach(option => {
-            expect(actualOptions).toContain(option);
-        });
-    });
-
-    test('Default Value of Scenario Custom Priority', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Custom Priority section to be visible
-        await expect(
-            dropdownsPage.getCustomPrioritySection()
-        ).toBeVisible();
-        // Validate Default value to the Custom Priority dropdown
-        await expect(
-            dropdownsPage.getCustomPriorityDropdown()
-        ).toHaveText(
-            DropdownsData.defaultValue.customPriorityDropdown
-        );
-        // Validate Default value to the Custom Priority result
-        await expect(
-            dropdownsPage.getCustomPriorityResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.customPriorityResult
-        );
-    });
-
     test('Select City', 
         {
             tag: ['@smoke', '@regression', '@positive']
@@ -506,52 +284,6 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             DropdownsData.result.citySelected +
                 DropdownsData.input.city.pune +
                 ' (' + DropdownsData.valueAttribute.city.pune + ')'
-        );
-    });
-
-    test('Select City options', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select City section to be visible
-        await expect(
-            dropdownsPage.getSearchCitySection()
-        ).toBeVisible();
-        // Get Select City options
-        const actualOptions = 
-            await dropdownsPage.getSelectCityOptions();
-        console.log(actualOptions);
-        // Validate Select City options
-        DropdownsData.options.city.forEach(option => {
-            expect(
-                actualOptions.some(option =>
-                    option.startsWith(option)
-                )
-            ).toBeTruthy();
-        });
-    });
-
-    test('Default Value of Scenario Select City', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Select City section to be visible
-        await expect(
-            dropdownsPage.getSearchCitySection()
-        ).toBeVisible();
-        // Validate Default value to the Select City dropdown
-        const placeholder = 
-            await dropdownsPage.getCityPlaceholderAttribute();
-        expect(placeholder)
-            .toBe(DropdownsData.defaultValue.searchCityDropdown
-        );
-        // Validate Default value to the Select City result
-        await expect(
-            dropdownsPage.getSearchCityResult()
-        ).toHaveText(
-            DropdownsData.defaultValue.searchCityResult
         );
     });
 

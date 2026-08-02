@@ -13,17 +13,19 @@ class DropdownsPage {
 
     // Async
     async clickCustomPriorityDropdown() {
-        await this.page.locator(
+        const dropdown = this.page.locator(
             DropdownsLocators.customPriorityDropdown
-        )
-        .click();
+        );
+        await dropdown.scrollIntoViewIfNeeded();
+        await dropdown.click();
     }
 
     async clickSearchCityDropdown() {
-        await this.page.locator(
+        const dropdown = this.page.locator(
             DropdownsLocators.searchCityDropdown
-        )
-        .click();
+        );
+        await dropdown.scrollIntoViewIfNeeded();
+        await dropdown.click();
     }
 
     async clickSelectLastButton() {
@@ -54,10 +56,21 @@ class DropdownsPage {
 
     async getCustomPriorityOptions() {
         await this.clickCustomPriorityDropdown();
-        return await this.page
-            .locator('[data-priority-id] span:first-child')
-            .allTextContents();
+        const options = this.page.locator(
+            '[data-priority-id] span:first-child'
+        );
+        await options.first().waitFor();
+        return await options.allTextContents();
     }
+
+    // async getCustomPriorityOptions() {
+    //     await this.clickCustomPriorityDropdown();
+    //     const options = this.page.locator(
+    //         '[data-priority-id] span:first-child'
+    //     );
+    //     await expect(options.first()).toBeVisible();
+    //     return await options.allTextContents();
+    // }
 
     async getMultiSelectHeroesOptions() {
         return await this.getMultiSelectHeroesMultiSelect()
@@ -65,11 +78,13 @@ class DropdownsPage {
             .allTextContents();
     }
 
-    async getSelectCityOptions() {
+    async getSearchableCityOptions() {
         await this.clickSearchCityDropdown();
-        return await this.page
-            .locator('[data-city-id]')
-            .allTextContents();
+        const options = this.page.locator(
+            '[data-city-id]'
+        );
+        await options.first().waitFor();
+        return await options.allTextContents();
     }
 
     async getSelectCountryOptions() {

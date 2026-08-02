@@ -88,7 +88,7 @@ const defaultValueTests = [
     }
 ];
 
-test.describe('QA Playground - Button Text Validations', () => {
+test.describe('QA Playground - Buttons Validations', () => {
 
     let buttonsPage;
 
@@ -98,8 +98,9 @@ test.describe('QA Playground - Button Text Validations', () => {
     });
 
     buttonTextTests.forEach(data => {
-        test(`${data.name} button text`, async () => {
-
+        test(`${data.name} button text`, {
+            tag: ['@regression', '@positive']
+        }, async () => {
             await expect(
                 data.locator(buttonsPage)
             ).toHaveText(
@@ -109,14 +110,14 @@ test.describe('QA Playground - Button Text Validations', () => {
     });
 
     defaultValueTests.forEach(data => {
-        test(`${data.name} default value`, async () => {
-
+        test(`${data.name} default value`, {
+            tag: ['@regression', '@positive']
+        }, async () => {
             await expect(
                 data.locator(buttonsPage)
             ).toHaveText(
                 data.expected
             );
-
         });
     });
 
