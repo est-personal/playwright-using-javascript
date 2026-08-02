@@ -13,17 +13,19 @@ class DropdownsPage {
 
     // Async
     async clickCustomPriorityDropdown() {
-        await this.page.locator(
+        const dropdown = this.page.locator(
             DropdownsLocators.customPriorityDropdown
-        )
-        .click();
+        );
+        await dropdown.scrollIntoViewIfNeeded();
+        await dropdown.click();
     }
 
     async clickSearchCityDropdown() {
-        await this.page.locator(
+        const dropdown = this.page.locator(
             DropdownsLocators.searchCityDropdown
-        )
-        .click();
+        );
+        await dropdown.scrollIntoViewIfNeeded();
+        await dropdown.click();
     }
 
     async clickSelectLastButton() {
@@ -54,9 +56,11 @@ class DropdownsPage {
 
     async getCustomPriorityOptions() {
         await this.clickCustomPriorityDropdown();
-        return await this.page
-            .locator('[data-priority-id] span:first-child')
-            .allTextContents();
+        const options = this.page.locator(
+            '[data-priority-id] span:first-child'
+        );
+        await options.first().waitFor();
+        return await options.allTextContents();
     }
 
     async getMultiSelectHeroesOptions() {
@@ -65,17 +69,55 @@ class DropdownsPage {
             .allTextContents();
     }
 
-    async getSelectCityOptions() {
+    async getSearchableCityOptions() {
         await this.clickSearchCityDropdown();
-        return await this.page
-            .locator('[data-city-id]')
-            .allTextContents();
+        const options = this.page.locator(
+            '[data-city-id]'
+        );
+        await options.first().waitFor();
+        return await options.allTextContents();
     }
 
     async getSelectCountryOptions() {
         return await this.getSelectCountryDropdown()
             .locator('option')
             .allTextContents();
+    }
+
+    async getSelectedCountry() {
+        return await this
+            .getSelectCountryDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedFruit() {
+        return await this
+            .getSelectFruitDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedHeroes() {
+        return await this
+            .getMultiSelectHeroesMultiSelect()
+            .evaluate(select =>
+                Array.from(select.selectedOptions)
+                    .map(option => option.text)
+            );
+    }
+
+    async getSelectedLanguage() {
+        return await this
+            .getSelectLanguageDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedPriority() {
+        return await this
+            .getCustomPriorityDropdown()
+            .textContent();
     }
 
     async getSelectFruitOptions() {
