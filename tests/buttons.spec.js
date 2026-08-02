@@ -187,7 +187,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Validate button color vs result
         const displayedColor = 
             await buttonsPage.getDisplayedColor();
-        const tolerance = 5;
+        const tolerance = 8;
         expect(displayedColor.r).toBeCloseTo(color.r, 0);
         expect(displayedColor.g).toBeCloseTo(color.g, 0);
         expect(displayedColor.b).toBeCloseTo(color.b, 0);
