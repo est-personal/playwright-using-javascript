@@ -63,15 +63,6 @@ class DropdownsPage {
         return await options.allTextContents();
     }
 
-    // async getCustomPriorityOptions() {
-    //     await this.clickCustomPriorityDropdown();
-    //     const options = this.page.locator(
-    //         '[data-priority-id] span:first-child'
-    //     );
-    //     await expect(options.first()).toBeVisible();
-    //     return await options.allTextContents();
-    // }
-
     async getMultiSelectHeroesOptions() {
         return await this.getMultiSelectHeroesMultiSelect()
             .locator('option')
@@ -91,6 +82,42 @@ class DropdownsPage {
         return await this.getSelectCountryDropdown()
             .locator('option')
             .allTextContents();
+    }
+
+    async getSelectedCountry() {
+        return await this
+            .getSelectCountryDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedFruit() {
+        return await this
+            .getSelectFruitDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedHeroes() {
+        return await this
+            .getMultiSelectHeroesMultiSelect()
+            .evaluate(select =>
+                Array.from(select.selectedOptions)
+                    .map(option => option.text)
+            );
+    }
+
+    async getSelectedLanguage() {
+        return await this
+            .getSelectLanguageDropdown()
+            .locator('option:checked')
+            .textContent();
+    }
+
+    async getSelectedPriority() {
+        return await this
+            .getCustomPriorityDropdown()
+            .textContent();
     }
 
     async getSelectFruitOptions() {
