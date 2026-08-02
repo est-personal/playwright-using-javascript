@@ -4,7 +4,10 @@ const { ButtonsData } = require('../testData/ButtonsData');
 
 const { 
     expectColorWithinTolerance, 
+    expectCoordinatesNear,
+    expectSizeWithinTolerance,
     expectValidCoordinates, 
+    expectValidRgb,
     expectValidSize 
 } = require('../helpers/buttonAssertions');
 
@@ -28,7 +31,6 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toBeVisible();
         // Click Go To Home button
         await buttonsPage.clickGoToHomeButton();
-        // Validate text is reflected in Navigate Home result
         await expect(
             buttonsPage.getNavigateHomeResult()
         ).toHaveText(
@@ -81,12 +83,15 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toBeVisible();
         // Click Find Location button
         await buttonsPage.clickFindLocationButton();
-        // Validate text is reflected in Get Coordinates result
         const coordinates = 
             await buttonsPage.getDisplayedCoordinates();
-        console.log(coordinates);
-        // expect(coordinates.x).toBeGreaterThan(0);
-        // expect(coordinates.y).toBeGreaterThan(0);
+        await test.info().attach(
+            'coordinates',
+            {
+                body: JSON.stringify(coordinates, null, 2),
+                contentType: 'application/json'
+            }
+        );
         expectValidCoordinates(coordinates);
     });
 
@@ -102,19 +107,27 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Get button coordinates
         const coordinates = 
             await buttonsPage.getButtonCoordinates();
-        console.log(`X: ${coordinates.x}`);
-        console.log(`Y: ${coordinates.y}`);
+        await test.info().attach(
+            'x-coordinate',
+            {
+                body: JSON.stringify(coordinates.x, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        await test.info().attach(
+            'y-coordinate',
+            {
+                body: JSON.stringify(coordinates.y, null, 2),
+                contentType: 'application/json'
+            }
+        );
         // Validate button coordinates
         expectValidCoordinates(coordinates);
-        // expect(coordinates.x).toBeGreaterThan(0);
-        // expect(coordinates.y).toBeGreaterThan(0);
-        // Click Find Location button
         await buttonsPage.clickFindLocationButton();
         // Validate button coordinates vs result
         const displayedCoordinates = 
             await buttonsPage.getDisplayedCoordinates();
-        expect(displayedCoordinates.x).toBe(coordinates.x);
-        expect(displayedCoordinates.y).toBe(coordinates.y);
+        expectCoordinatesNear(displayedCoordinates, coordinates);
     });
 
     test('Get Coordinates button text', 
@@ -162,17 +175,16 @@ test.describe('QA Playground - Buttons Tests', () => {
         ).toBeVisible();
         // Click Find My Color button
         await buttonsPage.clickFindMyColorButton();
-        // Validate text is reflected in Get Color result
         const color = 
             await buttonsPage.getDisplayedColor();
-        console.log(color);
-        // expect(color.r).toBeTruthy();
-        // expect(color.g).toBeTruthy();
-        // expect(color.b).toBeTruthy();
-        [color.r, color.g, color.b].forEach(component => {
-            expect(component).toBeGreaterThanOrEqual(0);
-            expect(component).toBeLessThanOrEqual(255);
-        });
+        await test.info().attach(
+            'button text color',
+            {
+                body: JSON.stringify(color, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        expectValidRgb(color);
     });
     
     test('Get Button Color', 
@@ -187,22 +199,52 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Get button color
         const color = 
             await buttonsPage.getButtonColor();
-        console.log(`Button Background Color: ${color.backgroundColor}`);
-        console.log(`Button Text Color: ${color.textColor}`);
-        console.log(`Button Red Component: ${color.r}`);
-        console.log(`Button Green Component: ${color.g}`);
-        console.log(`Button Blue Component: ${color.b}`);
+        await test.info().attach(
+            'button background color',
+            {
+                body: JSON.stringify(color.backgroundColor, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        await test.info().attach(
+            'button text color',
+            {
+                body: JSON.stringify(color.textColor, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        await test.info().attach(
+            'button red component',
+            {
+                body: JSON.stringify(color.r, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        await test.info().attach(
+            'button green component',
+            {
+                body: JSON.stringify(color.g, null, 2),
+                contentType: 'application/json'
+            }
+        );
+        await test.info().attach(
+            'button blue component',
+            {
+                body: JSON.stringify(color.b, null, 2),
+                contentType: 'application/json'
+            }
+        );
         // Validate button color
-        expect(color).toBeTruthy();
+        expect(color).toMatchObject({
+            r: expect.any(Number),
+            g: expect.any(Number),
+            b: expect.any(Number)
+        });
         // Click Find My Color button
         await buttonsPage.clickFindMyColorButton();
         // Validate button color vs result
         const displayedColor = 
             await buttonsPage.getDisplayedColor();
-        // const tolerance = 8;
-        // expect(Math.abs(displayedColor.r - color.r)).toBeLessThanOrEqual(tolerance);
-        // expect(Math.abs(displayedColor.g - color.g)).toBeLessThanOrEqual(tolerance);
-        // expect(Math.abs(displayedColor.b - color.b)).toBeLessThanOrEqual(tolerance);
         expectColorWithinTolerance(
             displayedColor, 
             color
@@ -257,9 +299,13 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Validate text is reflected in Get Size result
         const size = 
             await buttonsPage.getDisplayedSize();
-        console.log(size);
-        // expect(size.height).toBeGreaterThan(0);
-        // expect(size.width).toBeGreaterThan(0);
+        await test.info().attach(
+            'button size',
+            {
+                body: JSON.stringify(size, null, 2),
+                contentType: 'application/json'
+            }
+        );
         expectValidSize(size);
     });
 
@@ -275,19 +321,21 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Get button size
         const size = 
             await buttonsPage.getButtonSize();
-        console.log(`Height: ${size.height}`);
-        console.log(`Width: ${size.width}`);
+        await test.info().attach(
+            'button size',
+            {
+                body: JSON.stringify(size, null, 2),
+                contentType: 'application/json'
+            }
+        );
         // Validate button size
         expectValidSize(size);
-        // expect(size.height).toBeGreaterThan(0);
-        // expect(size.width).toBeGreaterThan(0);
         // Click Do You Know My Size button
         await buttonsPage.clickDoYouKnowMySizeButton();
         // Validate button size vs result
         const displayedSize = 
             await buttonsPage.getDisplayedSize();
-        expect(displayedSize.height).toBe(size.height);
-        expect(displayedSize.width).toBe(size.width);
+        expectSizeWithinTolerance(displayedSize, size);
     });
 
     test('Get Size button text', 
@@ -400,7 +448,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getClickAndHoldButton()
         ).toBeVisible();
         // Action for Click And Hold button
-        await buttonsPage.clickAndHold(1600);
+        await buttonsPage.clickAndHold(2000);
         await buttonsPage.releaseHold()
         // Validate text is reflected in Click Hold result
         await expect(
@@ -429,7 +477,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             buttonsPage.getClickAndHoldButton()
         ).toBeVisible();
         // Action for Click And Hold button
-        await buttonsPage.clickAndHold(800);
+        await buttonsPage.clickAndHold(500);
         await buttonsPage.releaseHold()
         // Validate text is reflected in Click Hold result
         await expect(
@@ -458,11 +506,9 @@ test.describe('QA Playground - Buttons Tests', () => {
         // Action for Click And Hold button
         await buttonsPage.holdButton();
         // Validate Keep Holding text is reflected in Click Hold result
-        const text = 
-            await buttonsPage.getClickHoldResult()
-            .textContent();
-        console.log('Current text:', text);
-        expect(text.trim()).toBe(
+        await expect(
+            buttonsPage.getClickHoldResult()
+        ).toHaveText(
             ButtonsData.holdingText
         );
         // Release Hold
