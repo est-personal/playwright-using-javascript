@@ -24,7 +24,7 @@ class InputFieldsPage {
             .clear();
     }
 
-    async clickCleareButton() {
+    async clickClearButton() {
         await this.page
             .locator(InputFieldsLocators.clearButton)
             .click();
@@ -143,6 +143,13 @@ class InputFieldsPage {
         );
     }
 
+    getAppendTabSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.appendTabSection
+        );
+    }
+
     getClearFieldInput() {
         return this.page
             .locator(
@@ -157,6 +164,13 @@ class InputFieldsPage {
         );
     }
 
+    getClearFieldSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.clearFieldSection
+        );
+    }
+
     getDisabledFieldInput() {
         return this.page
             .locator(
@@ -168,6 +182,13 @@ class InputFieldsPage {
         return this.page
             .locator(
                 InputFieldsLocators.disabledFieldResult
+        );
+    }
+
+    getDisabledInputSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.disabledInputSection
         );
     }
 
@@ -199,6 +220,13 @@ class InputFieldsPage {
         );
     }
 
+    getReadOnlyInputSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readOnlyInputSection
+        );
+    }
+
     getReadValueInput() {
         return this.page
             .locator(
@@ -213,10 +241,24 @@ class InputFieldsPage {
         );
     }
 
+    getReadValueSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.readValueSection
+        );
+    }
+
     getSubmitButton() {
         return this.page
             .locator(
                 InputFieldsLocators.submitButton
+        );
+    }
+
+    getTypeMovieSection() {
+        return this.page
+            .locator(
+                InputFieldsLocators.typeMovieSection
         );
     }
     
