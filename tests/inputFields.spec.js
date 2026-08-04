@@ -11,433 +11,260 @@ test.describe('QA Playground - Input Fields Tests', () => {
         await inputFieldsPage.navigateToInputFields();
     });
 
-    test('Type a Movie Name', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Movie Name input to be visible
-        await expect(
-            inputFieldsPage.getMovieNameInput()
-        ).toBeVisible();
-        // Enter text in Movie Name input
-        await inputFieldsPage.enterMovieName(
-            InputFieldsData.enteredMovieName,
-            { delay: 100 }
-        );
-        await expect(
-            inputFieldsPage.getMovieNameInput()
-        ).toHaveValue(
-            InputFieldsData.enteredMovieName
-        );
-        // Click Submit button
-        await expect(
-            inputFieldsPage.getSubmitButton()
-        ).toBeVisible();
-        await expect(
-            inputFieldsPage.getSubmitButton()
-        ).toBeEnabled();
-        await inputFieldsPage.clickSubmitButton();
-        // Validate text is reflected in Movie Name result
-        await expect(
-            inputFieldsPage.getMovieNameResult()
-        ).not.toHaveText(
-            InputFieldsData.defaultMovieNameResult
-        );
-        await expect(
-            inputFieldsPage.getMovieNameResult()
-        ).toHaveText(
-            InputFieldsData.movieValueText,
-            { timeout: 10000 }
-        );
+    test.describe('Scenario Type Movie', () => {
+        test('Type a Movie Name', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async () => {
+            // Wait for Type Movie section to be visible
+            await expect(
+                inputFieldsPage.getTypeMovieSection()
+            ).toBeVisible();
+            // Enter text in Movie Name input
+            await inputFieldsPage.enterMovieName(
+                InputFieldsData.enteredMovieName
+            );
+            await expect(
+                inputFieldsPage.getMovieNameInput()
+            ).toHaveValue(
+                InputFieldsData.enteredMovieName
+            );
+            // Click Submit button
+            await inputFieldsPage.clickSubmitButton();
+            // Validate text is reflected in Movie Name result
+            await expect(
+                inputFieldsPage.getMovieNameResult()
+            ).toHaveText(
+                InputFieldsData.movieValueText
+            );
+        });
+
+        test('No movie entered', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async ({ page }) => {
+            // Wait for Type Movie section to be visible
+            await expect(
+                inputFieldsPage.getTypeMovieSection()
+            ).toBeVisible();
+            // Click Submit button
+            await inputFieldsPage.clickSubmitButton();
+            // Validate value of Movie Name result if no movie entered
+            await expect(
+                inputFieldsPage.getMovieNameResult()
+            ).toHaveText(
+                InputFieldsData.defaultMovieNameResultNoneEntered
+            );
+        });
+
     });
 
-    test('No movie entered', 
-        {
-            tag: ['@regression', '@negative']
-        },
-    async ({ page }) => {
-        // Wait for Movie Name input to be visible
-        await expect(
-            inputFieldsPage.getMovieNameInput()
-        ).toBeVisible();
-        // Click Submit button
-        await inputFieldsPage.clickSubmitButton();
-        // Validate value of Movie Name result if no movie entered
-        await expect(
-            inputFieldsPage.getMovieNameResult()
-        ).toHaveText(
-            InputFieldsData.defaultMovieNameResultNoneEntered,
-            { timeout: 10000 }
-        );
+    test.describe('Scenario Append Tab', () => {
+        test('Append Text and Press Tab', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async ({ page }) => {
+            // Wait for Append Tab section to be visible
+            await expect(
+                inputFieldsPage.getAppendTabSection()
+            ).toBeVisible();
+            // Enter text in Append Tab input
+            await inputFieldsPage.appendText(
+                InputFieldsData.appendText
+            );
+            await expect(
+                inputFieldsPage.getAppendTabInput()
+            ).toHaveValue(
+                InputFieldsData.appendValue
+            );
+            // console.log(
+            //     await inputFieldsPage.getAppendTabInput().inputValue()
+            // );
+            // Press Tab
+            await inputFieldsPage.pressTabAppendTextField();
+            //Validate Append Tab result
+            await expect(
+                inputFieldsPage.getAppendTabResult()
+            ).toHaveText(
+                InputFieldsData.appendValueText
+            );
+        });
+
+        test('Focus after pressing Tab', 
+            {
+                tag: ['@regression', '@positive']
+            },
+        async ({ page }) => {
+            // Wait for Append Tab section to be visible
+            await expect(
+                inputFieldsPage.getAppendTabSection()
+            ).toBeVisible();
+            // Click Append Tab input
+            await inputFieldsPage.getAppendTabInput().click();
+            // Verify focus in Append Tab input
+            await expect(
+                inputFieldsPage.getAppendTabInput()
+            ).toBeFocused();
+            // Press Tab
+            await inputFieldsPage.pressTabAppendTextField();
+            // Validate focus not in Append Tab input
+            await expect(
+                inputFieldsPage.getAppendTabInput()
+            ).not.toBeFocused();
+        });
+
+        test('No Append Text then Press Tab', 
+            {
+                tag: ['@regression', '@negative']
+            },
+        async ({ page }) => {
+            // Wait for Append Tab section to be visible
+            await expect(
+                inputFieldsPage.getAppendTabSection()
+            ).toBeVisible();
+            // Click Append Tab input
+            await inputFieldsPage.getAppendTabInput().click();
+            // Press Tab
+            await inputFieldsPage.pressTabAppendTextField();
+            //Validate Append Tab result
+            await expect(
+                inputFieldsPage.getAppendTabResult()
+            ).toHaveText(
+                InputFieldsData.defaultAppendValueTextResult
+            );
+        });
+
     });
 
-    test('Default Value of Scenario Type Movie', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Movie Name input to be visible
-        await expect(
-            inputFieldsPage.getMovieNameInput()
-        ).toBeVisible();
-        // Validate Placeholder to the Movie Name input
-        const placeholderInputMovie = 
-            await inputFieldsPage.getMovieNameInputPlaceholderAttribute();
-        expect(placeholderInputMovie)
-            .toBe(InputFieldsData.placeholderMovieNameInput
-        );
-        // Validate Default value to the Movie Name result
-        await expect(
-            inputFieldsPage.getMovieNameResult()
-        ).toHaveText(
-            InputFieldsData.defaultMovieNameResult
-        );
+    test.describe('Scenario Read Value', () => {
+        test('Read Value Field', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async ({ page }) => {
+            // Wait for Read Value section to be visible
+            await expect(
+                inputFieldsPage.getReadValueSection()
+            ).toBeVisible();
+            // Get Read Value input
+            const readValueFieldText =
+                await inputFieldsPage.getReadValueInputText();
+            // Click Read Value button
+            await inputFieldsPage.clickReadValueButton();
+            //Validate Read Value result
+            await expect(
+                inputFieldsPage.getReadValueResult()
+            ).toHaveText(
+                InputFieldsData.valueText + readValueFieldText
+            );
+        });
+
+        test('Read Field Input is Read-Only', 
+            {
+                tag: ['@regression', '@positive']
+            },
+        async ({ page }) => {
+            // Wait for Read Value section to be visible
+            await expect(
+                inputFieldsPage.getReadValueSection()
+            ).toBeVisible();
+            await expect(
+                inputFieldsPage.getReadValueInput()
+            ).toHaveJSProperty('readOnly', true);
+        });
+    
     });
 
-    test('Append Text and Press Tab', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Append Tab input to be visible
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toBeVisible();
-        // Enter text in Append Tab input
-        await inputFieldsPage.appendText(
-            InputFieldsData.appendText
-        );
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toHaveValue(
-            InputFieldsData.appendValue
-        );
-        console.log(
-            await inputFieldsPage.getAppendTabInput().inputValue()
-        );
-        // Press Tab
-        await inputFieldsPage.pressTabAppendTextField();
-        //Validate Append Tab result
-        await expect(
-            inputFieldsPage.getAppendTabResult()
-        ).toHaveText(
-            InputFieldsData.appendValueText
-        );
+    test.describe('Scenario Clear Field', () => {
+        test('Clear Input Field via button', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async () => {
+            // Wait for Clear Field section to be visible
+            await expect(
+                inputFieldsPage.getClearFieldSection()
+            ).toBeVisible();
+            // Click Clear button
+            await inputFieldsPage.clickClearButton();
+            // Validate Clear Field input is cleared
+            await expect(
+                inputFieldsPage.getClearFieldInput()
+            ).toHaveValue('');
+            // Validate Clear Field result
+            await expect(
+                inputFieldsPage.getClearFieldResult()
+            ).toHaveText(
+                InputFieldsData.fieldClearedText
+            );
+        });
+
+        test('Entered text will be cleared', 
+            {
+                tag: ['@regression', '@positive']
+            },
+        async () => {
+            // Wait for Clear Field section to be visible
+            await expect(
+                inputFieldsPage.getClearFieldSection()
+            ).toBeVisible();
+            // Enter text in Clear Field Input
+            await inputFieldsPage.enterTextInClearField(
+                InputFieldsData.sampleText
+            );
+            // Click Clear button
+            await inputFieldsPage.clickClearButton();
+            // Validate Clear Field input is cleared
+            await expect(
+                inputFieldsPage.getClearFieldInput()
+            ).toHaveValue('');
+            // Validate Clear Field result
+            await expect(
+                inputFieldsPage.getClearFieldResult()
+            ).toHaveText(
+                InputFieldsData.fieldClearedText
+            );
+        });
+    
     });
 
-    test('Focus after pressing Tab', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Append Tab input to be visible
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toBeVisible();
-        // Click Append Tab input
-        await inputFieldsPage.getAppendTabInput().click();
-        // Verify focus in Append Tab input
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toBeFocused();
-        // Press Tab
-        await inputFieldsPage.pressTabAppendTextField();
-        // Validate focus not in Append Tab input
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).not.toBeFocused();
+    test.describe('Scenario Disabled Input', () => {
+        test('Disabled Field', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async () => {
+            // Wait for Disabled Input section to be visible
+            await expect(
+                inputFieldsPage.getDisabledInputSection()
+            ).toBeVisible();
+            // Validate Disabled Field input is disabled
+            await expect(
+                inputFieldsPage.getDisabledFieldInput()
+            ).toBeDisabled();
+        });
+
     });
 
-    test('No Append Text then Press Tab', 
-        {
-            tag: ['@regression', '@negative']
-        },
-    async ({ page }) => {
-        // Wait for Append Tab input to be visible
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toBeVisible();
-        // Click Append Tab input
-        await inputFieldsPage.getAppendTabInput().click();
-        // Press Tab
-        await inputFieldsPage.pressTabAppendTextField();
-        //Validate Append Tab result
-        await expect(
-            inputFieldsPage.getAppendTabResult()
-        ).toHaveText(
-            InputFieldsData.defaultAppendValueTextResult
-        );
-    });
+    test.describe('Scenario Read-Only Input', () => {
+        test('Read-Only Field', 
+            {
+                tag: ['@smoke', '@regression', '@positive']
+            },
+        async () => {
+            // Wait for Read-Only Input section to be visible
+            await expect(
+                inputFieldsPage.getReadOnlyInputSection()
+            ).toBeVisible();
+            // Validate Read-Only Field input is read-only
+            await expect(
+                inputFieldsPage.getReadonlyFieldInput()
+            ).toHaveJSProperty('readOnly', true);
+        });
 
-    test('Default Value of Scenario Append Tab', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Append Tab input to be visible
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toBeVisible();
-        // Validate Default value to the Append Tab input
-        await expect(
-            inputFieldsPage.getAppendTabInput()
-        ).toHaveValue(
-            InputFieldsData.defaultAppendTabInput
-        );
-        // Validate Default value to the Append Tab result
-        await expect(
-            inputFieldsPage.getAppendTabResult()
-        ).toHaveText(
-            InputFieldsData.defaultAppendValueTextResult
-        );
     });
-
-    test('Read Value Field', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Read Value input to be visible
-        await expect(
-            inputFieldsPage.getReadValueInput()
-        ).toBeVisible();
-        // Get Read Value input
-        const readValueFieldText =
-            await inputFieldsPage.getReadValueInputText();
-        // Click Read Value button
-        await inputFieldsPage.clickReadValueButton();
-        //Validate Read Value result
-        await expect(
-            inputFieldsPage.getReadValueResult()
-        ).toHaveText(
-            InputFieldsData.valueText + readValueFieldText
-        );
-    });
-
-    test('Read Field Input is Read-Only', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Read Value input to be visible
-        await expect(
-            inputFieldsPage.getReadValueInput()
-        ).toBeVisible();
-        // Validate Read Value input is read-only
-        await expect(
-            inputFieldsPage.getReadValueInput()
-        ).toHaveAttribute(
-            InputFieldsData.readOnly
-        );
-    });
-
-    test('Default Value of Scenario Read Value', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Read Value input to be visible
-        await expect(
-            inputFieldsPage.getReadValueInput()
-        ).toBeVisible();
-        // Validate Default value to the Read Value input
-        await expect(
-            inputFieldsPage.getReadValueInput()
-        ).toHaveValue(
-            InputFieldsData.defaultReadValueInput
-        );
-        // Validate Default value to the Read Value result
-        await expect(
-            inputFieldsPage.getReadValueResult()
-        ).toHaveText(
-            InputFieldsData.defaultReadValueResult
-        );
-    });
-
-    test('Clear Input Field via button', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Clear Field input to be visible
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toBeVisible();
-        // Get Clear Field Input
-        const readValueFieldText =
-            await inputFieldsPage.getReadValueInputText();
-        // Click Clear button
-        await inputFieldsPage.clickCleareButton();
-        // Validate Clear Field input is cleared
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toHaveText('');
-        // Validate Clear Field result
-        await expect(
-            inputFieldsPage.getClearFieldResult()
-        ).toHaveText(
-            InputFieldsData.fieldClearedText,
-            { timeout: 10000 }
-        );
-    });
-
-    test('Clear Input Field via clear()', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Clear Field input to be visible
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toBeVisible();
-        // Validate Clear Field Input
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toHaveValue(InputFieldsData.defaultClearFieldInput);
-        // Clear via clear()
-        await inputFieldsPage.clickCleareButton();
-        // Validate Clear Field input is cleared
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toHaveValue('',
-            { timeout: 10000 }
-        );
-        // Validate Clear Field result
-        await expect(
-            inputFieldsPage.getClearFieldResult()
-        ).toHaveText(
-            InputFieldsData.fieldClearedText
-        );
-    });
-
-    test('Entered text will be cleared', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async () => {
-        // Wait for Clear Field input to be visible
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toBeVisible();
-        // Enter text in Clear Field Input
-        await inputFieldsPage.enterTextInClearField(
-            InputFieldsData.sampleText,
-            { delay: 100 }
-        );
-        // Click Clear button
-        await inputFieldsPage.clickCleareButton();
-        // Validate Clear Field input is cleared
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toHaveText('');
-        // Validate Clear Field result
-        await expect(
-            inputFieldsPage.getClearFieldResult()
-        ).toHaveText(
-            InputFieldsData.fieldClearedText
-        );
-    });
-
-    test('Default Value of Scenario Clear Field', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Clear Field input to be visible
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toBeVisible();
-        // Validate Default value to the Clear Field input
-        await expect(
-            inputFieldsPage.getClearFieldInput()
-        ).toHaveValue(
-            InputFieldsData.defaultClearFieldInput
-        );
-        // Validate Default value to the Movie name result
-        await expect(
-            inputFieldsPage.getClearFieldResult()
-        ).toHaveText(
-            InputFieldsData.defaultClearFieldResult
-        );
-    });
-
-    test('Disabled Field', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Disabled Field input to be visible
-        await expect(
-            inputFieldsPage.getDisabledFieldInput()
-        ).toBeVisible();
-        // Validate Disabled Field input is disabled
-        await expect(
-            inputFieldsPage.getDisabledFieldInput()
-        ).toBeDisabled();
-    });
-
-    test('Default Value of Scenario Disabled Input', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Disabled Field input to be visible
-        await expect(
-            inputFieldsPage.getDisabledFieldInput()
-        ).toBeVisible();
-        // Validate Default value to the Disabled Field input
-        await expect(
-            inputFieldsPage.getDisabledFieldInput()
-        ).toHaveValue(
-            InputFieldsData.defaultDisabledFieldInput
-        );
-        // Validate Default value to the Disabled Field result
-        await expect(
-            inputFieldsPage.getDisabledFieldResult()
-        ).toHaveText(
-            InputFieldsData.defaultDisabledFieldResult
-        );
-    });
-
-    test('Read-Only Field', 
-        {
-            tag: ['@smoke', '@regression', '@positive']
-        },
-    async () => {
-        // Wait for Read-Only Field input to be visible
-        await expect(
-            inputFieldsPage.getReadonlyFieldInput()
-        ).toBeVisible();
-        // Validate Read-Only Field input is read-only
-        await expect(
-            inputFieldsPage.getReadonlyFieldInput()
-        ).toHaveAttribute(
-            InputFieldsData.readOnly
-        );
-    });
-
-    test('Default Value of Scenario Read-only Input', 
-        {
-            tag: ['@regression', '@positive']
-        },
-    async ({ page }) => {
-        // Wait for Read-Only Field input to be visible
-        await expect(
-            inputFieldsPage.getReadonlyFieldInput()
-        ).toBeVisible();
-        // Validate Default value to the Read-Only Field input
-        await expect(
-            inputFieldsPage.getReadonlyFieldInput()
-        ).toHaveValue(
-            InputFieldsData.defaultReadonlyFieldInput
-        );
-        // Validate Default value to the Read-Only Field result
-        await expect(
-            inputFieldsPage.getReadonlyFieldResult()
-        ).toHaveText(
-            InputFieldsData.defaultReadonlyFieldResult
-        );
-    });
-
+    
 });
