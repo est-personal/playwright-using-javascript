@@ -90,6 +90,8 @@ const FormsData = {
         invalidUser: {
             email:
                 'abc.com',
+            lessThanSixCharPassword:
+                'Pass1',
             mismatchedPassword:
                 'Password124',
             phoneAlphanumeric:
@@ -121,6 +123,8 @@ const FormsData = {
                 'Phone must be exactly 10 digits.',
             lastNameRequiredMessage:
                 'Last name is required.',
+            passwordLengthMessage:
+                'Password must be at least 6 characters.',
             passwordRequiredMessage:
                 'Password is required.',
             passwordsDoNotMatchMessage:
