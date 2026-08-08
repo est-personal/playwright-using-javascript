@@ -26,6 +26,18 @@ pipeline {
             ],
             description: 'Select Playwright Browser to run tests'
         )
+
+        choice(
+            name: 'TEST_SUITE',
+            choices: [
+                'all',
+                'inputFields',
+                'buttons',
+                'forms',
+                'dropdowns'
+            ],
+            description: 'Select Test Suite to run'
+        )
     }
 
     stages {
@@ -55,9 +67,11 @@ pipeline {
 
                     env.BUILD_TRIGGER = currentBuild.getBuildCauses()[0].shortDescription
 
-                    currentBuild.displayName = "#${BUILD_NUMBER} ${env.GIT_BRANCH_NAME}"
+                    currentBuild.displayName = "#${BUILD_NUMBER} ${env.GIT_BRANCH_NAME} [${params.BROWSER}]"
                     currentBuild.description = 
                         """
+                            Browser: ${params.BROWSER}
+                            Suite: ${params.TEST_SUITE}
                             Branch: ${env.GIT_BRANCH_NAME}
                             Commit: ${env.GIT_COMMIT_SHORT}
                         """
@@ -96,6 +110,10 @@ pipeline {
                             if (params.BROWSER != 'all') {
                                 command +=
                                     " --project=${params.BROWSER}"
+                            }
+                            if (params.TEST_SUITE != 'all') {
+                                command += 
+                                    " tests/${params.TEST_SUITE}"
                             }
                             echo "Executing: ${command}"
                             bat command
@@ -297,6 +315,8 @@ pipeline {
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
                     🌐 Browser: ${params.BROWSER}
+                    📁 Test Suite: ${params.TEST_SUITE}
+
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
@@ -325,6 +345,8 @@ pipeline {
                     ⏭ Skipped: ${env.SKIPPED_TESTS}
 
                     🌐 Browser: ${params.BROWSER}
+                    📁 Test Suite: ${params.TEST_SUITE}
+
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
@@ -355,6 +377,8 @@ pipeline {
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
                     🌐 Browser: ${params.BROWSER}
+                    📁 Test Suite: ${params.TEST_SUITE}
+                    
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
