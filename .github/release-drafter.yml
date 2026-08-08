@@ -10,7 +10,7 @@ categories:
     labels:
       - bugfix
 
-  - title: "🎯 Integration"
+  - title: "🎯 Integration / Enhancement"
     labels:
       - integration
 

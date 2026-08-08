@@ -9,10 +9,24 @@ const folders = {};
 function processSuite(suite) {
   if (suite.specs) {
     for (const spec of suite.specs) {
-      const folder = spec.file
-        .split(/[/\\]/)
-        .pop()
-        .replace('.spec.js', '');
+      // // tests doesn't contain folders
+      // const folder = spec.file
+      //   .split(/[/\\]/)
+      //   .pop()
+      //   .replace('.spec.js', '');
+      // tests contains folders
+      // const pathParts = spec.file.split(/[/\\]/);
+      // const folder =
+      //   pathParts[pathParts.length - 2] || 'unknown';
+      const path = require('path');
+      const folder = path.basename(
+        path.dirname(spec.file)
+      );
+      const specName = path.basename(
+        spec.file,
+        '.spec.js'
+      );
+      const key = `${folder}/${specName}`;
 
       if (!folders[folder]) {
         folders[folder] = {

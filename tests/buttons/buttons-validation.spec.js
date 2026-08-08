@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { ButtonsPage } = require('../pages/ButtonsPage');
-const { ButtonsData } = require('../testData/ButtonsData');
+const { ButtonsPage } = require('../../pages/ButtonsPage');
+const { ButtonsData } = require('../../testData/ButtonsData');
 
 const buttonTextTests = [
     {

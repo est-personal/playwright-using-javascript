@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { DropdownsPage } = require('../pages/DropdownsPage');
-const { DropdownsData } = require('../testData/DropdownsData');
+const { DropdownsPage } = require('../../pages/DropdownsPage');
+const { DropdownsData } = require('../../testData/DropdownsData');
 
 const optionsTests = [
     {
