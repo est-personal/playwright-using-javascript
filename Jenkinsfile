@@ -44,6 +44,17 @@ pipeline {
             defaultValue: '',
             description: 'Playwright tag (@smoke, @regression, @positive, @negative)'
         )
+
+        string(
+            name: 'RETRIES',
+            defaultValue: '1',
+            description: 'Number of retries'
+        )
+
+        string(
+            name: 'WORKERS',
+            defaultValue: '2'
+        )
     }
 
     stages {
@@ -126,6 +137,8 @@ pipeline {
                                 command += 
                                     " --grep ${params.TAG}"
                             }
+                            command += " --workers=${params.WORKERS}"
+                            command += " --retries=${params.RETRIES}"
                             echo "Executing: ${command}"
                             bat command
                         }
@@ -328,6 +341,8 @@ pipeline {
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
                     🏷️ Tag: ${params.TAG ?: 'N/A'}
+                    🔄 Retries: ${params.RETRIES}
+                    👷 Workers: ${params.WORKERS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -359,6 +374,8 @@ pipeline {
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
                     🏷️ Tag: ${params.TAG ?: 'N/A'}
+                    🔄 Retries: ${params.RETRIES}
+                    👷 Workers: ${params.WORKERS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -392,6 +409,8 @@ pipeline {
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
                     🏷️ Tag: ${params.TAG ?: 'N/A'}
+                    🔄 Retries: ${params.RETRIES}
+                    👷 Workers: ${params.WORKERS}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
