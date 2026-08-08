@@ -42,6 +42,29 @@ test.describe('QA Playground - Buttons Tests', () => {
     });
 
     test.describe('Coordinates Button', () => {
+        test('Click Find Location', 
+        {
+            tag: ['@smoke', '@regression', '@positive']
+        },
+        async () => {
+            // Wait for Find Location button to be visible
+            await expect(
+                buttonsPage.getFindLocationButton()
+            ).toBeVisible();
+            // Click Find Location button
+            await buttonsPage.clickFindLocationButton();
+            const coordinates = 
+                await buttonsPage.getDisplayedCoordinates();
+            await test.info().attach(
+                'button coordinates',
+                {
+                    body: JSON.stringify(coordinates, null, 2),
+                    contentType: 'application/json'
+                }
+            );
+            expectValidCoordinates(coordinates);
+        });
+
         test('Get Button Coordinates', 
         {
             tag: ['@regression', '@positive']
