@@ -159,7 +159,22 @@ class ButtonsPage {
             this.page.locator(
                 ButtonsLocators.getColorResult
             );
-        const text = await result.textContent();
+        await result.waitFor({ 
+            state: 'visible' 
+        });
+        let text = '';
+        await this.page.waitForFunction(
+            ({ selector }) => {
+                const el = document.querySelector(selector);
+                return /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/i.test(
+                    el?.textContent || ''
+                );
+            }, { 
+                selector: ButtonsLocators.getColorResult 
+            }
+        );
+        text = (await result.textContent())?.trim();
+        // const text = await result.textContent();
         if (!text?.trim()) {
             throw new Error('Color information is not displayed');
         }
@@ -182,7 +197,22 @@ class ButtonsPage {
             this.page.locator(
                 ButtonsLocators.getCoordinatesResult
             );
-        const text = await result.textContent();
+        await result.waitFor({ 
+            state: 'visible' 
+        });
+        let text = '';
+        await this.page.waitForFunction(
+            ({ selector }) => {
+                const el = document.querySelector(selector);
+                return /X:\s*\d+px,\s*Y:\s*\d+px/.test(
+                    el?.textContent || ''
+                );
+            }, { 
+                selector: ButtonsLocators.getCoordinatesResult 
+            }
+        );
+        text = (await result.textContent())?.trim();
+        // const finalText = await result.textContent();
         if (!text?.trim()) {
             throw new Error(`Coordinate information is not displayed`);
         }
@@ -205,7 +235,22 @@ class ButtonsPage {
             this.page.locator(
                 ButtonsLocators.getSizeResult
             );
-        const text = await result.textContent();
+        await result.waitFor({ 
+            state: 'visible' 
+        });
+        let text = '';
+        await this.page.waitForFunction(
+            ({ selector }) => {
+                const el = document.querySelector(selector);
+                return /W:\s*\d+px,\s*H:\s*\d+px/.test(
+                    el?.textContent || ''
+                );
+            }, { 
+                selector: ButtonsLocators.getSizeResult 
+            }
+        );
+        text = (await result.textContent())?.trim();
+        // const text = await result.textContent();
         if (!text?.trim()) {
             throw new Error('Size information is not displayed');
         }
