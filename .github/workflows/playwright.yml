@@ -80,8 +80,10 @@ jobs:
         if: always()
         run: |
           END_TIME=$(date +%s)
-          DURATION=$((END_TIME - START_TIME))
-          echo "DURATION=$DURATION" >> $GITHUB_ENV
+          DURATION_SEC=$((END_TIME - START_TIME))
+          DURATION_MIN=$((DURATION_SEC / 60))
+          DURATION_REM_SEC=$((DURATION_SEC % 60))
+          echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
 
       - name: Upload Playwright Report
         if: always()
