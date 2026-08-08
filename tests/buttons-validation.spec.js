@@ -45,6 +45,29 @@ const buttonTextTests = [
     }
 ];
 
+test.describe('QA Playground - Buttons Text Validations', () => {
+
+    let buttonsPage;
+
+    test.beforeEach(async ({ page }) => {
+        buttonsPage = new ButtonsPage(page);
+        await buttonsPage.navigateToButtons();
+    });
+
+    buttonTextTests.forEach(data => {
+        test(`${data.name} button text`, {
+            tag: ['@regression', '@positive']
+        }, async () => {
+            await expect(
+                data.locator(buttonsPage)
+            ).toHaveText(
+                data.expected
+            );
+        });
+    });
+
+});
+
 const defaultValueTests = [
     {
         name: 'Scenario Navigate Home Default Value',
@@ -88,25 +111,13 @@ const defaultValueTests = [
     }
 ];
 
-test.describe('QA Playground - Buttons Validations', () => {
+test.describe('QA Playground - Buttons Default Value Validations', () => {
 
     let buttonsPage;
 
     test.beforeEach(async ({ page }) => {
         buttonsPage = new ButtonsPage(page);
         await buttonsPage.navigateToButtons();
-    });
-
-    buttonTextTests.forEach(data => {
-        test(`${data.name} button text`, {
-            tag: ['@regression', '@positive']
-        }, async () => {
-            await expect(
-                data.locator(buttonsPage)
-            ).toHaveText(
-                data.expected
-            );
-        });
     });
 
     defaultValueTests.forEach(data => {

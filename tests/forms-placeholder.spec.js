@@ -62,7 +62,7 @@ const placeholderScenarios = [
     }
 ];
 
-test.describe('QA Playground - Form Reset Validations', () => {
+test.describe('QA Playground - Forms Placeholder Validations', () => {
     
     let formsPage;
 

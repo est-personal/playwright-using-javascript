@@ -3,7 +3,7 @@ const { FormsPage } = require('../pages/FormsPage');
 const { FormsData } = require('../testData/FormsData');
 const { GenericData } = require('../testData/GenericData');
 
-test.describe('QA Playground - Form Reset Validations', () => {
+test.describe('QA Playground - Forms Reset Validations', () => {
     let formsPage;
 
     const resetScenarios = [
