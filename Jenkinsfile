@@ -15,6 +15,19 @@ pipeline {
         REPOSITORY_NAME = 'playwright-using-javascript'
     }
 
+    parameters {
+        choice(
+            name: 'BROWSER',
+            choices: [
+                'all',
+                'chromium',
+                'firefox',
+                'webkit'
+            ],
+            description: 'Select Playwright Browser to run tests'
+        )
+    }
+
     stages {
         stage('Clean Workspace') {
             steps {
@@ -77,8 +90,17 @@ pipeline {
                         buildResult: 'UNSTABLE', 
                         stageResult: 'FAILURE'
                     ) {
-                    bat 'npx playwright test'
-                }
+                        script {
+                            def command =
+                                'npx playwright test'
+                            if (params.BROWSER != 'all') {
+                                command +=
+                                    " --project=${params.BROWSER}"
+                            }
+                            echo "Executing: ${command}"
+                            bat command
+                        }
+                    }
             }
         }
 
@@ -274,6 +296,7 @@ pipeline {
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
+                    🌐 Browser: ${params.BROWSER}
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
@@ -301,6 +324,7 @@ pipeline {
                     ⚠️ Flaky: ${env.FLAKY_TESTS}
                     ⏭ Skipped: ${env.SKIPPED_TESTS}
 
+                    🌐 Browser: ${params.BROWSER}
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
@@ -330,6 +354,7 @@ pipeline {
 
                     📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
+                    🌐 Browser: ${params.BROWSER}
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
