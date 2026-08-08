@@ -36,40 +36,7 @@ const optionsTests = [
     }
 ];
 
-const defaultValueTests = [
-    {
-        name: 'Select Fruit Result',
-        locator: page => page.getSelectFruitResult(),
-        expected: DropdownsData.defaultValue.selectFruitResult
-    },
-    {
-        name: 'Select Country Result',
-        locator: page => page.getSelectCountryResult(),
-        expected: DropdownsData.defaultValue.selectCountryResult
-    },
-    {
-        name: 'Select Language Result',
-        locator: page => page.getSelectLanguageResult(),
-        expected: DropdownsData.defaultValue.selectLanguageResult
-    },
-    {
-        name: 'Multi-Select Heroes Result',
-        locator: page => page.getMultiSelectHeroesResult(),
-        expected: DropdownsData.defaultValue.multiSelectHeroesResult
-    },
-    {
-        name: 'Custom Priority Result',
-        locator: page => page.getCustomPriorityResult(),
-        expected: DropdownsData.defaultValue.customPriorityResult
-    },
-    {
-        name: 'Search City Result',
-        locator: page => page.getSearchCityResult(),
-        expected: DropdownsData.defaultValue.searchCityResult
-    }
-];
-
-test.describe('QA Playground - Dropdowns Validation', () => {
+test.describe('QA Playground - Dropdowns Options Validation', () => {
 
     let dropdownsPage;
 
@@ -103,6 +70,50 @@ test.describe('QA Playground - Dropdowns Validation', () => {
                 );
             }
         });
+    });
+
+});
+
+const defaultValueTests = [
+    {
+        name: 'Select Fruit Result',
+        locator: page => page.getSelectFruitResult(),
+        expected: DropdownsData.defaultValue.selectFruitResult
+    },
+    {
+        name: 'Select Country Result',
+        locator: page => page.getSelectCountryResult(),
+        expected: DropdownsData.defaultValue.selectCountryResult
+    },
+    {
+        name: 'Select Language Result',
+        locator: page => page.getSelectLanguageResult(),
+        expected: DropdownsData.defaultValue.selectLanguageResult
+    },
+    {
+        name: 'Multi-Select Heroes Result',
+        locator: page => page.getMultiSelectHeroesResult(),
+        expected: DropdownsData.defaultValue.multiSelectHeroesResult
+    },
+    {
+        name: 'Custom Priority Result',
+        locator: page => page.getCustomPriorityResult(),
+        expected: DropdownsData.defaultValue.customPriorityResult
+    },
+    {
+        name: 'Search City Result',
+        locator: page => page.getSearchCityResult(),
+        expected: DropdownsData.defaultValue.searchCityResult
+    }
+];
+
+test.describe('QA Playground - Dropdowns Default Value Validation', () => {
+
+    let dropdownsPage;
+
+    test.beforeEach(async ({ page }) => {
+        dropdownsPage = new DropdownsPage(page);
+        await dropdownsPage.navigateToDropdowns();
     });
 
     defaultValueTests.forEach(data => {

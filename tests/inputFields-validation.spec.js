@@ -65,7 +65,7 @@ const defaultValueTests = [
     }
 ];
 
-test.describe('QA Playground - Input Fields Validations', () => {
+test.describe('QA Playground - Input Fields Default Value Validations', () => {
 
     let inputFieldsPage;
 
