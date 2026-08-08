@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
-const { FormsPage } = require('../pages/FormsPage');
-const { FormsData } = require('../testData/FormsData');
-const { GenericData } = require('../testData/GenericData');
+const { FormsPage } = require('../../pages/FormsPage');
+const { FormsData } = require('../../testData/FormsData');
+const { GenericData } = require('../../testData/GenericData');
 
 const loginFormValidationScenarios = [
     {

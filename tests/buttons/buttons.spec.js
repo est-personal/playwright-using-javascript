@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { ButtonsPage } = require('../pages/ButtonsPage');
-const { ButtonsData } = require('../testData/ButtonsData');
+const { ButtonsPage } = require('../../pages/ButtonsPage');
+const { ButtonsData } = require('../../testData/ButtonsData');
 
 const { 
     expectColorWithinTolerance, 
@@ -9,7 +9,7 @@ const {
     expectValidCoordinates, 
     expectValidRgb,
     expectValidSize 
-} = require('../helpers/buttonAssertions');
+} = require('../../helpers/buttonAssertions');
 
 test.describe('QA Playground - Buttons Tests', () => {
 
