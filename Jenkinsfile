@@ -38,6 +38,12 @@ pipeline {
             ],
             description: 'Select Test Suite to run'
         )
+
+        string(
+            name: 'TAG',
+            defaultValue: '',
+            description: 'Playwright tag (@smoke, @regression, @positive, @negative)'
+        )
     }
 
     stages {
@@ -72,6 +78,7 @@ pipeline {
                         """
                             Browser: ${params.BROWSER}
                             Suite: ${params.TEST_SUITE}
+                            Tag: ${params.TAG}
                             Branch: ${env.GIT_BRANCH_NAME}
                             Commit: ${env.GIT_COMMIT_SHORT}
                         """
@@ -114,6 +121,10 @@ pipeline {
                             if (params.TEST_SUITE != 'all') {
                                 command += 
                                     " tests/${params.TEST_SUITE}"
+                            }
+                            if (params.TAG?.trim()) {
+                                command += 
+                                    " --grep ${params.TAG}"
                             }
                             echo "Executing: ${command}"
                             bat command
@@ -316,6 +327,7 @@ pipeline {
 
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
+                    🏷️ Tag: ${params.TAG ?: 'N/A'}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -346,6 +358,7 @@ pipeline {
 
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
+                    🏷️ Tag: ${params.TAG ?: 'N/A'}
 
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
@@ -378,7 +391,8 @@ pipeline {
 
                     🌐 Browser: ${params.BROWSER}
                     📁 Test Suite: ${params.TEST_SUITE}
-                    
+                    🏷️ Tag: ${params.TAG ?: 'N/A'}
+
                     📦 Repository: ${env.REPOSITORY_NAME}
                     🌿 Branch: ${env.GIT_BRANCH_NAME}
                     🚀 Trigger: ${env.BUILD_TRIGGER}
