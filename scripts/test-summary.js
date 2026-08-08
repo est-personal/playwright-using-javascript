@@ -66,40 +66,56 @@ function processSuite(suite) {
         // console.log('Test:', test.title);
         // console.log('Statuses:', statuses);
 
-        // const hasFailed = statuses.includes('failed');
-        // const hasPassed = statuses.includes('passed');
-
-        if (DEBUG) {
+        // if (DEBUG) {
           const statuses = 
             test.results?.map(r => r.status) || [];
-          console.log('Test:', test.title);
-          console.log('Statuses:', statuses);
+          const hasFailed = statuses.includes('failed');
+          const hasPassed = statuses.includes('passed');
+        //   console.log('Test:', test.title);
+        //   console.log('Statuses:', statuses);
+        //   console.log('Outcome:', test.outcome);
+        // }
+        // if (DEBUG) {
+        //   console.log(
+        //     JSON.stringify(test, null, 2)
+        //   );
+        //   process.exit(0);
+        // }
+        if (DEBUG) {
+          console.log('Title:', test.title);
           console.log('Outcome:', test.outcome);
+          console.log(
+            'Results:',
+            test.results?.map(r => r.status)
+          );
         }
 
-        // if (hasFailed && hasPassed) {
-        //   folders[folder].flaky++;
-        //   overall.flaky++;
-        // } else if (hasFailed) {
-        //   folders[folder].failed++;
-        //   overall.failed++;
-        // } else if (hasPassed) {
-        //   folders[folder].passed++;
-        //   overall.passed++;
-        // }
-        if (test.outcome === 'flaky') {
+        if (hasFailed && hasPassed) {
           folders[folder].flaky++;
           overall.flaky++;
-        } else if (test.outcome === 'unexpected') {
+        } else if (hasFailed) {
           folders[folder].failed++;
           overall.failed++;
-        } else if (test.outcome === 'expected') {
+        } else if (hasPassed) {
           folders[folder].passed++;
           overall.passed++;
         } else {
           folders[folder].skipped++;
           overall.skipped++;
         }
+        // if (test.outcome === 'flaky') {
+        //   folders[folder].flaky++;
+        //   overall.flaky++;
+        // } else if (test.outcome === 'unexpected') {
+        //   folders[folder].failed++;
+        //   overall.failed++;
+        // } else if (test.outcome === 'expected') {
+        //   folders[folder].passed++;
+        //   overall.passed++;
+        // } else {
+        //   folders[folder].skipped++;
+        //   overall.skipped++;
+        // }
       }
     }
   }
@@ -118,8 +134,8 @@ output += '📊 Overall Results\n';
 output += `🧪 Total: ${overall.total}\n`;
 output += `✅ Passed: ${overall.passed}\n`;
 output += `❌ Failed: ${overall.failed}\n`;
-output += `⚠️ Flaky: ${overall.flaky}\n\n`;
-output += `⏭️ Skipped: ${overall.skipped}\n`;
+output += `⚠️ Flaky: ${overall.flaky}\n`;
+output += `⏭️ Skipped: ${overall.skipped}\n\n`;
 const executed = 
   overall.passed + overall.failed + overall.flaky;
 const passRate =
