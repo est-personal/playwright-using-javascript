@@ -61,26 +61,11 @@ function processSuite(suite) {
         folders[folder].total++;
         overall.total++;
 
-        // console.log(JSON.stringify(test, null, 2));
-
-        // console.log('Test:', test.title);
-        // console.log('Statuses:', statuses);
-
-        // if (DEBUG) {
           const statuses = 
             test.results?.map(r => r.status) || [];
           const hasFailed = statuses.includes('failed');
           const hasPassed = statuses.includes('passed');
-        //   console.log('Test:', test.title);
-        //   console.log('Statuses:', statuses);
-        //   console.log('Outcome:', test.outcome);
-        // }
-        // if (DEBUG) {
-        //   console.log(
-        //     JSON.stringify(test, null, 2)
-        //   );
-        //   process.exit(0);
-        // }
+
         if (DEBUG) {
           console.log('Title:', test.title);
           console.log('Outcome:', test.outcome);

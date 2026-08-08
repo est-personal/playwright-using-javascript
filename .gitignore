@@ -7,3 +7,4 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 /dependency-versions.txt
+folder-summary.txt
