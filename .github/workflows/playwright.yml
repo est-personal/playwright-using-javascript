@@ -118,11 +118,8 @@ jobs:
                 🔗 PR:
                 ${{ github.event.pull_request.html_url }}
 
-                🔗 Workflow:
+                🔍 Workflow:
                 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-                🔍 View Report:
-                https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             }
 
       - name: Notify Slack Failure
@@ -149,11 +146,8 @@ jobs:
               🔗 PR:
               ${{ github.event.pull_request.html_url }}
 
-              🔗 Workflow:
+              🔍 Workflow:
               https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-              🔍 View Report:
-              https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             }
 
       - name: Fail Workflow If Tests Failed
