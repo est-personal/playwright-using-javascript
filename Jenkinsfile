@@ -13,6 +13,7 @@ ${status}
 📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
 🌐 Browser: ${params.BROWSER}
+🖥 Mode: ${params.HEAD_MODE}
 📁 Test Suite: ${params.TEST_SUITE}
 🏷️ Tag: ${params.TAG ?: 'N/A'}
 🔄 Retries: ${params.RETRIES}
@@ -62,6 +63,15 @@ pipeline {
                 'webkit'
             ],
             description: 'Select Playwright Browser to run tests'
+        )
+
+        choice(
+            name: 'HEAD_MODE',
+            choices: [
+                'headless',
+                'headed'
+            ],
+            description: 'Run Playwright in headless or headed mode'
         )
 
         choice(
@@ -125,6 +135,7 @@ pipeline {
                     currentBuild.description = 
                         """
                             Browser: ${params.BROWSER}
+                            Headed or Headless: ${params.HEAD_MODE}
                             Suite: ${params.TEST_SUITE}
                             Tag: ${params.TAG}
                             Branch: ${env.GIT_BRANCH_NAME}
@@ -206,6 +217,10 @@ pipeline {
                                 command +=
                                     " --project=${params.BROWSER}"
                             }
+                            if (params.HEAD_MODE == 'headed') {
+                                command += 
+                                    " --headed"
+                            }
                             if (params.TEST_SUITE != 'all') {
                                 command += 
                                     " tests/${params.TEST_SUITE}"
@@ -214,7 +229,13 @@ pipeline {
                                 command += 
                                     " --grep ${params.TAG}"
                             }
-                            command += " --workers=${params.WORKERS}"
+                            if (params.HEAD_MODE == 'headed') {
+                                command += 
+                                    " --workers=1"
+                            } else {
+                                command += 
+                                    " --workers=${params.WORKERS}"
+                            }
                             command += " --retries=${params.RETRIES}"
                             echo "Executing: ${command}"
                             bat command
