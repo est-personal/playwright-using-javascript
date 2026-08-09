@@ -399,10 +399,7 @@ pipeline {
 
                     env.TOTAL_TESTS =
                         (
-                            results.stats.expected +
-                            results.stats.unexpected +
-                            results.stats.flaky +
-                            results.stats.skipped
+                            passed + failed + flaky + skipped
                         ).toString()
 
                     echo """
@@ -503,14 +500,14 @@ pipeline {
         //     }
         // }
 
-        stage('Debug JSON') {
-            steps {
-                script {
-                    def results = readJSON file: 'test-results/results.json'
-                    echo "Stats = ${results.stats}"
-                }
-            }
-        }
+        // stage('Debug JSON') {
+        //     steps {
+        //         script {
+        //             def results = readJSON file: 'test-results/results.json'
+        //             echo "Stats = ${results.stats}"
+        //         }
+        //     }
+        // }
 
         stage ('Verify Report') {
             steps {
