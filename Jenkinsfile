@@ -13,6 +13,7 @@ ${status}
 📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
 
 🌐 Browser: ${params.BROWSER}
+⚙️ Execution Mode: ${params.EXECUTION_MODE}
 🖥 Mode: ${params.HEAD_MODE}
 📁 Test Suite: ${params.TEST_SUITE}
 🏷️ Tag: ${params.TAG ?: 'N/A'}
@@ -63,6 +64,15 @@ pipeline {
                 'webkit'
             ],
             description: 'Select Playwright Browser to run tests'
+        )
+
+        choice(
+            name: 'EXECUTION_MODE',
+            choices: [
+                'sequential',
+                'parallel'
+            ],
+            description: 'Execution strategy when BROWSER=all'
         )
 
         choice(
@@ -135,6 +145,7 @@ pipeline {
                     currentBuild.description = 
                         """
                             Browser: ${params.BROWSER}
+                            Execution: ${params.EXECUTION_MODE}
                             Headed or Headless: ${params.HEAD_MODE}
                             Suite: ${params.TEST_SUITE}
                             Tag: ${params.TAG}
@@ -204,43 +215,123 @@ pipeline {
             }
         }
 
+        // stage('Run Playwright Tests') {
+        //     steps {
+        //         catchError(
+        //                 buildResult: 'UNSTABLE', 
+        //                 stageResult: 'FAILURE'
+        //             ) {
+        //                 script {
+        //                     def command =
+        //                         'npx playwright test'
+        //                     if (params.BROWSER != 'all') {
+        //                         command +=
+        //                             " --project=${params.BROWSER}"
+        //                     }
+        //                     if (params.HEAD_MODE == 'headed') {
+        //                         command += 
+        //                             " --headed"
+        //                     }
+        //                     if (params.TEST_SUITE != 'all') {
+        //                         command += 
+        //                             " tests/${params.TEST_SUITE}"
+        //                     }
+        //                     if (params.TAG?.trim()) {
+        //                         command += 
+        //                             " --grep ${params.TAG}"
+        //                     }
+        //                     if (params.HEAD_MODE == 'headed') {
+        //                         command += 
+        //                             " --workers=1"
+        //                     } else {
+        //                         command += 
+        //                             " --workers=${params.WORKERS}"
+        //                     }
+        //                     command += " --retries=${params.RETRIES}"
+        //                     echo "Executing: ${command}"
+        //                     bat command
+        //                 }
+        //             }
+        //     }
+        // }
         stage('Run Playwright Tests') {
             steps {
                 catchError(
-                        buildResult: 'UNSTABLE', 
-                        stageResult: 'FAILURE'
-                    ) {
-                        script {
-                            def command =
-                                'npx playwright test'
+                    buildResult: 'UNSTABLE',
+                    stageResult: 'FAILURE'
+                ) {
+                    script {
+                        if (
+                            params.BROWSER == 'all' &&
+                            params.EXECUTION_MODE == 'parallel'
+                        ) {
+                            echo "Running browsers in parallel"
+                            parallel(
+                                Chromium: {
+                                    withEnv([
+                                        'PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/chromium/results.json',
+                                        'PLAYWRIGHT_JUNIT_OUTPUT_NAME=test-results/chromium/results.xml'
+                                    ]) {
+                                    bat """
+                                        npx playwright test ^
+                                        --project=chromium ^
+                                        --workers=${params.WORKERS} ^
+                                        --retries=${params.RETRIES}
+                                    """
+                                    }
+                                },
+                                Firefox: {
+                                    withEnv([
+                                        'PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/firefox/results.json',
+                                        'PLAYWRIGHT_JUNIT_OUTPUT_NAME=test-results/firefox/results.xml'
+                                    ]) {
+                                    bat """
+                                        npx playwright test ^
+                                        --project=firefox ^
+                                        --workers=${params.WORKERS} ^
+                                        --retries=${params.RETRIES}
+                                    """
+                                    }
+                                },
+                                Webkit: {
+                                    withEnv([
+                                        'PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/webkit/results.json',
+                                        'PLAYWRIGHT_JUNIT_OUTPUT_NAME=test-results/webkit/results.xml'
+                                    ]) {
+                                    bat """
+                                        npx playwright test ^
+                                        --project=webkit ^
+                                        --workers=${params.WORKERS} ^
+                                        --retries=${params.RETRIES}
+                                    """
+                                    }
+                                }
+                            )
+                        } else {
+                            def command = 'npx playwright test'
                             if (params.BROWSER != 'all') {
-                                command +=
-                                    " --project=${params.BROWSER}"
+                                command += " --project=${params.BROWSER}"
                             }
                             if (params.HEAD_MODE == 'headed') {
-                                command += 
-                                    " --headed"
+                                command += " --headed"
                             }
                             if (params.TEST_SUITE != 'all') {
-                                command += 
-                                    " tests/${params.TEST_SUITE}"
+                                command += " tests/${params.TEST_SUITE}"
                             }
                             if (params.TAG?.trim()) {
-                                command += 
-                                    " --grep ${params.TAG}"
+                                command += " --grep ${params.TAG}"
                             }
                             if (params.HEAD_MODE == 'headed') {
-                                command += 
-                                    " --workers=1"
+                                command += " --workers=1"
                             } else {
-                                command += 
-                                    " --workers=${params.WORKERS}"
+                                command += " --workers=${params.WORKERS}"
                             }
                             command += " --retries=${params.RETRIES}"
                             echo "Executing: ${command}"
                             bat command
                         }
                     }
+                }
             }
         }
 
@@ -248,12 +339,63 @@ pipeline {
         stage('Get Test Summary') {
             steps {
                 script {
-                    def results = readJSON file: 'test-results/results.json'
+                    int passed = 0
+                    int failed = 0
+                    int flaky = 0
+                    int skipped = 0
 
-                    env.PASSED_TESTS = results.stats.expected.toString()
-                    env.FAILED_TESTS = results.stats.unexpected.toString()
-                    env.FLAKY_TESTS = results.stats.flaky.toString()
-                    env.SKIPPED_TESTS = results.stats.skipped.toString()
+                    def jsonFiles = findFiles(
+                        glob: 'test-results/**/results.json'
+                    )
+
+                    // Fallback for sequential run
+                    if (jsonFiles.size() == 0 &&
+                        fileExists('test-results/results.json')) {
+                        jsonFiles = [
+                            [path: 'test-results/results.json']
+                        ]
+                    }
+
+                    if (jsonFiles.size() == 0) { 
+                        echo 'No results.json files found'
+                        env.TOTAL_TESTS = '0'
+                        env.PASSED_TESTS = '0'
+                        env.FAILED_TESTS = '0'
+                        env.FLAKY_TESTS = '0'
+                        env.SKIPPED_TESTS = '0'
+                        return
+                    }
+
+                    jsonFiles.each { file -> 
+                        echo "Reading: ${file.path}"
+                        def results = readJSON file: file.path
+                        passed += (results.stats.expected ?: 0)
+                        failed += (results.stats.unexpected ?: 0)
+                        flaky += (results.stats.flaky ?: 0)
+                        skipped += (results.stats.skipped ?: 0)
+                    }
+
+                    env.PASSED_TESTS = passed.toString()
+                    env.FAILED_TESTS = failed.toString()
+                    env.FLAKY_TESTS = flaky.toString()
+                    env.SKIPPED_TESTS = skipped.toString()
+
+                    // env.PASSED_TESTS = results.stats.expected.toString()
+                    // env.FAILED_TESTS = results.stats.unexpected.toString()
+                    // env.FLAKY_TESTS = results.stats.flaky.toString()
+                    // env.SKIPPED_TESTS = results.stats.skipped.toString()
+
+                    // env.TOTAL_TESTS =
+                    // (
+                    //     passed + failed + flaky + skipped
+                    // ).toString()
+
+                    // def results = readJSON file: 'test-results/results.json'
+
+                    // env.PASSED_TESTS = results.stats.expected.toString()
+                    // env.FAILED_TESTS = results.stats.unexpected.toString()
+                    // env.FLAKY_TESTS = results.stats.flaky.toString()
+                    // env.SKIPPED_TESTS = results.stats.skipped.toString()
 
                     env.TOTAL_TESTS =
                         (
@@ -263,11 +405,21 @@ pipeline {
                             results.stats.skipped
                         ).toString()
 
-                    echo "Total: ${env.TOTAL_TESTS}"
-                    echo "Passed: ${env.PASSED_TESTS}"
-                    echo "Failed: ${env.FAILED_TESTS}"
-                    echo "Flaky: ${env.FLAKY_TESTS}"
-                    echo "Skipped: ${env.SKIPPED_TESTS}"
+                    echo """
+                    ==============================
+                    Total : ${env.TOTAL_TESTS}
+                    Passed : ${env.PASSED_TESTS}
+                    Failed : ${env.FAILED_TESTS}
+                    Flaky : ${env.FLAKY_TESTS}
+                    Skipped : ${env.SKIPPED_TESTS}
+                    ==============================
+                    """
+
+                    // echo "Total: ${env.TOTAL_TESTS}"
+                    // echo "Passed: ${env.PASSED_TESTS}"
+                    // echo "Failed: ${env.FAILED_TESTS}"
+                    // echo "Flaky: ${env.FLAKY_TESTS}"
+                    // echo "Skipped: ${env.SKIPPED_TESTS}"
                 }
             }
         }
@@ -379,7 +531,7 @@ pipeline {
         always {
             junit (
                 allowEmptyResults: true,
-                testResults: 'test-results/results.xml',
+                testResults: 'test-results/**/*.xml',
                 // testResults: '**/results.xml'
                 healthScaleFactor: 1.0
             )

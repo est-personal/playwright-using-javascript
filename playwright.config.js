@@ -25,9 +25,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['line'],
-    ['json', { outputFile: 'test-results/results.json' }],
+    ['json', { outputFile: process.env.PLAYWRIGHT_JSON_OUTPUT_NAME || 'test-results/results.json'}],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
-    ['junit', { outputFile: 'test-results/results.xml' }],
+    ['junit', { outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT_NAME || 'test-results/results.xml' }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -45,16 +45,19 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      outputDir: 'test-results/chromium',
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      outputDir: 'test-results/firefox',
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      outputDir: 'test-results/webkit',
     },
 
     /* Test against mobile viewports. */
