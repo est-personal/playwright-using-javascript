@@ -1,3 +1,40 @@
+def sendSlackNotification(color, status) {
+    slackSend(
+        color: color,
+        message: """
+${status}
+
+🧪 Total: ${env.TOTAL_TESTS}
+✅ Passed: ${env.PASSED_TESTS}
+❌ Failed: ${env.FAILED_TESTS}
+⚠️ Flaky: ${env.FLAKY_TESTS}
+⏭ Skipped: ${env.SKIPPED_TESTS}
+
+📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
+
+🌐 Browser: ${params.BROWSER}
+📁 Test Suite: ${params.TEST_SUITE}
+🏷️ Tag: ${params.TAG ?: 'N/A'}
+🔄 Retries: ${params.RETRIES}
+👷 Workers: ${params.WORKERS}
+
+👨 Author: ${env.GIT_AUTHOR}
+📧 Email: ${env.GIT_EMAIL}
+📦 Repository: ${env.REPOSITORY_NAME}
+🌿 Branch: ${env.GIT_BRANCH_NAME}
+🚀 Trigger: ${env.BUILD_TRIGGER}
+🏗 Job: ${env.JOB_NAME}
+🔢 Build: #${env.BUILD_NUMBER}
+📝 Commit: ${env.GIT_COMMIT_SHORT}
+📄 Message: ${env.GIT_COMMIT_MESSAGE}
+🔀 PR: ${env.CHANGE_ID}
+
+⏱ Duration: ${currentBuild.durationString}
+🔗 Build URL: ${env.BUILD_URL}
+        """
+    )
+}
+
 pipeline {
     agent any
 
@@ -94,6 +131,46 @@ pipeline {
                             Commit: ${env.GIT_COMMIT_SHORT}
                         """
                 }
+            }
+        }
+
+        stage('Validate Parameters') {
+            steps {
+                script {
+                    if (!params.RETRIES.isInteger()) {
+                        error("RETRIES must be a number")
+                    }
+                    if (!params.WORKERS.isInteger()) {
+                        error("WORKERS must be a number")
+                    }
+                    if (params.TAG && !params.TAG.startsWith('@')) {
+                        error("TAG must start with @")
+                    }
+                }
+            }
+        }
+
+        stage('Git Information') {
+            steps {
+                script {
+                    env.GIT_AUTHOR = bat(
+                        script: '@git log -1 --pretty^=%%an',
+                        returnStdout: true
+                    ).trim()
+
+                    env.GIT_EMAIL = bat(
+                        script: '@git log -1 --pretty^=%%ae',
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+
+        stage('Environment Info') {
+            steps {
+                bat 'systeminfo | findstr /B /C:"OS Name" /C:"OS Version"'
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
@@ -303,6 +380,13 @@ pipeline {
                     🌿 ${env.GIT_BRANCH_NAME}
                     📝 ${env.GIT_COMMIT_SHORT}
                 """
+                currentBuild.description = """
+                🧪 Total: ${env.TOTAL_TESTS}
+                ✅ Passed: ${env.PASSED_TESTS}
+                ❌ Failed: ${env.FAILED_TESTS}
+                ⚠️ Flaky: ${env.FLAKY_TESTS}
+                ⏭ Skipped: ${env.SKIPPED_TESTS}
+                """
             }
 
             publishHTML([
@@ -315,117 +399,43 @@ pipeline {
             ])
 
             archiveArtifacts(
-                // artifacts: '''
-                //     playwright-report/**,
-                //     test-results/**,
-                // '''.trim(),
-                artifacts: 'playwright-report/**,test-results/**',
+                artifacts: '''
+                    playwright-report/**,
+                    test-results/**,
+                    test-results/**/*.png,
+                    test-results/**/*.zip
+                '''.trim(),
+                // artifacts: 'playwright-report/**,test-results/**',
                 allowEmptyArchive: true
             )
 
         }
 
         success {
-            slackSend(
-                color: 'good',
-                message: """
-                    🟢 PLAYWRIGHT TESTS PASSED
-                    🧪 Total: ${env.TOTAL_TESTS}
-                    ✅ Passed: ${env.PASSED_TESTS}
-                    ❌ Failed: ${env.FAILED_TESTS}
-                    ⚠️ Flaky: ${env.FLAKY_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
-
-                    📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
-
-                    🌐 Browser: ${params.BROWSER}
-                    📁 Test Suite: ${params.TEST_SUITE}
-                    🏷️ Tag: ${params.TAG ?: 'N/A'}
-                    🔄 Retries: ${params.RETRIES}
-                    👷 Workers: ${params.WORKERS}
-
-                    📦 Repository: ${env.REPOSITORY_NAME}
-                    🌿 Branch: ${env.GIT_BRANCH_NAME}
-                    🚀 Trigger: ${env.BUILD_TRIGGER}
-                    🏗 Job: ${env.JOB_NAME}
-                    🔢 Build: #${env.BUILD_NUMBER}
-                    📝 Commit: ${env.GIT_COMMIT_SHORT}
-                    📄 Message: ${env.GIT_COMMIT_MESSAGE}
-                    🔀 PR: ${env.CHANGE_ID}
-
-                    ⏱ Duration: ${currentBuild.durationString}
-
-                    🔗 Build URL: ${env.BUILD_URL}
-                """
-            )
+            script{
+                sendSlackNotification(
+                    'good',
+                    '🟢 PLAYWRIGHT TESTS PASSED'
+                )
+            }
         }
 
         failure {
-            slackSend(
-                color: 'danger',
-                message: """
-                    🔴 PLAYWRIGHT TESTS FAILED
-                    🧪 Total: ${env.TOTAL_TESTS}
-                    ✅ Passed: ${env.PASSED_TESTS}
-                    ❌ Failed: ${env.FAILED_TESTS}
-                    ⚠️ Flaky: ${env.FLAKY_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
-
-                    🌐 Browser: ${params.BROWSER}
-                    📁 Test Suite: ${params.TEST_SUITE}
-                    🏷️ Tag: ${params.TAG ?: 'N/A'}
-                    🔄 Retries: ${params.RETRIES}
-                    👷 Workers: ${params.WORKERS}
-
-                    📦 Repository: ${env.REPOSITORY_NAME}
-                    🌿 Branch: ${env.GIT_BRANCH_NAME}
-                    🚀 Trigger: ${env.BUILD_TRIGGER}
-                    🏗 Job: ${env.JOB_NAME}
-                    🔢 Build: #${env.BUILD_NUMBER}
-                    📝 Commit: ${env.GIT_COMMIT_SHORT}
-                    📄 Message: ${env.GIT_COMMIT_MESSAGE}
-                    🔀 PR: ${env.CHANGE_ID}
-
-                    ⏱ Duration: ${currentBuild.durationString}
-
-                    🔗 Build URL: ${env.BUILD_URL}
-                """
-            )
+            script{
+                sendSlackNotification(
+                    'danger',
+                    '🔴 PLAYWRIGHT TESTS FAILED'
+                )
+            }
         }
 
         unstable {
-            slackSend(
-                color: 'warning',
-                message: """
-                    🟡 PLAYWRIGHT TESTS COMPLETED WITH FAILURES
-                    🧪 Total: ${env.TOTAL_TESTS}
-                    ✅ Passed: ${env.PASSED_TESTS}
-                    ❌ Failed: ${env.FAILED_TESTS}
-                    ⚠️ Flaky: ${env.FLAKY_TESTS}
-                    ⏭ Skipped: ${env.SKIPPED_TESTS}
-
-                    📊 Playwright Report: ${env.BUILD_URL}Playwright_Report/
-
-                    🌐 Browser: ${params.BROWSER}
-                    📁 Test Suite: ${params.TEST_SUITE}
-                    🏷️ Tag: ${params.TAG ?: 'N/A'}
-                    🔄 Retries: ${params.RETRIES}
-                    👷 Workers: ${params.WORKERS}
-
-                    📦 Repository: ${env.REPOSITORY_NAME}
-                    🌿 Branch: ${env.GIT_BRANCH_NAME}
-                    🚀 Trigger: ${env.BUILD_TRIGGER}
-                    🏗 Job: ${env.JOB_NAME}
-                    🔢 Build: #${env.BUILD_NUMBER}
-                    📝 Commit: ${env.GIT_COMMIT_SHORT}
-                    📄 Message: ${env.GIT_COMMIT_MESSAGE}
-                    🔀 PR: ${env.CHANGE_ID}
-
-                    ⏱ Duration: ${currentBuild.durationString}
-
-                    🔗 Build URL: ${env.BUILD_URL}
-                """
-            )
+            script{
+                sendSlackNotification(
+                    'warning',
+                    '🟡 PLAYWRIGHT TESTS COMPLETED WITH FAILURES'
+                )
+            }
         }
     }
 }
