@@ -1,9 +1,33 @@
 # Playwright Using JavaScript
 
+![Playwright](https://img.shields.io/badge/Playwright-Automation-green)
+![JavaScript](https://img.shields.io/badge/JavaScript-Framework-yellow)
+![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-blue)
+![Jenkins](https://img.shields.io/badge/CD-Jenkins-red)
+
 UI Test Automation Framework built using Playwright and JavaScript.
 
-## Features
+---
 
+## Overview
+This project demonstrates a scalable UI test automation framework built using Playwright and JavaScript. It follows the Page Object Model (POM) design pattern, supports cross-browser execution, integrates with GitHub Actions and Jenkins for CI/CD, and provides automated Slack notifications and detailed reporting.
+
+---
+
+## Table of Contents
+- #overview
+- #features
+- #project-structure
+- #prerequisites
+- [Installation](#installations
+- [CI/CD Workflow- #slack-notifications
+- #test-result-classification
+- #reports
+- [Future Enhancements](#future
+
+---
+
+## Features
 - Playwright Test Runner
 - Page Object Model (POM)
 - Data-Driven Testing
@@ -20,17 +44,93 @@ UI Test Automation Framework built using Playwright and JavaScript.
 - Test Result Summary by Test File
 
 ---
+
+## Project Structure
+```text
+playwright-using-javascript/
+├── .github/
+│   └── workflows/
+├── pages/
+│   ├── LoginPage.js
+│   └── HomePage.js
+├── tests/
+│   ├── forms/
+│   ├── buttons/
+│   ├── dropdowns/
+│   └── inputFields/
+├── testData/
+├── utils/
+├── test-results/
+├── playwright-report/
+├── playwright.config.js
+├── Jenkinsfile
+└── package.json
+```
+
+---
+
+## Prerequisites
+Check if the following are installed on your machine:
+```bash
+node -v
+npm -v
+git --version
+```
+
+---
+
+## Installation
+Clone the repository and install dependencies:
+```bash
+git clone <repository-url>
+cd playwright-using-javascript
+npm install
+npx playwright install
+```
+
+---
+
+## Running Tests
+The following commands can be used to execute tests:
+
+### Run All Tests:
+```bash
+npx playwright test
+```
+### Run in Specific Browser:
+```bash
+npx playwright test --project=chromium
+npx playwright test --project=firefox 
+npx playwright test --project=webkit
+```
+### Run a Specific Test:
+```bash
+npx playwright test tests/forms/sample.spec.js
+```
+### Run by Tag:
+```bash
+npx playwright test --grep "@smoke"
+```
+### Headed Run:
+```bash
+npx playwright test --headed
+```
+### Parallel Execution:
+```bash
+npx playwright test --workers=4
+```
+
 ---
 
 ## CI/CD Workflow
 
-### Github Actions
+### GitHub Actions
 The GitHub Actions workflow automatically:
 1. Checkout Repository
 2. Setup Node.js
 3. Cache Playwright Browsers
-4. Installs dependencies
-5. Installs Playwright browsers
+4. Install Dependencies
+5. Install Playwright browsers
 6. Record Start Time
 7. Run Playwright tests
 8. Verify Playwright JSON Report
@@ -38,15 +138,13 @@ The GitHub Actions workflow automatically:
 10. Read Folder Summary
 11. Calculate Duration
 12. Upload Playwright Report
-13. Sends Slack notifications for successful and failed runs
-
----
+13. Send Slack Notifications for successful and failed runs
 
 ### Jenkins Pipeline
-The Jenkins automatically creates build once PR is merged (make sure ngrok is active)
-It automatically builds:
-1. cleans workspace
-2. Checkout latest source code
+Jenkins automatically triggers a build once a Pull Request is merged (ensure ngrok is active).
+The pipeline performs the following steps:
+1. Cleans Workspace
+2. Checkout Latest Source Code
 3. Validate Parameters
 4. Git Information
 5. Environment Information
@@ -57,8 +155,8 @@ It automatically builds:
 10. Get Test Summary
 11. Verify Report
 12. Verify Test Report
-13. Archive Artifiacts
-14. Sends Slack notifications for successful and failed runs
+13. Archive Artifacts
+14. Send Slack Notifications for successful and failed runs
 
 Pipeline Parameters:
 - Browser
@@ -70,13 +168,11 @@ Pipeline Parameters:
 - Workers
 
 ---
----
 
 ## Slack Notifications
-
 A Slack notification is sent after every workflow execution.
 
-### Github Actions Included Information
+### GitHub Actions Included Information
 - Run Status
 - Repository Name
 - Overall Result
@@ -95,8 +191,6 @@ A Slack notification is sent after every workflow execution.
 - Duration
 - PR Link
 - Workflow Link
-
----
 
 ### Jenkins Included Information
 - Run Status
@@ -118,27 +212,25 @@ A Slack notification is sent after every workflow execution.
 - Repository Name
 - Branch
 - Trigger (started by)
-- Job (Jekins Job name)
+- Job (Jenkins job name)
 - Build #
 - Pull Request Details (Commit, Message, author)
 - Duration
 - Build Link
 
----
-
 ### Sample Output
 
 GITHUB ACTIONS
 ```text
-❌ Playwright Tests Passed
+✅ Playwright Tests Passed
 📦 Repository: est-personal/playwright-using-javascript
 📊 Overall Results 🧪 Total:336 ✅ Passed: 331 ❌ Failed: 0 ⚠️ Flaky: 5 ⏭️ Skipped:0 
 📁 forms 🧪 Total:123 ✅ Passed: 119 ❌ Failed: 0 ⚠️ Flaky: 4 ⏭️ Skipped:0 
 📁 dropdowns 🧪 Total:63 ✅ Passed: 63 ❌ Failed: 0 ⚠️ Flaky: 0 ⏭️ Skipped:0 
 📁 buttons 🧪 Total:99 ✅ Passed: 99 ❌ Failed: 0 ⚠️ Flaky: 0 ⏭️ Skipped:0 
-📁 inputFields 🧪 Total:51 ✅ Passed: 5 ❌ Failed: 0 ⚠️ Flaky: 1 ⏭️ Skipped:0 
+📁 inputFields 🧪 Total:51 ✅ Passed: 50 ❌ Failed: 0 ⚠️ Flaky: 1 ⏭️ Skipped:0 
 🔀 PR: 172 📝 Title: Fix Jenkinsfile as build failed after merging of Parallel Execution Parameter 👤 Author: est-personal 🌿 Branch: item-AUTOMATION-122-140
-⏱ Duration: 8m 19s seconds
+⏱ Duration: 8m 19s
 🔗 PR: https://github.com/est-personal/playwright-using-javascript/pull/172
 🔍 Workflow: https://github.com/est-personal/playwright-using-javascript/actions/runs/31337602104
 ```
@@ -173,65 +265,28 @@ JENKINS
 🔗 Build URL: http://localhost:8080/job/Test%20Automation%20Project%20-%20Playwright%20JavaScript/47/
 ```
 
-❌ Playwright Tests Failed
-📦 Repository: playwright-using-javascript
-
-📁 buttons
-🧪 Total: 99
-✅ Passed: 98
-❌ Failed: 1
-⚠️ Flaky: 0
-
-📁 dropdowns
-🧪 Total: 63
-✅ Passed: 63
-❌ Failed: 0
-⚠️ Flaky: 0
-
-📁 forms
-🧪 Total: 104
-✅ Passed: 102
-❌ Failed: 0
-⚠️ Flaky: 2
-
-📁 inputFields
-🧪 Total: 54
-✅ Passed: 54
-❌ Failed: 0
-⚠️ Flaky: 0
-
-🔀 PR #149
-📝 Title: Add Playwright Test Summary Notification
-👤 Author: est-personal
-🌿 Branch: item-AUTOMATION-124-147
-
-⏱ Duration: 505 seconds
-```
-
----
 ---
 
 ## Test Result Classification
-
 | Status | Description |
 |----------|-------------|
+| 🧪 Total | Total test cases executed per test file |
 | ✅ Passed | Test passed successfully |
 | ❌ Failed | Test failed after all retry attempts |
 | ⚠️ Flaky | Test failed initially but passed on retry |
-| 🧪 Total | Total test cases executed per test file |
+| ⏭ Skipped | Tests not run |
 
 ---
 
 ## Reports
 
 ### HTML Report
-
+> 📸 HTML Report screenshot will be added soon.
 ```bash
 npx playwright show-report
 ```
 
 ### Generated Files
-
 ```text
 playwright-report/
 test-results/results.json
@@ -241,35 +296,21 @@ folder-summary.txt
 
 ---
 
-## Recent Enhancements
+## Future Enhancements
+- Allure Reporting
+- Docker Integration
+- Azure DevOps Pipeline
+- Email Notifications
+- Test Dashboard
+- API Automation Coverage
 
-### Slack Notification Improvements
+---
 
-- Added per-file test execution summary
-- Added test count per file
-- Added flaky test reporting
-- Added execution duration
-- Added PR information in Slack alerts
-- Added workflow URL in Slack alerts
-- Improved Slack message formatting
+## Author
 
-### Qase Removal
+**Esteen Valdez**
+QA Automation Consultant
 
-Qase TestOps integration has been removed from the framework.
+GitHub: https://github.com/est-personal
 
-Removed items:
-
-- Qase Playwright Reporter
-- Qase API Token dependency
-- Qase Project Code dependency
-- Qase GitHub Actions configuration
-- Qase Jenkins configuration
-
-The framework now uses:
-
-- Playwright Reports
-- GitHub Actions
-- Jenkins
-- Slack Notifications
-
-for test execution and reporting.
+---
