@@ -121,7 +121,7 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
+        stage('Checkout Latest Source Code') {
             steps {
                 checkout scm
                 script {
@@ -188,7 +188,7 @@ pipeline {
             }
         }
 
-        stage('Environment Info') {
+        stage('Environment Information') {
             steps {
                 bat 'systeminfo | findstr /B /C:"OS Name" /C:"OS Version"'
                 bat 'node -v'
@@ -196,7 +196,7 @@ pipeline {
             }
         }
 
-        stage('Verify Tools') {
+        stage('Verify Required Tools Installed') {
             steps {
                 bat 'node -v'
                 bat 'npm -v'
