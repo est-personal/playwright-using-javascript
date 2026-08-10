@@ -519,9 +519,6 @@ pipeline {
             steps {
                 bat '''
                     dir test-results /s
-                    type test-results\\chromium\\results.xml
-                    type test-results\\firefox\\results.xml
-                    type test-results\\webkit\\results.xml
                 '''
                 // bat 'type test-results\\results.xml'
             }
