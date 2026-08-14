@@ -2,6 +2,8 @@
 const QaPlaygroundUrls = {
     buttonsPage:
         'https://qaplayground.com/practice/buttons',
+    dataTablesPage:
+        'https://qaplayground.com/practice/data-table',
     dropdownsPage:
         'https://qaplayground.com/practice/dropdowns',
     formsPage:
