@@ -5,6 +5,20 @@ on:
     branches:
       - main
 
+  # Manual Trigger
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser to run
+        required: true
+        default: chromium
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
+
 # Concurrency control
 concurrency:
   group: playwright-${{ github.workflow }}-${{ github.ref }}
@@ -51,7 +65,16 @@ jobs:
       - name: Run Playwright Tests
         id: tests
         continue-on-error: true
-        run: npx playwright test --project=chromium
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            npx playwright test --project=chromium
+          else
+            if [ "${{ inputs.browser }}" = "all" ]; then
+              npx playwright test
+            else
+              npx playwright test --project=${{ inputs.browser }}
+            fi
+          fi
 
       - name: Verify Playwright JSON Report
         if: always()
