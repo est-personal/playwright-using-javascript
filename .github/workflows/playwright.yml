@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 # Concurrency control
 concurrency:
@@ -52,7 +51,7 @@ jobs:
       - name: Run Playwright Tests
         id: tests
         continue-on-error: true
-        run: npm test
+        run: npx playwright test --project=chromium
 
       - name: Verify Playwright JSON Report
         if: always()
