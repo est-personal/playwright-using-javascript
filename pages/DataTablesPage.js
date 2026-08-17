@@ -25,6 +25,21 @@ class DataTablesPage {
         this.bookPublishedHeader = page.locator(
             DataTablesLocators.bookPublishedColumn
         );
+        this.editAuthorInput = page.locator(
+            DataTablesLocators.editBookModalAuthorInput
+        );
+        this.editBookNameInput = page.locator(
+            DataTablesLocators.editBookModalBookNameInput
+        );
+        this.editAuthorInput = page.locator(
+            DataTablesLocators.editBookModalAuthorInput
+        );
+        this.editIsbnInput = page.locator(
+            DataTablesLocators.editBookModalIsbnInput
+        );
+        this.editPublishedInput = page.locator(
+            DataTablesLocators.editBookModalPublishedInput
+        );
             
     }
 
@@ -49,6 +64,55 @@ class DataTablesPage {
         await this.page
             .locator(
                 DataTablesLocators.addNewBookModalCancelButton
+            )
+            .click();
+    }
+
+    async clickDeleteBookModalCancelButton() {
+        await this.page
+            .locator(
+                DataTablesLocators.deleteBookModalCancelButton
+            ).click();
+    }
+
+    async clickDeleteBookModalDeleteButton() {
+        await this.page
+            .locator(
+                'button[aria-label^="Confirm delete"]'
+            ).click();
+    }
+
+    async clickDeleteButton(bookName) {
+        const row = this.page.locator(
+            DataTablesLocators.interactiveTableRow
+        ).filter({ 
+            hasText: bookName 
+        });
+        await row.getByRole('button', { 
+            name: /delete/i 
+        }).click();
+    }
+
+    async clickEditBookModalCancelButton() {
+        await this.page
+            .locator(
+                DataTablesLocators.editBookModalCancelButton
+            )
+            .click();
+    }
+
+    async clickEditBookModalSaveChangesButton() {
+        await this.page
+            .locator(
+                DataTablesLocators.editBookModalSaveChangesButton
+            )
+            .click();
+    }
+
+    async clickEditButton() {
+        await this.page
+            .locator(
+                DataTablesLocators.editButton
             )
             .click();
     }
@@ -115,6 +179,26 @@ class DataTablesPage {
                 DataTablesLocators.searchBooksField
             )
             .fill(bookName);
+    }
+
+    async enterEditBookModalAuthorField(author) {
+        await this.editAuthorInput.clear();
+        await this.editAuthorInput.fill(author);
+    }
+
+    async enterEditBookModalBookNameField(bookName) {
+        await this.editBookNameInput.clear();
+        await this.editBookNameInput.fill(bookName);
+    }
+
+    async enterEditBookModalIsbnField(isbn) {
+        await this.editIsbnInput.clear();
+        await this.editIsbnInput.fill(isbn);
+    }
+
+    async enterEditBookModalPublishedField(published) {
+        await this.editPublishedInput.clear();
+        await this.editPublishedInput.fill(published);
     }
 
     async enterNewBookDetails(book) {
@@ -216,6 +300,13 @@ class DataTablesPage {
         return match ? Number(match[1]) : null;
     }
 
+    async getDeleteBookModalMessageText() {
+        return (
+            await this.getDeleteBookModalMessage()
+                .innerText()
+        ).trim();
+    }
+
     async getGenreOptions() {
         return await this.getGenreDropdown()
         .locator('option')
@@ -297,6 +388,15 @@ class DataTablesPage {
         });
     }
 
+    async selectEditBookModalGenre(genre) {
+        const dropdown = this.page.locator(
+            DataTablesLocators.editBookModalGenreDropdown
+        );
+        await dropdown.selectOption({ 
+            value: genre 
+        });
+    }
+
     async selectGenre(genre) {
         const dropdown = this.page.locator(
             DataTablesLocators.allGenresDropdown
@@ -349,6 +449,14 @@ class DataTablesPage {
     async sortBookPublishedDescending() {
         await this.bookPublishedHeader.click();
         await this.bookPublishedHeader.click();
+    }
+
+    async updateBookDetails(book) {
+        await this.enterEditBookModalBookNameField(book.bookName);
+        await this.enterEditBookModalAuthorField(book.author);
+        await this.selectEditBookModalGenre(book.genre);
+        await this.enterEditBookModalIsbnField(book.isbn);
+        await this.enterEditBookModalPublishedField(book.published);
     }
 
     // Sync
@@ -419,6 +527,32 @@ class DataTablesPage {
         return this.page
             .locator(
                 DataTablesLocators.bookPublishedColumn
+        );
+    }
+
+    getDeleteBookModalBookName() {
+        return this.page.getByTestId(
+            'delete-dialog-book-name'
+        );
+    }
+
+    getDeleteBookModalTitle() {
+        return this.page
+            .locator(
+                DataTablesLocators.deleteBookModalTitle
+        );
+    }
+
+    getDeleteBookModalMessage() {
+        return this.page
+            .getByTestId('delete-dialog-book-name')
+            .locator('..');
+    }
+
+    getEditBookModalTitle() {
+        return this.page
+            .locator(
+                DataTablesLocators.editBookModalTitle
         );
     }
 
