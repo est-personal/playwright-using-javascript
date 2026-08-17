@@ -1,5 +1,8 @@
 name: Playwright Tests - Github Actions
 
+env:
+  CI: true
+
 on:
   pull_request:
     branches:
@@ -31,8 +34,20 @@ concurrency:
 
 jobs:
   test:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 30     # Job timeout
+
+    # ### Future Enhancement:
+    # # Parallel Run (Future use)
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     browser:
+    #       - chromium
+    #       - firefox
+    #       - webkit
+    # ###
 
     steps:
       - name: Checkout Repository
@@ -70,13 +85,25 @@ jobs:
       - name: Run Playwright Tests
         id: tests
         continue-on-error: true
+        # run: |
+        #   if [ "${{ github.event_name }}" = "pull_request" ]; then
+        #     echo "Running Chromium for PR validation..."
+        #     npx playwright test --project=chromium
+        #   elif [ "${{ github.event_name }}" = "schedule" ]; then
+        #     echo "Running all browsers for scheduled execution..."
+        #     npx playwright test
+        #   else
+        #     echo "Running browser selected from workflow_dispatch..."
+        #     if [ "${{ inputs.browser }}" = "all" ]; then
+        #       npx playwright test
+        #     else
+        #       npx playwright test --project=${{ inputs.browser }}
+        #     fi
+        #   fi
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running Chromium for PR validation..."
             npx playwright test --project=chromium
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "Running all browsers for scheduled execution..."
-            npx playwright test
           else
             echo "Running browser selected from workflow_dispatch..."
             if [ "${{ inputs.browser }}" = "all" ]; then
@@ -85,6 +112,11 @@ jobs:
               npx playwright test --project=${{ inputs.browser }}
             fi
           fi
+        # ### Future Enhancement:
+        # # Parallel Run (Future use)
+        # run: |
+        #   npx playwright test --project=${{ matrix.browser }}
+        # ###
 
       - name: Verify Playwright JSON Report
         if: always()
@@ -183,6 +215,65 @@ jobs:
               🔍 Workflow:
               https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
+
+      - name: Fail Workflow If Tests Failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
+
+  cross-browser:
+    if: github.event_name == 'schedule'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chromium
+          - firefox
+          - webkit
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm     # Node.js cache
+
+      # Playwright browser cache
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        id: tests
+        continue-on-error: true
+        run: |
+          npx playwright test --project=${{ matrix.browser }}
+
+      - name: Upload Playwright Report (${{ matrix.browser }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
 
       - name: Fail Workflow If Tests Failed
         if: steps.tests.outcome == 'failure'
