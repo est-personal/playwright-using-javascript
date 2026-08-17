@@ -58,7 +58,7 @@ test.describe('QA Playground - Data Table Positive Search Validation', () => {
             DataTableAssertions.validateBookDetails(
                 actualBookRecord,
                 DataTablesData.existingBook
-            )
+            );
         });
         
     });

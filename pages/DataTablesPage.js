@@ -68,6 +68,13 @@ class DataTablesPage {
             .click();
     }
 
+    async clickDeleteBookModalCancelButton() {
+        await this.page
+            .locator(
+                DataTablesLocators.deleteBookModalCancelButton
+            ).click();
+    }
+
     async clickDeleteBookModalDeleteButton() {
         await this.page
             .locator(
@@ -293,6 +300,13 @@ class DataTablesPage {
         return match ? Number(match[1]) : null;
     }
 
+    async getDeleteBookModalMessageText() {
+        return (
+            await this.getDeleteBookModalMessage()
+                .innerText()
+        ).trim();
+    }
+
     async getGenreOptions() {
         return await this.getGenreDropdown()
         .locator('option')
@@ -516,11 +530,23 @@ class DataTablesPage {
         );
     }
 
+    getDeleteBookModalBookName() {
+        return this.page.getByTestId(
+            'delete-dialog-book-name'
+        );
+    }
+
     getDeleteBookModalTitle() {
         return this.page
             .locator(
                 DataTablesLocators.deleteBookModalTitle
         );
+    }
+
+    getDeleteBookModalMessage() {
+        return this.page
+            .getByTestId('delete-dialog-book-name')
+            .locator('..');
     }
 
     getEditBookModalTitle() {

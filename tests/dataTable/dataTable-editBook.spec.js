@@ -72,8 +72,7 @@ test.describe('QA Playground - Data Table Successful Edit Validation', () => {
     editBookScenarios.forEach(({ title, data, editAction }) => {
         test(`Edit ${title} Successfully`, {
             tag: ['@regression', '@positive']
-        },
-        async ({ dataTablesPage }) => {
+        }, async ({ dataTablesPage }) => {
             // Add Book
             await addBook(
                 dataTablesPage,

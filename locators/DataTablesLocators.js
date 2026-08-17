@@ -55,6 +55,8 @@ const DataTablesLocators = {
         '[data-testid="delete-dialog-cancel"]',
     deleteBookModalDeleteButton: 
         '[aria-label="Confirm delete sdcf"]',
+    deleteBookModalMessage: 
+        '[data-testid="delete-dialog-cancel"]',
     deleteBookModalTitle: 
         '[id="delete-dialog-title"]',
     editBookModalAuthorInput: 

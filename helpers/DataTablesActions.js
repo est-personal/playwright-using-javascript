@@ -21,6 +21,11 @@ async function addBook(dataTablesPage, bookData) {
     ).not.toBeVisible();
 }
 
+/**
+Deletes book.
+@param {DataTablesPage} dataTablesPage
+@param {Object} bookData
+**/
 async function deleteBook(dataTablesPage, bookName) {
     await dataTablesPage.enterBookField(
         bookName
@@ -41,6 +46,16 @@ async function deleteBook(dataTablesPage, bookName) {
         `No Book Matched Message Mismatch |
         Expected: ${DataTablesData.noBookMatched} | Actual: ${noBookMatchedMessage}`
     ).toEqual(DataTablesData.noBookMatched);
+}
+
+async function openDeleteBookModal(dataTablesPage, bookName) {
+    await dataTablesPage.enterBookField(
+        bookName
+    );
+    await dataTablesPage.clickDeleteButton();
+    await expect(
+        dataTablesPage.getDeleteBookModalTitle()
+    ).toBeVisible();
 }
 
 async function openEditBookModal(dataTablesPage, bookName) {
@@ -68,6 +83,7 @@ async function verifyBookRecord(dataTablesPage, expectedBook) {
 module.exports = {
     addBook,
     deleteBook,
+    openDeleteBookModal,
     openEditBookModal,
     verifyBookRecord
 };
