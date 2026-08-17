@@ -24,6 +24,65 @@ const DataTablesData = {
         5,
     descending:
         'descending',
+    editExistingBook: {
+        updateAuthor:{
+            author: 
+                'Mixtine Santos',
+            bookName:
+                'Playwright Design Patterns',
+            genre:
+                'Technology',
+            isbn:
+                '9781234567890',
+            published:
+                '2025-01-01',
+            get isbnNumber() {
+                return 'ISBN-' + this.isbn;
+            },
+        },
+        updateBookName:{
+            author: 
+                'Mistine Santos',
+            bookName:
+                'Playwright Design Architecture Pattern',
+            genre:
+                'Technology',
+            isbn:
+                '9781234567890',
+            published:
+                '2025-01-01',
+            get isbnNumber() {
+                return 'ISBN-' + this.isbn;
+            },
+        },
+        updateGenre:{
+            author: 
+                'Mistine Santos',
+            bookName:
+                'Playwright Design Patterns',
+            genre:
+                'Science Fiction',
+            isbn:
+                '9781234567890',
+            published:
+                '2025-01-01',
+            get isbnNumber() {
+                return 'ISBN-' + this.isbn;
+            },
+        },
+        updateIsbn:{
+            author: 
+                'Mistine Santos',
+            bookName:
+                'Playwright Design Patterns',
+            genre:
+                'Technology',
+            isbn:
+                'ISBN-9741232192890',
+            published:
+                '2025-01-01',
+        },
+    },
     existingBook: {
         author: 
             'William Gibson',

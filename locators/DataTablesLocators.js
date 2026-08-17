@@ -49,6 +49,32 @@ const DataTablesLocators = {
         '[data-testid="col-book-published"]',
     bookPublishedRowValue: 
         '[data-testid="book-row"] [data-col="book-published"]',
+    deleteButton: 
+        '[data-testid="btn-edit-book"]',
+    deleteBookModalCancelButton: 
+        '[data-testid="delete-dialog-cancel"]',
+    deleteBookModalDeleteButton: 
+        '[aria-label="Confirm delete sdcf"]',
+    deleteBookModalTitle: 
+        '[id="delete-dialog-title"]',
+    editBookModalAuthorInput: 
+        '[data-testid="edit-input-book-author"]',
+    editBookModalBookNameInput: 
+        '[data-testid="edit-input-book-name"]',
+    editBookModalCancelButton: 
+        '[data-testid="edit-dialog-cancel"]',
+    editBookModalGenreDropdown: 
+        '[data-testid="edit-select-genre"]',
+    editBookModalIsbnInput: 
+        'input[name^="isbn_field_book"]',
+    editBookModalPublishedInput: 
+        '[data-testid="edit-input-book-published"]',
+    editBookModalSaveChangesButton: 
+        '[data-testid="edit-dialog-save"]',
+    editBookModalTitle: 
+        '[id="edit-dialog-title"]',
+    editButton: 
+        '[data-testid="btn-edit-book"]',
     interactiveTableHeader: 
         '[data-testid="table-head"] th',
     interactiveTableRow: 
