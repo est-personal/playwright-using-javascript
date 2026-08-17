@@ -1,0 +1,25 @@
+name: Sync GitHub to GitLab
+
+on:
+  push:
+    branches:
+        - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure GitLab Remote
+        run: |
+          git remote add gitlab https://${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_TOKEN }}@gitlab.com/est-personal-group/playwright-using-javascript.git
+
+      - name: Mirror Repository
+        run: |
+          git push gitlab --all
+          git push gitlab --tags
