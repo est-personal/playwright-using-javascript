@@ -1,5 +1,4 @@
 const {test, expect} = require('../../fixtures/dataTables.fixture');
-// const { DataTablesPage } = require('../../pages/DataTablesPage');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTableAssertions } = require('../../helpers/DataTableAssertions');
 
