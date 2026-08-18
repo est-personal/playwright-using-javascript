@@ -5,10 +5,10 @@ const { ButtonsLocators } = require('../locators/ButtonsLocators');
 const { ButtonsData } = require('../testData/ButtonsData');
 const { BasePage } = require('./BasePage');
 
-class ButtonsPage {
+class ButtonsPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+        super(page);
     }
 
     // Async
@@ -30,51 +30,51 @@ class ButtonsPage {
     }
 
     async clickDoubleClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.doubleClickMeButton)
-            .click();
+        await this.click(
+            ButtonsLocators.doubleClickMeButton
+        );
     }
 
     async clickDoYouKnowMySizeButton() {
-        await this.page
-            .locator(ButtonsLocators.doYouKnowMySizeButton)
-            .click();
+        await this.click(
+            ButtonsLocators.doYouKnowMySizeButton
+        );
     }
 
     async clickFindLocationButton() {
-        await this.page
-            .locator(ButtonsLocators.findLocationButton)
-            .click();
+        await this.click(
+            ButtonsLocators.findLocationButton
+        );
     }
 
     async clickFindMyColorButton() {
-        await this.page
-            .locator(ButtonsLocators.findMyColorButton)
-            .click();
+       await this.click(
+        ButtonsLocators.findMyColorButton
+        );
     }
 
     async clickGoToHomeButton() {
-        await this.page
-            .locator(ButtonsLocators.goToHomeButton)
-            .click();
+        await this.click(
+            ButtonsLocators.goToHomeButton
+        );
     }
 
     async clickRightClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.rightClickMeButton)
-            .click();
+        await this.click(
+            ButtonsLocators.rightClickMeButton
+        );
     }
 
     async doubleClickDoubleClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.doubleClickMeButton)
-            .dblclick();
+        await this.doubleClick(
+            ButtonsLocators.doubleClickMeButton
+        );
     }
 
     async doubleClickRightClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.rightClickMeButton)
-            .dblclick();
+        await this.doubleClick(
+            ButtonsLocators.rightClickMeButton
+        );
     }
 
     async getButtonColor() {
@@ -292,7 +292,7 @@ class ButtonsPage {
     
     async isSuccessDisplayed() {
         const result = await this.getHoldResultMessage();
-        return result?.includes(ButtonsData.getClickAndHoldValue);
+        return result?.includes(ButtonsData.expectedClickAndHoldValue);
     }
 
     async navigateToButtons() {
@@ -312,15 +312,15 @@ class ButtonsPage {
     }
 
     async rightClickDoubleClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.doubleClickMeButton)
-            .click({ button: ButtonsData.rightText });
+        await this.rightClick(
+            ButtonsLocators.doubleClickMeButton
+        );
     }
 
     async rightClickRightClickMeButton() {
-        await this.page
-            .locator(ButtonsLocators.rightClickMeButton)
-            .click({ button: ButtonsData.rightText });
+        await this.rightClick(
+            ButtonsLocators.rightClickMeButton
+        );
     }
 
     // Non-Async

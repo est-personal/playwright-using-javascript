@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Buttons.fixture');
 const { ButtonsPage } = require('../../pages/ButtonsPage');
 const { ButtonsData } = require('../../testData/ButtonsData');
 
@@ -47,17 +47,10 @@ const buttonTextTests = [
 
 test.describe('QA Playground - Buttons Text Validations', () => {
 
-    let buttonsPage;
-
-    test.beforeEach(async ({ page }) => {
-        buttonsPage = new ButtonsPage(page);
-        await buttonsPage.navigateToButtons();
-    });
-
     buttonTextTests.forEach(data => {
         test(`${data.name} button text`, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ buttonsPage }) => {
             await expect(
                 data.locator(buttonsPage)
             ).toHaveText(
@@ -113,17 +106,10 @@ const defaultValueTests = [
 
 test.describe('QA Playground - Buttons Default Value Validations', () => {
 
-    let buttonsPage;
-
-    test.beforeEach(async ({ page }) => {
-        buttonsPage = new ButtonsPage(page);
-        await buttonsPage.navigateToButtons();
-    });
-
     defaultValueTests.forEach(data => {
         test(`${data.name} default value`, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ buttonsPage }) => {
             await expect(
                 data.locator(buttonsPage)
             ).toHaveText(

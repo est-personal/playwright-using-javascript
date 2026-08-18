@@ -1,6 +1,7 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Buttons.fixture');
 const { ButtonsPage } = require('../../pages/ButtonsPage');
 const { ButtonsData } = require('../../testData/ButtonsData');
+const { BasePage } = require('../../pages/BasePage');
 
 const { 
     expectColorWithinTolerance, 
@@ -13,19 +14,12 @@ const {
 
 test.describe('QA Playground - Buttons Tests', () => {
 
-    let buttonsPage;
-
-    test.beforeEach(async ({ page }) => {
-        buttonsPage = new ButtonsPage(page);
-        await buttonsPage.navigateToButtons();
-    });
-
     test.describe('Navigation Button', () => {
         test('Click Go To Home', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Go To Home button to be visible
             await expect(
                 buttonsPage.getGoToHomeButton()
@@ -46,7 +40,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Find Location button to be visible
             await expect(
                 buttonsPage.getFindLocationButton()
@@ -69,7 +63,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Find Location button to be visible
             await expect(
                 buttonsPage.getFindLocationButton()
@@ -107,7 +101,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Find My Color button to be visible
             await expect(
                 buttonsPage.getFindMyColorButton()
@@ -130,7 +124,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Find My Color button to be visible
             await expect(
                 buttonsPage.getFindMyColorButton()
@@ -193,7 +187,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Do You Know My Size button to be visible
             await expect(
                 buttonsPage.getDoYouKnowMySizeButton()
@@ -217,7 +211,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Do You Know My Size button to be visible
             await expect(
                 buttonsPage.getDoYouKnowMySizeButton()
@@ -249,7 +243,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Disabled button to be visible
             await expect(
                 buttonsPage.getDisabledButton()
@@ -287,7 +281,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Click And Hold button to be visible
             await expect(
                 buttonsPage.getClickAndHoldButton()
@@ -299,7 +293,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             await expect(
                 buttonsPage.getClickHoldResult()
             ).toHaveText(
-                ButtonsData.getClickAndHoldValue
+                ButtonsData.expectedClickAndHoldValue
             );
             // Validate success state
             const result = 
@@ -316,7 +310,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Click And Hold button to be visible
             await expect(
                 buttonsPage.getClickAndHoldButton()
@@ -343,7 +337,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Click And Hold button to be visible
             await expect(
                 buttonsPage.getClickAndHoldButton()
@@ -373,7 +367,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
+    async ({ buttonsPage }) => {
         // Wait for Double Click Me button to be visible
         await expect(
             buttonsPage.getDoubleClickMeButton()
@@ -392,7 +386,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@regression', '@negative']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Double Click Me button to be visible
             await expect(
                 buttonsPage.getDoubleClickMeButton()
@@ -411,7 +405,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Double Click Me button to be visible
             await expect(
                 buttonsPage.getDoubleClickMeButton()
@@ -433,7 +427,7 @@ test.describe('QA Playground - Buttons Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Right Click Me button to be visible
             await expect(
                 buttonsPage.getRightClickMeButton()
@@ -452,7 +446,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Right Click Me button to be visible
             await expect(
                 buttonsPage.getRightClickMeButton()
@@ -471,7 +465,7 @@ test.describe('QA Playground - Buttons Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async () => {
+        async ({ buttonsPage }) => {
             // Wait for Right Click Me button to be visible
             await expect(
                 buttonsPage.getRightClickMeButton()
