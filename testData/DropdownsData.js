@@ -49,9 +49,6 @@ const DropdownsData = {
             unitedStates:
                 'United States',
         },
-        deselectedHeroes: [
-            'Ant-Man',
-        ],
         fruit:
             'Banana',
         heroes: [
@@ -59,11 +56,6 @@ const DropdownsData = {
             'Aquaman',
             'Batman',
         ],
-        heroesAfterDeselect: [
-            'Aquaman',
-            'Batman',
-        ],
-
         language: {
             java:
                 'Java',
@@ -82,8 +74,13 @@ const DropdownsData = {
             mediumPriority:
                 'Medium Priority',
         },
-        
-        // Dynamic Data
+        remainingHeroes: [
+            'Aquaman',
+            'Batman',
+        ],
+        removedHeroes: [
+            'Ant-Man',
+        ],
         get heroesCount() {
             return this.heroes.length;
         },
@@ -144,31 +141,16 @@ const DropdownsData = {
             'Selected heroes: ',
         selectedLanguage:
             'Selected language: ',
-        selectedLanguageOptions:
-            'Python, Java, JavaScript, TypeScript',
-
-        // Dynamic Data
-        get customPriorityResult() {
-            return  this.prioritySelected + DropdownsData.input.priority;
-        },
+        //     'Python, Java, JavaScript, TypeScript',
         get multiSelectHeroesResult() {
             return  this.selectedHeroes + DropdownsData.input.heroes.join(', ');
-        },
-        get searchCityResult() {
-            return  this.citySelected + DropdownsData.input.city;
-        },
-        get selectCountryResult() {
-            return  this.selectedCountry + DropdownsData.input.country;
-        },
-        get selectFruitResult() {
-            return  this.selectedFruit + DropdownsData.input.fruit;
         },
         get selectLanguageAllResult() {
             return  this.selected + DropdownsData.input.language.typeScript +
                 '; options: ' + this.selectedLanguageOptions;
         },
-        get selectLanguageResult() {
-            return  this.selectedLanguage + DropdownsData.input.language;
+        get selectedLanguageOptions() {
+            return DropdownsData.options.language.join(', ');
         },
     },
 
@@ -195,7 +177,6 @@ const DropdownsData = {
             unitedStates:
                 'united-states',
         },
-
     },
 
 };

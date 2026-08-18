@@ -1,5 +1,4 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
-const { ButtonsPage } = require('../../pages/ButtonsPage');
 const { ButtonsData } = require('../../testData/ButtonsData');
 const { BasePage } = require('../../pages/BasePage');
 

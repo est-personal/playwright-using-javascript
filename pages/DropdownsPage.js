@@ -5,10 +5,10 @@ const { DropdownsLocators } = require('../locators/DropdownsLocators');
 const { DropdownsData } = require('../testData/DropdownsData');
 const { BasePage } = require('./BasePage');
 
-class DropdownsPage {
+class DropdownsPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+        super(page);
     }
 
     // Async
@@ -29,13 +29,12 @@ class DropdownsPage {
     }
 
     async clickSelectLastButton() {
-        await this.page.locator(
+        await this.click(
             DropdownsLocators.selectLastButton
         )
-        .click();
     }
 
-    async deselectHeroes(heroes) {
+    async updateSelectedHeroes(heroes) {
         await this.page.locator(
             DropdownsLocators.multiSelectHeroesMultiSelect
         )
@@ -85,17 +84,15 @@ class DropdownsPage {
     }
 
     async getSelectedCountry() {
-        return await this
-            .getSelectCountryDropdown()
-            .locator('option:checked')
-            .textContent();
+        return this.getSelectedOptionText(
+            DropdownsLocators.selectCountryDropdown
+        );
     }
 
     async getSelectedFruit() {
-        return await this
-            .getSelectFruitDropdown()
-            .locator('option:checked')
-            .textContent();
+        return this.getSelectedOptionText(
+            DropdownsLocators.selectFruitDropdown
+        );
     }
 
     async getSelectedHeroes() {
@@ -108,10 +105,9 @@ class DropdownsPage {
     }
 
     async getSelectedLanguage() {
-        return await this
-            .getSelectLanguageDropdown()
-            .locator('option:checked')
-            .textContent();
+        return this.getSelectedOptionText(
+            DropdownsLocators.selectLanguageDropdown
+        );
     }
 
     async getSelectedPriority() {
@@ -160,28 +156,17 @@ class DropdownsPage {
     }
 
     async selectCountry(country) {
-        await this.page
-            .locator(DropdownsLocators.selectCountryDropdown)
-            .selectOption({
-                value: country
-            });
-        // const dropdown = this.page.locator(
-        //     DropdownsLocators.selectCountryDropdown
-        // );
-        // await dropdown.selectOption({ 
-        //     value: country 
-        // });
-        // await dropdown.dispatchEvent('change');
+        await this.selectByValue(
+            DropdownsLocators.selectCountryDropdown,
+            country
+        );
     }
 
     async selectFruit(fruit) {
-        const dropdown = this.page.locator(
-            DropdownsLocators.selectFruitDropdown
+        await this.selectByLabel(
+            DropdownsLocators.selectFruitDropdown,
+            fruit
         );
-        await dropdown.selectOption({ 
-            label: fruit 
-        });
-        await dropdown.dispatchEvent('change');
     }
 
     async selectHeroes(heroes) {
@@ -198,18 +183,10 @@ class DropdownsPage {
     }
 
     async selectLanguage(language) {
-        await this.page
-            .locator(DropdownsLocators.selectLanguageDropdown)
-            .selectOption({
-                label: language
-            })
-        // const dropdown = this.page.locator(
-        //     DropdownsLocators.selectLanguageDropdown
-        // );
-        // await dropdown.selectOption({ 
-        //     label: language 
-        // });
-        // await dropdown.dispatchEvent('change');
+        await this.selectByLabel(
+            DropdownsLocators.selectLanguageDropdown,
+            language
+        );
     }
 
     async selectPriority(priority) {
