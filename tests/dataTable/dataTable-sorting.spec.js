@@ -1,6 +1,6 @@
 const {test, expect} = require('../../fixtures/dataTables.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
-const { DataTableAssertions } = require('../../helpers/DataTableAssertions');
+const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
 const sortableColumns = [
     {
@@ -54,7 +54,7 @@ test.describe('QA Playground - Data Table Sorting Validation', () => {
             );
             const values =
                 await column.getValues(dataTablesPage);
-            DataTableAssertions.validateAscending(
+            DataTablesAssertions.validateAscending(
                 values,
                 column.name
             );
@@ -71,7 +71,7 @@ test.describe('QA Playground - Data Table Sorting Validation', () => {
             );
             const values =
                 await column.getValues(dataTablesPage);
-            DataTableAssertions.validateDescending(
+            DataTablesAssertions.validateDescending(
                 values,
                 column.name
             );

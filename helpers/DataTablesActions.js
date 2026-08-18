@@ -1,6 +1,6 @@
 const { expect } = require('@playwright/test');
 const { DataTablesData } = require('../testData/DataTablesData');
-const { DataTableAssertions } = require('../helpers/DataTableAssertions');
+const { DataTablesAssertions } = require('../helpers/DataTablesAssertions');
 
 /**
 Adds a new book.
@@ -74,7 +74,7 @@ async function verifyBookRecord(dataTablesPage, expectedBook) {
     );
     const actualBookRecord =
         await dataTablesPage.getBookRecord();
-    DataTableAssertions.validateBookDetails(
+    DataTablesAssertions.validateBookDetails(
         actualBookRecord,
         expectedBook
     );

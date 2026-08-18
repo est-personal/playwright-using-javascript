@@ -1,6 +1,6 @@
 const {test, expect} = require('../../fixtures/dataTables.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
-const { DataTableAssertions } = require('../../helpers/DataTableAssertions');
+const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
 const positiveSearchTest = [
     {
@@ -55,7 +55,7 @@ test.describe('QA Playground - Data Table Positive Search Validation', () => {
             const actualBookRecord =
                 await dataTablesPage.getBookRecord();
             // Validate Book Record
-            DataTableAssertions.validateBookDetails(
+            DataTablesAssertions.validateBookDetails(
                 actualBookRecord,
                 DataTablesData.existingBook
             );
