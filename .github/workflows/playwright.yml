@@ -10,8 +10,10 @@ on:
 
   # Schedule Run
   schedule:
-    # Runs at 7:00 AM
-    - cron: '0 7 * * *'
+    # Runs at 6:30 AM UTC
+    # PHT is UTC+8 and GitHub Actions cron schedules use UTC
+    # Subtract 8 hours
+    - cron: '30 6 * * *'
 
   # Manual Trigger
   workflow_dispatch:
@@ -161,7 +163,7 @@ jobs:
           retention-days: 14
 
       - name: Notify Slack Success
-        if: success()
+        if: steps.tests.outcome == 'success'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -185,11 +187,11 @@ jobs:
                 ${{ github.event.pull_request.html_url }}
 
                 🔍 Workflow:
-                https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Notify Slack Failure
-        if: failure()
+        if: steps.tests.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -213,7 +215,7 @@ jobs:
               ${{ github.event.pull_request.html_url }}
 
               🔍 Workflow:
-              https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Fail Workflow If Tests Failed
@@ -235,6 +237,22 @@ jobs:
           - webkit
 
     steps:
+      - name: Notify Slack Schedule Started
+        if: matrix.browser == 'chromium'
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 Scheduled Playwright execution started
+
+              📦 Repository: ${{ github.repository }}
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -278,3 +296,50 @@ jobs:
       - name: Fail Workflow If Tests Failed
         if: steps.tests.outcome == 'failure'
         run: exit 1
+
+  notify-scheduled-run:
+    needs: cross-browser
+    if: ${{ always() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Slack Scheduled Run Success
+        if: needs.cross-browser.result == 'success'
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "✅ Scheduled Playwright Run Completed
+
+              📦 Repository: ${{ github.repository }}
+
+              🌙 Trigger: Daily Scheduled Run
+              🏃 Workflow Run: ${{ github.run_number }}
+
+              ✅ Cross-browser scheduled run completed successfully
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Notify Slack Scheduled Run Failure
+        if: needs.cross-browser.result != 'success'
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "❌ Scheduled Playwright Run Failed
+
+              📦 Repository: ${{ github.repository }}
+
+              🌙 Trigger: Daily Scheduled Run
+
+              One or more browser executions failed.
+
+              🔍 Check workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
