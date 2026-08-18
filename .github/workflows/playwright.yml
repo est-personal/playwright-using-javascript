@@ -10,10 +10,10 @@ on:
 
   # Schedule Run
   schedule:
-    # Runs at 6:30 AM UTC
+    # Runs at 13:30 (1:30 PM) UTC
     # PHT is UTC+8 and GitHub Actions cron schedules use UTC
     # Subtract 8 hours
-    - cron: '30 6 * * *'
+    - cron: '30 13 * * *'
 
   # Manual Trigger
   workflow_dispatch:
@@ -283,15 +283,42 @@ jobs:
         run: |
           npx playwright test --project=${{ matrix.browser }}
 
+      - name: Save Browser Result
+        if: always()
+        run: |
+          mkdir -p browser-results
+
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "✅ ${{ matrix.browser }}" > browser-results/${{ matrix.browser }}.txt
+          else
+            echo "❌ ${{ matrix.browser }}" > browser-results/${{ matrix.browser }}.txt
+          fi
+
       - name: Upload Playwright Report (${{ matrix.browser }})
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-browser-result-${{ matrix.browser }}
           path: |
-            playwright-report/
-            test-results/
+            browser-results
           retention-days: 14
+
+      - name: Download Browser Results
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          pattern: browser-result-*
+          merge-multiple: true
+          path: browser-results
+
+      - name: Generate Browser Summary
+        id: browser_summary
+        run: |
+          {
+            echo "RESULTS<<EOF"
+            cat browser-results/*.txt
+            echo EOF
+            * } >> $GITHUB_OUTPUT
 
       - name: Fail Workflow If Tests Failed
         if: steps.tests.outcome == 'failure'
@@ -303,46 +330,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Notify Slack Scheduled Run Success
-        if: needs.cross-browser.result == 'success'
+      - name: Set Schedule Status
+        id: schedule_status
+        run: |
+          if [ "${{ needs.cross-browser.result }}" = "success" ]; then
+            echo "ICON=✅" >> $GITHUB_OUTPUT
+            echo "STATUS=Passed" >> $GITHUB_OUTPUT
+          else
+            echo "ICON=❌" >> $GITHUB_OUTPUT
+            echo "STATUS=Failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack Scheduled Run
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "✅ Daily Playwright Health Check Passed
+              "text": "${{ steps.schedule_status.outputs.ICON }} Daily Playwright Health Check ${{ steps.schedule_status.outputs.STATUS }}
 
               📦 Repository: ${{ github.repository }}
 
-              🌙 Trigger: Daily Scheduled Run
-              🏃 Workflow Run: ${{ github.run_number }}
+              🌙 Trigger: Schedule
+              🔢 Run Number: ${{ github.run_number }}
 
-              ✅ Cross-browser scheduled run completed successfully
-              ✅ Chromium: Passed
-              ✅ Firefox: Passed
-              ✅ WebKit: Passed
+              Browser Results:
+              ${{ steps.browser_summary.outputs.RESULTS }}
 
               🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
-            }
-
-      - name: Notify Slack Scheduled Run Failure
-        if: needs.cross-browser.result != 'success'
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "❌ Scheduled Playwright Run Failed
-
-              📦 Repository: ${{ github.repository }}
-
-              🌙 Trigger: Daily Scheduled Run
-
-              One or more browser executions failed.
-
-              🔍 Check workflow:
               <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
