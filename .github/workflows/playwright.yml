@@ -187,7 +187,7 @@ jobs:
                 ${{ github.event.pull_request.html_url }}
 
                 🔍 Workflow:
-                <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>
+                <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Notify Slack Failure
@@ -215,7 +215,7 @@ jobs:
               ${{ github.event.pull_request.html_url }}
 
               🔍 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Fail Workflow If Tests Failed
@@ -250,7 +250,7 @@ jobs:
               📦 Repository: ${{ github.repository }}
 
               🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Checkout Repository
@@ -321,7 +321,7 @@ jobs:
               ✅ Cross-browser scheduled run completed successfully
 
               🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Notify Slack Scheduled Run Failure
@@ -341,5 +341,5 @@ jobs:
               One or more browser executions failed.
 
               🔍 Check workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
