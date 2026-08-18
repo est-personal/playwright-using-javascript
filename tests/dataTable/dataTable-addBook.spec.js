@@ -77,7 +77,7 @@ test.describe('QA Playground - Data Table Positive Add Book Validation', () => {
             const actualBookRecord =
                 await dataTablesPage.getBookRecord();
             // Validate Book Record
-            DataTableAssertions.validateBookDetails(
+            DataTablesAssertions.validateBookDetails(
                 actualBookRecord,
                 scenario.book
             )
