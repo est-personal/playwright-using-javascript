@@ -10,10 +10,10 @@ on:
 
   # Schedule Run
   schedule:
-    # Runs at 13:30 (1:30 PM) UTC
+    # Runs at 2:30 (2:30 AM) UTC
     # PHT is UTC+8 and GitHub Actions cron schedules use UTC
     # Subtract 8 hours
-    - cron: '30 13 * * *'
+    - cron: '30 18 * * *'
 
   # Manual Trigger
   workflow_dispatch:
@@ -39,17 +39,6 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 30     # Job timeout
-
-    # ### Future Enhancement:
-    # # Parallel Run (Future use)
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     browser:
-    #       - chromium
-    #       - firefox
-    #       - webkit
-    # ###
 
     steps:
       - name: Checkout Repository
@@ -79,29 +68,9 @@ jobs:
       - name: Record Start Time
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
-      # - name: Debug connectivity
-      #   run: |
-      #     nslookup qaplayground.com
-      #     curl -Iv https://qaplayground.com/practice/input-fields
-
       - name: Run Playwright Tests
         id: tests
         continue-on-error: true
-        # run: |
-        #   if [ "${{ github.event_name }}" = "pull_request" ]; then
-        #     echo "Running Chromium for PR validation..."
-        #     npx playwright test --project=chromium
-        #   elif [ "${{ github.event_name }}" = "schedule" ]; then
-        #     echo "Running all browsers for scheduled execution..."
-        #     npx playwright test
-        #   else
-        #     echo "Running browser selected from workflow_dispatch..."
-        #     if [ "${{ inputs.browser }}" = "all" ]; then
-        #       npx playwright test
-        #     else
-        #       npx playwright test --project=${{ inputs.browser }}
-        #     fi
-        #   fi
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running Chromium for PR validation..."
@@ -114,11 +83,6 @@ jobs:
               npx playwright test --project=${{ inputs.browser }}
             fi
           fi
-        # ### Future Enhancement:
-        # # Parallel Run (Future use)
-        # run: |
-        #   npx playwright test --project=${{ matrix.browser }}
-        # ###
 
       - name: Verify Playwright JSON Report
         if: always()
@@ -301,24 +265,8 @@ jobs:
           name: playwright-browser-result-${{ matrix.browser }}
           path: |
             browser-results
+            test-results/
           retention-days: 14
-
-      - name: Download Browser Results
-        if: always()
-        uses: actions/download-artifact@v4
-        with:
-          pattern: browser-result-*
-          merge-multiple: true
-          path: browser-results
-
-      - name: Generate Browser Summary
-        id: browser_summary
-        run: |
-          {
-            echo "RESULTS<<EOF"
-            cat browser-results/*.txt
-            echo EOF
-            * } >> $GITHUB_OUTPUT
 
       - name: Fail Workflow If Tests Failed
         if: steps.tests.outcome == 'failure'
@@ -340,6 +288,27 @@ jobs:
             echo "ICON=❌" >> $GITHUB_OUTPUT
             echo "STATUS=Failed" >> $GITHUB_OUTPUT
           fi
+
+      - name: Download Browser Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: playwright-browser-result-*
+          merge-multiple: true
+          path: browser-results
+
+      - name: Generate Browser Summary
+        id: browser_summary
+        run: |
+          {
+            echo "RESULTS<<EOF"
+            cat browser-results/*.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Verify Browser Results
+        run: |
+          ls -R browser-results
+          cat browser-results/*.txt
 
       - name: Notify Slack Scheduled Run
         uses: slackapi/slack-github-action@v2
