@@ -67,14 +67,14 @@ const ButtonsData = {
         'Y: ',
 
     // Dynamic Data
-    get getClickAndHoldValue() {
-        return  this.heldForText + this.expectedSeconds;
+    get expectedClickAndHoldValue() {
+        return  `${this.heldForText}${this.expectedSeconds}`;
     },
-    get getColorValue() {
-        return  this.xText + this.expectedXCoordinate + ',' + this.yText + this.expectedYCoordinate;
+    get expectedColorValue() {
+        return  `${this.backgroundText}${this.expectedColor}`;
     },
-    get getCoordinatesValue() {
-        return  this.coordinatesText + this.expectedXCoordinate + ',' + this.expectedYCoordinate;
+    get expectedCoordinatesValue() {
+        return  `${this.coordinatesText}${this.expectedXCoordinate},${this.expectedYCoordinate}`;
     },
 };
 
