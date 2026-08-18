@@ -1,4 +1,4 @@
-const {test, expect} = require('../../fixtures/dataTables.fixture');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
