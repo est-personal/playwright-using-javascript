@@ -162,60 +162,62 @@ jobs:
             folder-summary.txt
           retention-days: 14
 
-      - name: Notify Slack Success
-        if: steps.tests.outcome == 'success'
+      - name: Set Slack Context
+        id: slack_context
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            {
+              echo "DETAILS<<EOF"
+              echo "🔀 PR: #${{ github.event.pull_request.number }}"
+              echo "📝 Title: ${{ github.event.pull_request.title }}"
+              echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+              echo "🌿 Branch: ${{ github.head_ref }}"
+              echo ""
+              echo "🔗 PR:"
+              echo "${{ github.event.pull_request.html_url }}"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          else
+            {
+              echo "DETAILS<<EOF"
+              echo "🖱️ Browser: ${{ inputs.browser }}"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set Slack Status
+        if: always()
+        id: slack_status
+        run: |
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "ICON=✅" >> $GITHUB_OUTPUT
+            echo "STATUS=Passed" >> $GITHUB_OUTPUT
+          else
+            echo "ICON=❌" >> $GITHUB_OUTPUT
+            echo "STATUS=Failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack
+        if: always()
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "✅ Playwright Tests Passed
+              "text": "${{ steps.slack_status.outputs.ICON }} Playwright Tests ${{ steps.slack_status.outputs.STATUS }}
 
                 📦 Repository: ${{ github.repository }}
 
                 ${{ steps.summary.outputs.SUMMARY }}
 
-                🔀 *PR:* #${{ github.event.pull_request.number }}
-                📝 *Title:* ${{ github.event.pull_request.title }}
-                👤 *Author:* ${{ github.event.pull_request.user.login }}
-                🌿 *Branch:* ${{ github.head_ref }}
+                ${{ steps.slack_context.outputs.DETAILS }}
 
+                📅 Trigger: ${{ github.event_name }}
                 ⏱ Duration: ${{ env.DURATION }}
-
-                🔗 PR:
-                ${{ github.event.pull_request.html_url }}
 
                 🔍 Workflow:
                 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
-            }
-
-      - name: Notify Slack Failure
-        if: steps.tests.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "❌ Playwright Tests Failed
-
-              📦 Repository: ${{ github.repository }}
-
-              ${{ steps.summary.outputs.SUMMARY }}
-
-              🔀 *PR:* #${{ github.event.pull_request.number }}
-              📝 *Title:* ${{ github.event.pull_request.title }}
-              👤 *Author:* ${{ github.event.pull_request.user.login }}
-              🌿 *Branch:* ${{ github.head_ref }}
-
-              ⏱ Duration: ${{ env.DURATION }}
-
-              🔗 PR:
-              ${{ github.event.pull_request.html_url }}
-
-              🔍 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
       - name: Fail Workflow If Tests Failed
@@ -224,10 +226,8 @@ jobs:
 
   cross-browser:
     if: github.event_name == 'schedule'
-
     runs-on: ubuntu-latest
     timeout-minutes: 45
-
     strategy:
       fail-fast: false
       matrix:
@@ -311,7 +311,7 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "✅ Scheduled Playwright Run Completed
+              "text": "✅ Daily Playwright Health Check Passed
 
               📦 Repository: ${{ github.repository }}
 
@@ -319,6 +319,9 @@ jobs:
               🏃 Workflow Run: ${{ github.run_number }}
 
               ✅ Cross-browser scheduled run completed successfully
+              ✅ Chromium: Passed
+              ✅ Firefox: Passed
+              ✅ WebKit: Passed
 
               🔗 Workflow:
               <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
