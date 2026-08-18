@@ -1,22 +1,14 @@
-const { test, expect } = require('@playwright/test');
-const { DropdownsPage } = require('../../pages/DropdownsPage');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DropdownsData } = require('../../testData/DropdownsData');
 
 test.describe('QA Playground - Dropdowns Tests', () => {
-
-    let dropdownsPage;
-
-    test.beforeEach(async ({ page }) => {
-        dropdownsPage = new DropdownsPage(page);
-        await dropdownsPage.navigateToDropdowns();
-    });
 
     test.describe('Fruit Dropdown', () => {
         test('Select Fruit', 
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Select Fruit section to be visible
             await expect(
                 dropdownsPage.getSelectFruitSection()
@@ -35,7 +27,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             await expect(
                 dropdownsPage.getSelectFruitResult()
             ).toHaveText(
-                DropdownsData.result.selectFruitResult
+                `${DropdownsData.result.selectedFruit}${DropdownsData.input.fruit}`
             );
         });
 
@@ -46,7 +38,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Select Country section to be visible
             await expect(
                 dropdownsPage.getSelectCountrySection()
@@ -76,7 +68,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Select Language section to be visible
             await expect(
                 dropdownsPage.getSelectLanguageSection()
@@ -103,7 +95,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Select Language section to be visible
             await expect(
                 dropdownsPage.getSelectLanguageSection()
@@ -131,7 +123,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-    async () => {
+    async ({ dropdownsPage }) => {
         // Wait for Multi-Select Heroes section to be visible
         await expect(
             dropdownsPage.getMultiSelectHeroesSection()
@@ -159,7 +151,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@regression', '@negative']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Multi-Select Heroes section to be visible
             await expect(
                 dropdownsPage.getMultiSelectHeroesSection()
@@ -175,18 +167,18 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 DropdownsData.result.multiSelectHeroesResult
             );
             // Deselect option from Multi-Select Heroes dropdown
-            await dropdownsPage.deselectHeroes(
-                DropdownsData.input.heroesAfterDeselect
+            await dropdownsPage.updateSelectedHeroes(
+                DropdownsData.input.remainingHeroes
             );
             // Retrieve selected heroes
             const selectedHeroes = 
                 await dropdownsPage.getSelectedHeroes();
             // Validate selected Heroes
             expect(selectedHeroes).toHaveLength(
-                DropdownsData.input.heroesAfterDeselect.length
+                DropdownsData.input.remainingHeroes.length
             );
             // Validate hero removed
-            DropdownsData.input.deselectedHeroes.forEach(hero => {
+            DropdownsData.input.removedHeroes.forEach(hero => {
                 expect(selectedHeroes).not.toContain(hero);
             });
             // Validate text is reflected in Multi-Select Heroes result
@@ -194,7 +186,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 dropdownsPage.getMultiSelectHeroesResult()
             ).toHaveText(
                 DropdownsData.result.selectedHeroes +
-                    DropdownsData.input.heroesAfterDeselect.join(', ')
+                    DropdownsData.input.remainingHeroes.join(', ')
             );
         });
 
@@ -205,7 +197,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Custom Priority section to be visible
             await expect(
                 dropdownsPage.getCustomPrioritySection()
@@ -232,7 +224,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Custom Priority section to be visible
             await expect(
                 dropdownsPage.getCustomPrioritySection()
@@ -263,7 +255,7 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         {
             tag: ['@smoke', '@regression', '@positive']
         },
-        async () => {
+        async ({ dropdownsPage }) => {
             // Wait for Select City section to be visible
             await expect(
                 dropdownsPage.getSearchCitySection()

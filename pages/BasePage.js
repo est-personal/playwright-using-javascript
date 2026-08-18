@@ -24,6 +24,14 @@ class BasePage {
             .fill(value);
     }
 
+    async getSelectedOptionText(locator) {
+        return (await this.page
+            .locator(locator)
+            .locator('option:checked')
+            .textContent()
+        )?.trim();
+    }
+
     async getText(locator) {
         return (await this.page
             .locator(locator)
@@ -49,6 +57,18 @@ class BasePage {
             .click({
                 button: 'right'
             });
+    }
+
+    async selectByLabel(locator, label) {
+        await this.page
+            .locator(locator)
+            .selectOption({ label });
+    }
+
+    async selectByValue(locator, value) {
+        await this.page
+            .locator(locator)
+            .selectOption({ value });
     }
 
     async waitForPageToLoad() {

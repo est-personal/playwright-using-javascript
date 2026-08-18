@@ -1,5 +1,4 @@
-const { test, expect } = require('@playwright/test');
-const { DropdownsPage } = require('../../pages/DropdownsPage');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DropdownsData } = require('../../testData/DropdownsData');
 
 const optionsTests = [
@@ -38,17 +37,10 @@ const optionsTests = [
 
 test.describe('QA Playground - Dropdowns Options Validation', () => {
 
-    let dropdownsPage;
-
-    test.beforeEach(async ({ page }) => {
-        dropdownsPage = new DropdownsPage(page);
-        await dropdownsPage.navigateToDropdowns();
-    });
-
     optionsTests.forEach(data => {
         test(`${data.name} options`, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ dropdownsPage }) => {
             const actualOptions =
                 await data.getOptions(dropdownsPage);
             const normalizedOptions =
@@ -109,17 +101,10 @@ const defaultValueTests = [
 
 test.describe('QA Playground - Dropdowns Default Value Validation', () => {
 
-    let dropdownsPage;
-
-    test.beforeEach(async ({ page }) => {
-        dropdownsPage = new DropdownsPage(page);
-        await dropdownsPage.navigateToDropdowns();
-    });
-
     defaultValueTests.forEach(data => {
         test(`${data.name}`, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ dropdownsPage }) => {
             await expect(
                 data.locator(dropdownsPage)
             ).toHaveText(
