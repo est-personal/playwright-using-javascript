@@ -9,7 +9,7 @@ const {
     expectValidCoordinates, 
     expectValidRgb,
     expectValidSize 
-} = require('../../helpers/buttonAssertions');
+} = require('../../helpers/ButtonsAssertions');
 
 test.describe('QA Playground - Buttons Tests', () => {
 

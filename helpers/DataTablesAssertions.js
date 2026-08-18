@@ -1,7 +1,7 @@
 const { expect } = require('@playwright/test');
 const { DataTablesData } = require('../testData/DataTablesData');
 
-class DataTableAssertions {
+class DataTablesAssertions {
     static validateAscending(values, columnName) {
         const expected = [...values].sort((a, b) =>
             a.localeCompare(b)
@@ -74,4 +74,4 @@ class DataTableAssertions {
     }
 }
 
-module.exports = { DataTableAssertions };
+module.exports = { DataTablesAssertions };

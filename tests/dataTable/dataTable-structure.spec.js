@@ -1,6 +1,6 @@
 const {test, expect} = require('../../fixtures/dataTables.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
-const { DataTableAssertions } = require('../../helpers/DataTableAssertions');
+const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
 test.describe('QA Playground - Data Table Structure Validation', () => {
     test('Validate Column Headers', 
@@ -147,7 +147,7 @@ test.describe('QA Playground - Data Table Structure Validation', () => {
         // Validate Genre column
         const actualBookGenres =
         await dataTablesPage.getBookGenreRows();
-        DataTableAssertions.validateGenres(
+        DataTablesAssertions.validateGenres(
             actualBookGenres,
             DataTablesData.existingBook.genre
         );
