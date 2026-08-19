@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { InputFieldsPage } = require('../../pages/InputFieldsPage');
 const { InputFieldsData } = require('../../testData/InputFieldsData');
 
@@ -67,17 +67,17 @@ const defaultValueTests = [
 
 test.describe('QA Playground - Input Fields Default Value Validations', () => {
 
-    let inputFieldsPage;
+    // let inputFieldsPage;
 
-    test.beforeEach(async ({ page }) => {
-        inputFieldsPage = new InputFieldsPage(page);
-        await inputFieldsPage.navigateToInputFields();
-    });
+    // test.beforeEach(async ({ page }) => {
+    //     inputFieldsPage = new InputFieldsPage(page);
+    //     await inputFieldsPage.navigateToInputFields();
+    // });
 
     defaultValueTests.forEach(data => {
         test(`Default Value of Scenario ${data.name}`, {
                 tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ inputFieldsPage }) => {
             if (data.type === 'placeholder') {
                 await expect(
                     data.inputLocator(inputFieldsPage)

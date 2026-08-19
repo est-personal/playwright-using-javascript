@@ -364,11 +364,8 @@ class DataTablesPage {
     }
 
     async navigateToDataTable() {
-        await this.page.goto(
-            QaPlaygroundUrls.dataTablesPage,
-            {
-                waitUntil: 'domcontentloaded'
-            }
+        await this.navigate(
+            QaPlaygroundUrls.dataTablesPage
         );
     }
 

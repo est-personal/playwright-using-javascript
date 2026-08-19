@@ -12,6 +12,12 @@ class BasePage {
             .check();
     }
 
+    async clear(locator) {
+        await this.page
+            .locator(locator)
+            .clear();
+    }
+
     async click(locator) {
         await this.page
             .locator(locator)

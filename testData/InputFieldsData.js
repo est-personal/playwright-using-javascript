@@ -2,8 +2,6 @@
 // Test Data for QA Playground - Input Fields Page
 const InputFieldsData = {
     // Static Data
-    appendText: 
-        " Endgame",
     currentValueText: 
         "Current value: ",
     defaultAppendTabInput: 
@@ -38,6 +36,8 @@ const InputFieldsData = {
         "readonly",
     sampleText: 
         "Justice League",
+    textToAppend: 
+        " Endgame",
     valueText: 
         "Value: ",    
     youEnteredText: 
@@ -45,10 +45,10 @@ const InputFieldsData = {
 
     // Dynamic Data
     get appendValue() {
-        return  this.defaultAppendTabInput + this.appendText;
+        return  this.defaultAppendTabInput + this.textToAppend;
     },
     get appendValueText() {
-        return  this.currentValueText + this.defaultAppendTabInput + this.appendText;
+        return  this.currentValueText + this.defaultAppendTabInput + this.textToAppend;
     },
     get defaultAppendValueTextResult() {
         return  this.currentValueText + this.defaultAppendTabInput;
@@ -56,7 +56,7 @@ const InputFieldsData = {
     get defaultClearFieldResult() {
         return  this.fieldContainsText + this.defaultClearFieldInput;
     },
-    get defaultReadValueInputInputTextResult() {
+    get defaultReadValueTextResult() {
         return  this.valueText + this.defaultReadValueInput;
     },
     get movieValueText() {

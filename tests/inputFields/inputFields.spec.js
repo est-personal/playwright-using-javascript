@@ -1,26 +1,22 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { InputFieldsPage } = require('../../pages/InputFieldsPage');
 const { InputFieldsData } = require('../../testData/InputFieldsData');
 
 test.describe('QA Playground - Input Fields Tests', () => {
 
-    let inputFieldsPage;
-
-    test.beforeEach(async ({ page }) => {
-        inputFieldsPage = new InputFieldsPage(page);
-        await inputFieldsPage.navigateToInputFields();
-    });
-
     test.describe('Scenario Type Movie', () => {
+
+        test.beforeEach(async ({ inputFieldsPage }) => {
+            await expect(
+                inputFieldsPage.getTypeMovieSection()
+            ).toBeVisible();
+        });
+
         test('Type a Movie Name', 
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
-            // Wait for Type Movie section to be visible
-            await expect(
-                inputFieldsPage.getTypeMovieSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Enter text in Movie Name input
             await inputFieldsPage.enterMovieName(
                 InputFieldsData.enteredMovieName
@@ -44,11 +40,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async ({ page }) => {
-            // Wait for Type Movie section to be visible
-            await expect(
-                inputFieldsPage.getTypeMovieSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Click Submit button
             await inputFieldsPage.clickSubmitButton();
             // Validate value of Movie Name result if no movie entered
@@ -62,27 +54,23 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Append Tab', () => {
+
+        test.beforeEach(async ({ inputFieldsPage }) => {
+            await expect(
+                inputFieldsPage.getAppendTabSection()
+            ).toBeVisible();
+        });
+
+
         test('Append Text and Press Tab', 
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async ({ page }) => {
-            // Wait for Append Tab section to be visible
-            await expect(
-                inputFieldsPage.getAppendTabSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Enter text in Append Tab input
             await inputFieldsPage.appendText(
-                InputFieldsData.appendText
+                InputFieldsData.textToAppend
             );
-            await expect(
-                inputFieldsPage.getAppendTabInput()
-            ).toHaveValue(
-                InputFieldsData.appendValue
-            );
-            // console.log(
-            //     await inputFieldsPage.getAppendTabInput().inputValue()
-            // );
             // Press Tab
             await inputFieldsPage.pressTabAppendTextField();
             //Validate Append Tab result
@@ -97,11 +85,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async ({ page }) => {
-            // Wait for Append Tab section to be visible
-            await expect(
-                inputFieldsPage.getAppendTabSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Click Append Tab input
             await inputFieldsPage.getAppendTabInput().click();
             // Verify focus in Append Tab input
@@ -120,11 +104,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@regression', '@negative']
             },
-        async ({ page }) => {
-            // Wait for Append Tab section to be visible
-            await expect(
-                inputFieldsPage.getAppendTabSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Click Append Tab input
             await inputFieldsPage.getAppendTabInput().click();
             // Press Tab
@@ -140,15 +120,18 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Read Value', () => {
+
+        test.beforeEach(async ({ inputFieldsPage }) => {
+            await expect(
+                inputFieldsPage.getReadValueSection()
+            ).toBeVisible();
+        });
+
         test('Read Value Field', 
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async ({ page }) => {
-            // Wait for Read Value section to be visible
-            await expect(
-                inputFieldsPage.getReadValueSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Get Read Value input
             const readValueFieldText =
                 await inputFieldsPage.getReadValueInputText();
@@ -166,11 +149,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async ({ page }) => {
-            // Wait for Read Value section to be visible
-            await expect(
-                inputFieldsPage.getReadValueSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             await expect(
                 inputFieldsPage.getReadValueInput()
             ).toHaveJSProperty('readOnly', true);
@@ -179,15 +158,18 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Clear Field', () => {
+
+        test.beforeEach(async ({ inputFieldsPage }) => {
+            await expect(
+                inputFieldsPage.getClearFieldSection()
+            ).toBeVisible();
+        });
+        
         test('Clear Input Field via button', 
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
-            // Wait for Clear Field section to be visible
-            await expect(
-                inputFieldsPage.getClearFieldSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Click Clear button
             await inputFieldsPage.clickClearButton();
             // Validate Clear Field input is cleared
@@ -206,11 +188,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
-            // Wait for Clear Field section to be visible
-            await expect(
-                inputFieldsPage.getClearFieldSection()
-            ).toBeVisible();
+        async ({ inputFieldsPage }) => {
             // Enter text in Clear Field Input
             await inputFieldsPage.enterTextInClearField(
                 InputFieldsData.sampleText
@@ -236,7 +214,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ inputFieldsPage }) => {
             // Wait for Disabled Input section to be visible
             await expect(
                 inputFieldsPage.getDisabledInputSection()
@@ -254,7 +232,7 @@ test.describe('QA Playground - Input Fields Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ inputFieldsPage }) => {
             // Wait for Read-Only Input section to be visible
             await expect(
                 inputFieldsPage.getReadOnlyInputSection()

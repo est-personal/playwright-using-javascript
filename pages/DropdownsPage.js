@@ -129,11 +129,8 @@ class DropdownsPage extends BasePage {
     }
 
     async navigateToDropdowns() {
-        await this.page.goto(
-            QaPlaygroundUrls.dropdownsPage,
-            {
-                waitUntil: 'domcontentloaded'
-            }
+        await this.navigate(
+            QaPlaygroundUrls.dropdownsPage
         );
     }
 

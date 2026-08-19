@@ -2,11 +2,12 @@
 // Keywords for QA Playground - Input Fields Page
 const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
 const { InputFieldsLocators } = require('../locators/InputFieldsLocators');
+const { BasePage } = require('./BasePage');
 
-class InputFieldsPage {
+class InputFieldsPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+        super(page);
     }
 
     // Async
@@ -19,108 +20,91 @@ class InputFieldsPage {
     }
 
     async clearField() {
-        await this.page
-            .locator(InputFieldsLocators.clearFieldInput)
-            .clear();
+        await this.clear(
+            InputFieldsLocators.clearFieldInput
+        );
     }
 
     async clickClearButton() {
-        await this.page
-            .locator(InputFieldsLocators.clearButton)
-            .click();
+        await this.click(
+            InputFieldsLocators.clearButton
+        );
     }
 
     async clickReadValueButton() {
-        await this.page
-            .locator(InputFieldsLocators.readValueButton)
-            .click();
+        await this.click(
+            InputFieldsLocators.readValueButton
+        );
     }
 
     async clickSubmitButton() {
-        await this.page
-            .locator(InputFieldsLocators.submitButton)
-            .click();
+        await this.click(
+            InputFieldsLocators.submitButton
+        );
     }
 
     async enterTextInClearField(clearText) {
-        await this.page
-            .locator(InputFieldsLocators.clearFieldInput)
-            .fill(clearText);
+        await this.fill(
+            InputFieldsLocators.clearFieldInput,
+            clearText
+        );
     }
 
     async enterMovieName(movieName) {
-        await this.page
-            .locator(InputFieldsLocators.movieNameInput)
-            .fill(movieName);
+        await this.fill(
+            InputFieldsLocators.movieNameInput,
+            movieName
+        );
     }
 
     async getAppendTabInputText() {
-        return await this.page
-            .locator(
-                InputFieldsLocators.appendTabInput)
-            // .textContent();
-            .inputValue();
+        return await this.getValue(
+            InputFieldsLocators.appendTabInput
+        );
     }
 
     async getAppendTabResultText() {
-        return await this.page
-            .locator(
-                InputFieldsLocators.appendTabResult)
-            .textContent();
+       return await this.getText(
+            InputFieldsLocators.appendTabResult
+        );
     }
 
     async getMovieNameInputText() {
-        return await this.page
-            .locator(InputFieldsLocators.movieNameInput)
-            .textContent();
+        return await this.getValue(
+            InputFieldsLocators.movieNameInput
+        );
     }
 
     async getMovieNameInputPlaceholderAttribute() {
-        return await this.page
-            .locator(InputFieldsLocators.movieNameInput)
-            .getAttribute('placeholder');
+        return await this.getAttribute(
+            InputFieldsLocators.movieNameInput,
+            'placeholder'
+        );
     }
 
     async getMovieNameResultText() {
-        return await this.page
-            .locator(
-                InputFieldsLocators.movieNameResult)
-            .textContent();
+        return await this.getText(
+            InputFieldsLocators.movieNameResult
+        );
     }
 
     async getReadValueInputText() {
-        return await this.page
-            .locator(
-                InputFieldsLocators.readValueInput)
-            // .textContent();
-            .inputValue();
+        return await this.getValue(
+            InputFieldsLocators.readValueInput
+        );
     }
 
     async getReadValueResultText() {
-        return await this.page
-            .locator(
-                InputFieldsLocators.readValueResult)
-            // .textContent();
-            .inputValue();
+        return await this.getValue(
+            InputFieldsLocators.readValueResult
+        );
     }
 
     async navigateToInputFields() {
-    for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-            await this.page.goto(
-                QaPlaygroundUrls.inputFieldsPage,
-                {
-                    waitUntil: 'domcontentloaded',
-                    timeout: 60000
-                }
-            );
-            return;
-        } catch (error) {
-            if (attempt === 3) throw error;
-            console.log(`Navigation attempt ${attempt} failed`);
-        }
+        await this.navigate(
+            QaPlaygroundUrls.inputFieldsPage
+        );
     }
-}
 
     async pressTabAppendTextField() {
         await this.page
