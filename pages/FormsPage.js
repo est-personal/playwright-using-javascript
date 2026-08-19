@@ -2,146 +2,154 @@
 // Keywords for QA Playground - FormsLocators Page
 const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
 const { FormsLocators } = require('../locators/FormsLocators');
+const { BasePage } = require('./BasePage');
 
-class FormsPage {
+class FormsPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+        super(page);
     }
 
     // Async
     async clickAccountResetButton() {
-        await this.page
-            .locator(FormsLocators.accountResetButton)
-            .click();
+        await this.click(
+            FormsLocators.accountResetButton
+        );
     }
 
     async clickAddressResetButton() {
-        await this.page
-            .locator(FormsLocators.addressResetButton)
-            .click();
+        await this.click(
+            FormsLocators.addressResetButton
+        );
     }
 
     async clickFillAgainButton() {
-        await this.page
-            .locator(FormsLocators.fillAgainButton)
-            .click();
+        await this.click(
+            FormsLocators.fillAgainButton
+        );
     }
 
     async clickInterestsResetButton() {
-        await this.page
-            .locator(FormsLocators.interestResetButton)
-            .click();
+        await this.click(
+            FormsLocators.interestResetButton
+        );
     }
 
     async clickLoginButton() {
-        await this.page
-            .locator(FormsLocators.loginButton)
-            .click();
+        await this.click(
+            FormsLocators.loginButton
+        );
     }
 
     async clickLoginResetButton() {
-        await this.page
-            .locator(FormsLocators.loginResetButton)
-            .click();
+        await this.click(
+            FormsLocators.loginResetButton
+        );
     }
 
     async clickPersonalResetButton() {
-        await this.page
-            .locator(FormsLocators.personalResetButton)
-            .click();
+        await this.click(
+            FormsLocators.personalResetButton
+        );
     }
 
     async clickSaveAddressButton() {
-        await this.page
-            .locator(FormsLocators.saveAddressButton)
-            .click();
+        await this.click(
+            FormsLocators.saveAddressButton
+        );
     }
 
     async clickSaveDetailsButton() {
-        await this.page
-            .locator(FormsLocators.saveDetailsButton)
-            .click();
+        await this.click(
+            FormsLocators.saveDetailsButton
+        );
     }
 
     async clickSaveInterestsButton() {
-        await this.page
-            .locator(FormsLocators.saveInterestButton)
-            .click();
+        await this.click(
+            FormsLocators.saveInterestButton
+        );
     }
 
     async clickSubmitButton() {
-        await this.page
-            .locator(FormsLocators.submitButton)
-            .click();
+        await this.click(
+            FormsLocators.submitButton
+        );
     }
 
     async enterAboutYou(aboutYou) {
-        await this.page
-            .locator(FormsLocators.aboutYouInput)
-            .fill(aboutYou);
+        await this.fill(
+            FormsLocators.aboutYouInput,
+            aboutYou
+        );
     }
 
     async enterCity(city) {
-        await this.page
-            .locator(FormsLocators.cityInput)
-            .fill(city);
+        await this.fill(
+            FormsLocators.cityInput,
+            city
+        );
     }
 
     async enterConfirmPassword(password) {
-        await this.page
-            .locator(FormsLocators.confirmPasswordInput)
-            .fill(password);
+        await this.fill(
+            FormsLocators.confirmPasswordInput,
+            password
+        );
     }
 
     async enterDateOfBirth(dob) {
-        await this.page
-            .locator(FormsLocators.dateOfBirthInput)
-            .fill(dob);
+        await this.fill(
+            FormsLocators.dateOfBirthInput,
+            dob
+        );
     }
 
     async enterEmail(email) {
-        await this.page
-            .locator(FormsLocators.emailInput)
-            .fill(email);
+        await this.fill(
+            FormsLocators.emailInput,
+            email
+        );
     }
 
     async enterFirstName(firstName) {
-        await this.page
-            .locator(FormsLocators.firstNameInput)
-            .fill(firstName);
+        await this.fill(
+            FormsLocators.firstNameInput,
+            firstName
+        );
     }
 
     async enterLastName(lastName) {
-        await this.page
-            .locator(FormsLocators.lastNameInput)
-            .fill(lastName);
+        await this.fill(
+            FormsLocators.lastNameInput,
+            lastName
+        );
     }
 
     async enterLoginPassword(password) {
-        await this.page
-            .locator(FormsLocators.loginPasswordInput)
-            .fill(password);
+        await this.fill(
+            FormsLocators.loginPasswordInput,
+            password
+        );
     }
 
     async enterPassword(password) {
-        await this.page
-            .locator(FormsLocators.accountPasswordInput)
-            .fill(password);
+        await this.fill(
+            FormsLocators.accountPasswordInput,
+            password
+        );
     }
 
     async enterPhone(phone) {
-        await this.page
-            .locator(FormsLocators.phoneInput)
-            .fill(phone);
+        await this.fill(
+            FormsLocators.phoneInput,
+            phone
+        );
     }
 
     async navigateToForms() {
-        await this.page.goto(
-            QaPlaygroundUrls.formsPage,
-            {
-                waitUntil: 'domcontentloaded'
-            }
+        await this.navigate(
+            QaPlaygroundUrls.formsPage
         );
     }
 
@@ -154,9 +162,9 @@ class FormsPage {
             FormsLocators.jestCheckBox
         ];
         for (const checkbox of checkboxes) {
-            const isChecked = await this.page
-                .locator(checkbox)
-                .isChecked();
+            const isChecked = await this.isChecked(
+                checkbox
+            );
             if (isChecked) {
                 throw new Error(
                     `Checkbox ${checkbox} is checked but should not be`
@@ -166,29 +174,28 @@ class FormsPage {
     }
 
     async selectAppium() {
-        await this.page
-            .locator(FormsLocators.appiumCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.appiumCheckBox
+        );
     }
 
     async selectCountry(country) {
-        await this.page
-            .locator(FormsLocators.countryDropdown)
-            .selectOption({ 
-                label: country 
-            });
+        await this.selectByLabel(
+            FormsLocators.countryDropdown,
+            country 
+        );
     }
 
     async selectCypress() {
-        await this.page
-            .locator(FormsLocators.cypressCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.cypressCheckBox
+        );
     }
 
     async selectFemaleGender() {
-        await this.page
-            .locator(FormsLocators.femaleRadioButton)
-            .check();
+        await this.check(
+            FormsLocators.femaleRadioButton
+        );
     }
 
     async selectGender(gender) {
@@ -197,14 +204,17 @@ class FormsPage {
             female: FormsLocators.femaleRadioButton,
             other: FormsLocators.otherRadioButton
         };
-        await this.page
-            .locator(genderMap[gender])
-            .waitFor(
-                {State: 'visible'}
+        if (!genderMap[gender]) {
+            throw new Error(
+                `Unsupported gender: ${gender}`
             );
-        await this.page
-            .locator(genderMap[gender])
-            .click();
+        }
+        await this.waitForVisible(
+            genderMap[gender]
+        );
+        await this.click(
+            genderMap[gender]
+        );
     }
 
     async selectInterest(interests) {
@@ -226,44 +236,43 @@ class FormsPage {
             if (!(await locator.isChecked())) {
                 await locator.check();
             }
-            // await expect(locator).toBeChecked();
         }
     }
 
     async selectJest() {
-        await this.page
-            .locator(FormsLocators.jestCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.jestCheckBox
+        );
     }
 
     async selectMaleGender() {
-        await this.page
-            .locator(FormsLocators.maleRadioButton)
-            .check();
+        await this.check(
+            FormsLocators.maleRadioButton
+        );
     }
 
     async selectOtherGender() {
-        await this.page
-            .locator(FormsLocators.otherRadioButton)
-            .check();
+        await this.check(
+            FormsLocators.otherRadioButton
+        );
     }
 
     async selectPlaywright() {
-        await this.page
-            .locator(FormsLocators.playwrightCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.playwrightCheckBox
+        );
     }
 
     async selectSelenium() {
-        await this.page
-            .locator(FormsLocators.seleniumCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.seleniumCheckBox
+        );
     }
 
     async selectTermsAndConditions() {
-        await this.page
-            .locator(FormsLocators.termsAndConditionCheckBox)
-            .check();
+        await this.check(
+            FormsLocators.termsAndConditionCheckBox
+        );
     }
 
     // Sync

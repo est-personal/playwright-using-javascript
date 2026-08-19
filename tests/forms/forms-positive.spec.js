@@ -1,44 +1,44 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
 const { GenericData } = require('../../testData/GenericData');
 
 test.describe('QA Playground - Forms Tests', () => {
 
-    let formsPage;
+    // let formsPage;
 
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
+    // test.beforeEach(async ({ page }) => {
+    //     formsPage = new FormsPage(page);
+    //     await formsPage.navigateToForms();
+    // });
 
     test.describe('Login Form', () => {
         test('Successful Login', 
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Login section to be visible
             await expect(
                 formsPage.getLoginSection()
             ).toBeVisible();
             // Input Email
             await formsPage.enterEmail(
-                FormsData.positive.validUser.email
+                FormsData.user.validUser.email
             );
             await expect(
                 formsPage.getEmailInput()
             ).toHaveValue(
-                FormsData.positive.validUser.email
+                FormsData.user.validUser.email
             );
             // Input Password
             await formsPage.enterLoginPassword(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             await expect(
                 formsPage.getLoginPasswordInput()
             ).toHaveValue(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             // Click Login button
             await formsPage.clickLoginButton();
@@ -49,7 +49,7 @@ test.describe('QA Playground - Forms Tests', () => {
             await expect(
                 formsPage.getLoginResult()
             ).toHaveText(
-                FormsData.positive.expectedResults.loginSuccessUserMessage
+                FormsData.expectedResults.loginSuccessUserMessage
             );
         });
     
@@ -60,50 +60,50 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Personal Details section to be visible
             await expect(
                 formsPage.getPersonalSection()
             ).toBeVisible();
             // Input First Name
             await formsPage.enterFirstName(
-                FormsData.positive.validUser.firstName
+                FormsData.user.validUser.firstName
             );
             await expect(
                 formsPage.getFirstNameInput()
             ).toHaveValue(
-                FormsData.positive.validUser.firstName
+                FormsData.user.validUser.firstName
             );
             // Input Last Name
             await formsPage.enterLastName(
-                FormsData.positive.validUser.lastName
+                FormsData.user.validUser.lastName
             );
             await expect(
                 formsPage.getLastNameInput()
             ).toHaveValue(
-                FormsData.positive.validUser.lastName
+                FormsData.user.validUser.lastName
             );
             // Input Phone
             await formsPage.enterPhone(
-                FormsData.positive.validUser.phone
+                FormsData.user.validUser.phone
             );
             await expect(
                 formsPage.getPhoneInput()
             ).toHaveValue(
-                FormsData.positive.validUser.phone
+                FormsData.user.validUser.phone
             );
             // Input Date of Birth
             await formsPage.enterDateOfBirth(
-                FormsData.positive.validUser.dateOfBirth
+                FormsData.user.validUser.dateOfBirth
             );
             await expect(
                 formsPage.getDateOfBirthInput()
             ).toHaveValue(
-                FormsData.positive.validUser.dateOfBirth
+                FormsData.user.validUser.dateOfBirth
             );
             // Select Gender
             await formsPage.selectGender(
-                FormsData.positive.validUser.gender
+                FormsData.user.validUser.gender
             );
             // Click Save Details button
             await formsPage.clickSaveDetailsButton();
@@ -114,7 +114,7 @@ test.describe('QA Playground - Forms Tests', () => {
             await expect(
                 formsPage.getPersonalResult()
             ).toHaveText(
-                FormsData.positive.expectedResults.personalSuccessUserMessage
+                FormsData.expectedResults.personalSuccessUserMessage
             );
         });
     
@@ -125,37 +125,37 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Address section to be visible
             await expect(
                 formsPage.getAddressSection()
             ).toBeVisible();
             // Select Country
             await formsPage.selectCountry(
-                FormsData.positive.validUser.country
+                FormsData.user.validUser.country
             );
             await expect(
                 formsPage.getCountryDropdown()
             ).toHaveValue(
-                FormsData.positive.validUser.countryCode
+                FormsData.user.validUser.countryCode
             );
             // Input City
             await formsPage.enterCity(
-                FormsData.positive.validUser.city
+                FormsData.user.validUser.city
             );
             await expect(
                 formsPage.getCityInput()
             ).toHaveValue(
-                FormsData.positive.validUser.city
+                FormsData.user.validUser.city
             );
             // Input About You
             await formsPage.enterAboutYou(
-                FormsData.positive.validUser.aboutYou
+                FormsData.user.validUser.aboutYou
             );
             await expect(
                 formsPage.getAboutYouInput()
             ).toHaveValue(
-                FormsData.positive.validUser.aboutYou
+                FormsData.user.validUser.aboutYou
             );
             // Click Save Address button
             await formsPage.clickSaveAddressButton();
@@ -166,7 +166,7 @@ test.describe('QA Playground - Forms Tests', () => {
             await expect(
                 formsPage.getAddressResult()
             ).toHaveText(
-                FormsData.positive.expectedResults.addressSuccessUserMessage
+                FormsData.expectedResults.addressSuccessUserMessage
             );
         });
 
@@ -174,28 +174,28 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Address section to be visible
             await expect(
                 formsPage.getAddressSection()
             ).toBeVisible();
             // Select Country
             await formsPage.selectCountry(
-                FormsData.positive.validUser.country
+                FormsData.user.validUser.country
             );
             await expect(
                 formsPage.getCountryDropdown()
             ).toHaveValue(
-                FormsData.positive.validUser.countryCode
+                FormsData.user.validUser.countryCode
             );
             // Input City
             await formsPage.enterCity(
-                FormsData.positive.validUser.city
+                FormsData.user.validUser.city
             );
             await expect(
                 formsPage.getCityInput()
             ).toHaveValue(
-                FormsData.positive.validUser.city
+                FormsData.user.validUser.city
             );
             // Click Save Address button
             await formsPage.clickSaveAddressButton();
@@ -206,7 +206,7 @@ test.describe('QA Playground - Forms Tests', () => {
             await expect(
                 formsPage.getAddressResult()
             ).toHaveText(
-                FormsData.positive.expectedResults.addressSuccessUserMessage
+                FormsData.expectedResults.addressSuccessUserMessage
             );
         });
 
@@ -217,17 +217,17 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Interests section to be visible
             await expect(
                 formsPage.getInterestsSection()
             ).toBeVisible();
             // Set Variable
             const expectedInterests = 
-                FormsData.positive.expectedResults.interestsSavedMessage + FormsData.positive.validUser.interests.join(', ');
+                FormsData.expectedResults.interestsSavedMessage + FormsData.user.validUser.interests.join(', ');
             // Select Interest/s
             await formsPage.selectInterest(
-                FormsData.positive.validUser.interests
+                FormsData.user.validUser.interests
             );
             // Click Save Interests button
             await formsPage.clickSaveInterestsButton();
@@ -246,17 +246,17 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Interests section to be visible
             await expect(
                 formsPage.getInterestsSection()
             ).toBeVisible();
             // Set Variable
             const expectedInterests = 
-                FormsData.positive.expectedResults.interestsSavedMessage + FormsData.positive.validUser.oneInterest.join(', ');
+                FormsData.expectedResults.interestsSavedMessage + FormsData.user.validUser.oneInterest.join(', ');
             // Select Interest/s
             await formsPage.selectInterest(
-                FormsData.positive.validUser.oneInterest
+                FormsData.user.validUser.oneInterest
             );
             // Click Save Interests button
             await formsPage.clickSaveInterestsButton();
@@ -275,14 +275,14 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Interests section to be visible
             await expect(
                 formsPage.getInterestsSection()
             ).toBeVisible();
             // Select Interest/s
             await formsPage.selectInterest(
-                FormsData.positive.validUser.allInterests
+                FormsData.user.validUser.allInterests
             );
             // Click Save Interests button
             await formsPage.clickSaveInterestsButton();
@@ -292,7 +292,7 @@ test.describe('QA Playground - Forms Tests', () => {
             ).toBeVisible();
             const resultText =
                 await formsPage.getInterestsResult().textContent();
-            for (const interest of FormsData.positive.validUser.interests) {
+            for (const interest of FormsData.user.validUser.interests) {
                 expect(resultText).toContain(interest);
             }
         });
@@ -304,28 +304,28 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@smoke', '@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Account section to be visible
             await expect(
                 formsPage.getAccountSection()
             ).toBeVisible();
             // Input Password
             await formsPage.enterPassword(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             await expect(
                 formsPage.getPasswordInput()
             ).toHaveValue(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             // Input Confirm Password
             await formsPage.enterConfirmPassword(
-                FormsData.positive.validUser.confirmPassword
+                FormsData.user.validUser.confirmPassword
             );
             await expect(
                 formsPage.getConfirmPasswordInput()
             ).toHaveValue(
-                FormsData.positive.validUser.confirmPassword
+                FormsData.user.validUser.confirmPassword
             );
             // Check Terms & Conditions
             await formsPage.selectTermsAndConditions();
@@ -337,10 +337,10 @@ test.describe('QA Playground - Forms Tests', () => {
             ).toBeVisible();
             await expect(
                 formsPage.getAccountResult()
-            ).toContainText(FormsData.positive.expectedResults.accountSetupCompleteMessage)
+            ).toContainText(FormsData.expectedResults.accountSetupCompleteMessage)
             await expect(
                 formsPage.getAccountResult()
-            ).toContainText(FormsData.positive.expectedResults.accoutSecureMessage)
+            ).toContainText(FormsData.expectedResults.accoutSecureMessage)
             await expect(
                 formsPage.getFillAgainButton()
             ).toBeVisible();
@@ -354,28 +354,28 @@ test.describe('QA Playground - Forms Tests', () => {
             {
                 tag: ['@regression', '@positive']
             },
-        async () => {
+        async ({ formsPage }) => {
             // Wait for Account section to be visible
             await expect(
                 formsPage.getAccountSection()
             ).toBeVisible();
             // Input Password
             await formsPage.enterPassword(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             await expect(
                 formsPage.getPasswordInput()
             ).toHaveValue(
-                FormsData.positive.validUser.password
+                FormsData.user.validUser.password
             );
             // Input Confirm Password
             await formsPage.enterConfirmPassword(
-                FormsData.positive.validUser.confirmPassword
+                FormsData.user.validUser.confirmPassword
             );
             await expect(
                 formsPage.getConfirmPasswordInput()
             ).toHaveValue(
-                FormsData.positive.validUser.confirmPassword
+                FormsData.user.validUser.confirmPassword
             );
             // Check Terms & Conditions
             await formsPage.selectTermsAndConditions();

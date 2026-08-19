@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
 const { GenericData } = require('../../testData/GenericData');
@@ -9,50 +9,43 @@ const loginFormValidationScenarios = [
         email: '',
         password: '',
         expectedEmailError:
-            FormsData.negative.expectedResults.emailRequiredMessage,
+            FormsData.expectedResults.emailRequiredMessage,
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordRequiredMessage
+            FormsData.expectedResults.passwordRequiredMessage
     },
     {
         name: 'Blank Email',
         email: '',
         password: 
-            FormsData.positive.validUser.password,
+            FormsData.user.validUser.password,
         expectedEmailError:
-            FormsData.negative.expectedResults.emailRequiredMessage
+            FormsData.expectedResults.emailRequiredMessage
     },
     {
         name: 'Blank Password',
         email:
-            FormsData.positive.validUser.email,
+            FormsData.user.validUser.email,
         password: '',
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordRequiredMessage
+            FormsData.expectedResults.passwordRequiredMessage
     },
     {
         name: 'Invalid Email',
         email:
-            FormsData.negative.invalidUser.email,
+            FormsData.user.invalidUser.email,
         password:
-            FormsData.positive.validUser.password,
+            FormsData.user.validUser.password,
         expectedEmailError:
-            FormsData.negative.expectedResults.invalidEmailMessage
+            FormsData.expectedResults.invalidEmailMessage
     }
 ];
 
 test.describe('Login Form Validation', () => {
 
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
     loginFormValidationScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@negative']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 formsPage.getLoginSection()
             ).toBeVisible();
@@ -97,132 +90,125 @@ const personalDetailsFormValidationScenarios = [
         dateOfBirth: '',
         gender: '',
         expectedFirstNameError:
-            FormsData.negative.expectedResults.firstNameRequiredMessage,
+            FormsData.expectedResults.firstNameRequiredMessage,
         expectedLastNameError:
-            FormsData.negative.expectedResults.lastNameRequiredMessage,
+            FormsData.expectedResults.lastNameRequiredMessage,
         expectedPhoneError:
-            FormsData.negative.expectedResults.phoneRequiredMessage,
+            FormsData.expectedResults.phoneRequiredMessage,
         expectedDateOfBirthError:
-            FormsData.negative.expectedResults.dateOfBirthRequiredMessage,
+            FormsData.expectedResults.dateOfBirthRequiredMessage,
         expectedGenderError:
-            FormsData.negative.expectedResults.genderRequiredMessage
+            FormsData.expectedResults.genderRequiredMessage
     },
     {
         name: 'Blank First Name',
         firstName: '',
         lastName: 
-            FormsData.positive.validUser.LastName,
+            FormsData.user.validUser.LastName,
         phone: 
-            FormsData.positive.validUser.phone,
+            FormsData.user.validUser.phone,
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender:
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedFirstNameError:
-            FormsData.negative.expectedResults.firstNameRequiredMessage
+            FormsData.expectedResults.firstNameRequiredMessage
     },
     {
         name: 'Blank Last Name',
         firstName: 
-            FormsData.positive.validUser.FirstName,
+            FormsData.user.validUser.FirstName,
         lastName: '',
         phone: 
-            FormsData.positive.validUser.phone,
+            FormsData.user.validUser.phone,
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender:
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedLastNameError:
-            FormsData.negative.expectedResults.lastNameRequiredMessage
+            FormsData.expectedResults.lastNameRequiredMessage
     },
     {
         name: 'Blank Phone',
         firstName: 
-            FormsData.positive.validUser.FirstName,
+            FormsData.user.validUser.FirstName,
         lastName: 
-            FormsData.positive.validUser.LastName,
+            FormsData.user.validUser.LastName,
         phone: '',
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender:
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedPhoneError:
-            FormsData.negative.expectedResults.phoneRequiredMessage
+            FormsData.expectedResults.phoneRequiredMessage
     },
     {
         name: 'Blank Date Of Birth',
         firstName: 
-            FormsData.positive.validUser.FirstName,
+            FormsData.user.validUser.FirstName,
         lastName: 
-            FormsData.positive.validUser.LastName,
+            FormsData.user.validUser.LastName,
         phone:
-            FormsData.positive.validUser.phone,
+            FormsData.user.validUser.phone,
         dateOfBirth: '',
         gender:
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedDateOfBirthError:
-            FormsData.negative.expectedResults.dateOfBirthRequiredMessage
+            FormsData.expectedResults.dateOfBirthRequiredMessage
     },
     {
         name: 'Blank Gender',
         firstName: 
-            FormsData.positive.validUser.FirstName,
+            FormsData.user.validUser.FirstName,
         lastName: 
-            FormsData.positive.validUser.LastName,
+            FormsData.user.validUser.LastName,
         phone:
-            FormsData.positive.validUser.phone,
+            FormsData.user.validUser.phone,
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender: '',
         expectedGenderError:
-            FormsData.negative.expectedResults.genderRequiredMessage
+            FormsData.expectedResults.genderRequiredMessage
     },
     {
         name: 'Invalid Phone',
         firstName: 
-            FormsData.positive.validUser.FirstName,
+            FormsData.user.validUser.FirstName,
         lastName: 
-            FormsData.positive.validUser.LastName,
+            FormsData.user.validUser.LastName,
         phone:
-            FormsData.negative.invalidUser.phoneAlphanumeric,
+            FormsData.user.invalidUser.phoneAlphanumeric,
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender: 
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedPhoneError:
-            FormsData.negative.expectedResults.invalidPhoneMessage
+            FormsData.expectedResults.invalidPhoneMessage
     },
     {
         name: 'Phone Is Less Than 10 Digits',
         firstName: 
-            FormsData.positive.validUser.firstName,
+            FormsData.user.validUser.firstName,
         lastName: 
-            FormsData.positive.validUser.lastName,
+            FormsData.user.validUser.lastName,
         phone:
-            FormsData.negative.invalidUser.phoneRequirement,
+            FormsData.user.invalidUser.phoneRequirement,
         dateOfBirth:
-            FormsData.positive.validUser.dateOfBirth,
+            FormsData.user.validUser.dateOfBirth,
         gender: 
-            FormsData.positive.validUser.gender,
+            FormsData.user.validUser.gender,
         expectedPhoneError:
-            FormsData.negative.expectedResults.invalidPhoneMessage
+            FormsData.expectedResults.invalidPhoneMessage
     }
 
 ];
 
 test.describe('Personal Details Form Validation', () => {
 
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
     personalDetailsFormValidationScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@negative']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 formsPage.getPersonalSection()
             ).toBeVisible();
@@ -301,45 +287,38 @@ const addressFormValidationScenarios = [
         city: '',
         aboutYou: '',
         expectedCountryError:
-            FormsData.negative.expectedResults.countryRequiredMessage,
+            FormsData.expectedResults.countryRequiredMessage,
         expectedCityError:
-            FormsData.negative.expectedResults.cityRequiredMessage
+            FormsData.expectedResults.cityRequiredMessage
     },
     {
         name: 'Blank Country',
         country: '',
         city: 
-            FormsData.positive.validUser.city,
+            FormsData.user.validUser.city,
         aboutYou: 
-            FormsData.positive.validUser.aboutYou,
+            FormsData.user.validUser.aboutYou,
         expectedCountryError:
-            FormsData.negative.expectedResults.countryRequiredMessage
+            FormsData.expectedResults.countryRequiredMessage
     },
     {
         name: 'Blank City',
         country: 
-            FormsData.positive.validUser.country,
+            FormsData.user.validUser.country,
         city: '',
         aboutYou: 
-            FormsData.positive.validUser.aboutYou,
+            FormsData.user.validUser.aboutYou,
         expectedCityError:
-            FormsData.negative.expectedResults.cityRequiredMessage
+            FormsData.expectedResults.cityRequiredMessage
     }
 ];
 
 test.describe('Address Form Validation', () => {
 
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
     addressFormValidationScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@negative']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 formsPage.getAddressSection()
             ).toBeVisible();
@@ -385,23 +364,16 @@ const interestsFormValidationScenarios = [
         name: 'Blank Interest',
         interest: '',
         expectedInterestError:
-            FormsData.negative.expectedResults.interestsRequiredMessage
+            FormsData.expectedResults.interestsRequiredMessage
     }
 ];
 
 test.describe('Interest Form Validation', () => {
 
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
     interestsFormValidationScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@negative']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 formsPage.getInterestsSection()
             ).toBeVisible();
@@ -432,11 +404,11 @@ const accountSetupFormValidationScenarios = [
         confirmPassword: '',
         selectTerms: false,
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordRequiredMessage,
+            FormsData.expectedResults.passwordRequiredMessage,
         expectedConfirmPasswordError:
-            FormsData.negative.expectedResults.confirmPasswordRequiredMessage,
+            FormsData.expectedResults.confirmPasswordRequiredMessage,
         expectedTermsError:
-            FormsData.negative.expectedResults.termsRequiredMessage
+            FormsData.expectedResults.termsRequiredMessage
     },
     {
         name: 'Blank Password And Confirm Password',
@@ -444,73 +416,66 @@ const accountSetupFormValidationScenarios = [
         confirmPassword: '',
         selectTerms: true,
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordRequiredMessage,
+            FormsData.expectedResults.passwordRequiredMessage,
         expectedConfirmPasswordError:
-            FormsData.negative.expectedResults.confirmPasswordRequiredMessage
+            FormsData.expectedResults.confirmPasswordRequiredMessage
     },
     {
         name: 'Blank Password',
         password: '',
         confirmPassword: 
-            FormsData.positive.validUser.confirmPassword,
+            FormsData.user.validUser.confirmPassword,
         selectTerms: true,
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordRequiredMessage
+            FormsData.expectedResults.passwordRequiredMessage
     },
     {
         name: 'Blank Confirm Password',
         password: 
-            FormsData.positive.validUser.password,
+            FormsData.user.validUser.password,
         confirmPassword: '',
         selectTerms: true,
         expectedConfirmPasswordError:
-            FormsData.negative.expectedResults.confirmPasswordRequiredMessage
+            FormsData.expectedResults.confirmPasswordRequiredMessage
     },
     {
         name: 'Unchecked Terms and Conditions',
         password: 
-            FormsData.positive.validUser.password,
+            FormsData.user.validUser.password,
         confirmPassword:
-            FormsData.positive.validUser.confirmPassword,
+            FormsData.user.validUser.confirmPassword,
         selectTerms: false,
         expectedTermsError:
-            FormsData.negative.expectedResults.termsRequiredMessage
+            FormsData.expectedResults.termsRequiredMessage
     },
     {
         name: 'Mismatched Password And Confirm Password',
         password: 
-            FormsData.positive.validUser.password,
+            FormsData.user.validUser.password,
         confirmPassword:
-            FormsData.negative.invalidUser.mismatchedPassword,
+            FormsData.user.invalidUser.mismatchedPassword,
         selectTerms: true,
         expectedConfirmPasswordError:
-            FormsData.negative.expectedResults.passwordsDoNotMatchMessage
+            FormsData.expectedResults.passwordsDoNotMatchMessage
     },
     {
         name: 'Password Is Less Than 6 Characters',
         password: 
-            FormsData.negative.invalidUser.lessThanSixCharPassword,
+            FormsData.user.invalidUser.lessThanSixCharPassword,
         confirmPassword:
-            FormsData.negative.invalidUser.lessThanSixCharPassword,
+            FormsData.user.invalidUser.lessThanSixCharPassword,
         selectTerms: true,
         expectedPasswordError:
-            FormsData.negative.expectedResults.passwordLengthMessage
+            FormsData.expectedResults.passwordLengthMessage
     }
 ];
 
 test.describe('Account Setup Form Validation', () => {
 
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
     accountSetupFormValidationScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@negative']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 formsPage.getAccountSection()
             ).toBeVisible();

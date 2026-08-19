@@ -1,6 +1,66 @@
 // Arrange Alphabetically
 // Test Data for QA Playground - Forms Page
 const FormsData = {
+    expectedResults: {
+        accoutSecureMessage:
+            'Your account has been secured.',
+        accountSetupCompleteMessage:
+            'Account Setup Complete!',
+        addressSavedMessage:
+            'Address saved: ',
+        cityRequiredMessage:
+            'City is required.',
+        confirmPasswordRequiredMessage:
+            'Please confirm your password.',
+        countryRequiredMessage:
+            'Please select a country.',
+        dateOfBirthRequiredMessage:
+            'Date of birth is required.',
+        emailRequiredMessage: 
+            'Email is required.',
+        fillAgainButton:
+            'Fill Again',
+        firstNameRequiredMessage:
+            'First name is required.',
+        genderRequiredMessage:
+            'Please select your gender.',
+        interestsRequiredMessage:
+            'Please select at least one interest.',
+        interestsSavedMessage:
+            'Interests saved: ',
+        invalidEmailMessage:
+            'Enter a valid email address.',
+        invalidPhoneMessage:
+            'Phone must be exactly 10 digits.',
+        lastNameRequiredMessage:
+            'Last name is required.',
+        loginSuccessMessage:
+            'Login successful! Welcome, ',
+        passwordLengthMessage:
+            'Password must be at least 6 characters.',
+        passwordRequiredMessage:
+            'Password is required.',
+        passwordsDoNotMatchMessage:
+            'Passwords do not match.',
+        phoneRequiredMessage:
+            'Phone is required.',
+        savedMessage:
+            'Saved: ',
+        termsAndConditionRequiredMessage:
+            'You must accept the Terms & Conditions.',
+        get interestsSuccessUserMessage() {
+            return this.interestsSavedMessage + FormsData.user.validUser.interests;
+        },
+        get addressSuccessUserMessage() {
+            return this.addressSavedMessage + FormsData.user.validUser.city + ', ' + FormsData.user.validUser.country;
+        },
+        get loginSuccessUserMessage() {
+            return this.loginSuccessMessage + FormsData.user.validUser.email + '.';
+        },
+        get personalSuccessUserMessage() {
+            return this.savedMessage + FormsData.user.validUser.firstName + " " + FormsData.user.validUser.lastName;
+        }
+    },
     placeholder: {
         aboutYouPlaceholder:
             'Tell us a little about yourself…',
@@ -25,7 +85,19 @@ const FormsData = {
         phonePlaceholder:
             '10-digit number'
     },
-    positive: {
+    user: {
+        invalidUser: {
+            email:
+                'abc.com',
+            lessThanSixCharPassword:
+                'Pass1',
+            mismatchedPassword:
+                'Password124',
+            phoneAlphanumeric:
+                '0956448w89',
+            phoneRequirement:
+                '095614889'
+        },
         validUser: {
             aboutYou: 'I am a QA Automation Engineer.',
             allInterests: [
@@ -54,87 +126,6 @@ const FormsData = {
             password: 'Password123',
             phone: '0917123467'
         },
-
-        expectedResults: {
-            accoutSecureMessage:
-                'Your account has been secured.',
-            accountSetupCompleteMessage:
-                'Account Setup Complete!',
-            addressSavedMessage:
-                'Address saved: ',
-            interestsSavedMessage:
-                'Interests saved: ',
-            loginSuccessMessage:
-                'Login successful! Welcome, ',
-            fillAgainButton:
-                'Fill Again',
-            savedMessage:
-                'Saved: ',
-            get interestsSuccessUserMessage() {
-                return this.interestsSavedMessage + FormsData.positive.validUser.interests;
-            },
-            get addressSuccessUserMessage() {
-                return this.addressSavedMessage + FormsData.positive.validUser.city + ', ' + FormsData.positive.validUser.country;
-            },
-            get loginSuccessUserMessage() {
-                return this.loginSuccessMessage + FormsData.positive.validUser.email + '.';
-            },
-            get personalSuccessUserMessage() {
-                return this.savedMessage + FormsData.positive.validUser.firstName + " " + FormsData.positive.validUser.lastName;
-            }
-        }
-
-    },
-
-    negative: {
-        invalidUser: {
-            email:
-                'abc.com',
-            lessThanSixCharPassword:
-                'Pass1',
-            mismatchedPassword:
-                'Password124',
-            phoneAlphanumeric:
-                '0956448w89',
-            phoneRequirement:
-                '095614889'
-        },
-        
-        expectedResults: {
-            cityRequiredMessage:
-                'City is required.',
-            confirmPasswordRequiredMessage:
-                'Please confirm your password.',
-            countryRequiredMessage:
-                'Please select a country.',
-            dateOfBirthRequiredMessage:
-                'Date of birth is required.',
-            emailRequiredMessage: 
-                'Email is required.',
-            firstNameRequiredMessage:
-                'First name is required.',
-            genderRequiredMessage:
-                'Please select your gender.',
-            interestsRequiredMessage:
-                'Please select at least one interest.',
-            invalidEmailMessage:
-                'Enter a valid email address.',
-            invalidPhoneMessage:
-                'Phone must be exactly 10 digits.',
-            lastNameRequiredMessage:
-                'Last name is required.',
-            passwordLengthMessage:
-                'Password must be at least 6 characters.',
-            passwordRequiredMessage:
-                'Password is required.',
-            passwordsDoNotMatchMessage:
-                'Passwords do not match.',
-            phoneRequiredMessage:
-                'Phone is required.',
-            termsAndConditionRequiredMessage:
-                'You must accept the Terms & Conditions.'
-        }
-
     }
 
 };

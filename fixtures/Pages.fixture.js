@@ -3,6 +3,7 @@ const { expect } = require('@playwright/test');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { DataTablesPage } = require('../pages/DataTablesPage');
 const { DropdownsPage } = require('../pages/DropdownsPage');
+const { FormsPage } = require('../pages/FormsPage');
 
 exports.test = base.test.extend({
 
@@ -28,6 +29,13 @@ exports.test = base.test.extend({
             new DropdownsPage(page);
         await dropdownsPage.navigateToDropdowns();
         await use(dropdownsPage);
+    },
+
+    formsPage: async ({ page }, use) => {
+        const formsPage =
+            new FormsPage(page);
+        await formsPage.navigateToForms();
+        await use(formsPage);
     }
 
 });

@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
 const { GenericData } = require('../../testData/GenericData');
@@ -74,7 +74,7 @@ test.describe('QA Playground - Forms Placeholder Validations', () => {
     placeholderScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ formsPage }) => {
             for (const field of scenario.fields) {
                 await expect(
                     field.locator(formsPage)
