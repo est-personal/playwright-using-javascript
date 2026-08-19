@@ -4,6 +4,7 @@ const { ButtonsPage } = require('../pages/ButtonsPage');
 const { DataTablesPage } = require('../pages/DataTablesPage');
 const { DropdownsPage } = require('../pages/DropdownsPage');
 const { FormsPage } = require('../pages/FormsPage');
+const { InputFieldsPage } = require('../pages/InputFieldsPage');
 
 exports.test = base.test.extend({
 
@@ -36,6 +37,13 @@ exports.test = base.test.extend({
             new FormsPage(page);
         await formsPage.navigateToForms();
         await use(formsPage);
+    },
+
+    inputFieldsPage: async ({ page }, use) => {
+        const inputFieldsPage =
+            new InputFieldsPage(page);
+        await inputFieldsPage.navigateToInputFields();
+        await use(inputFieldsPage);
     }
 
 });
