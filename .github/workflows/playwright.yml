@@ -10,10 +10,11 @@ on:
 
   # Schedule Run
   schedule:
-    # Runs at 2:30 (2:30 AM) UTC
+    # Runs at 10:50 (10:50 AM) UTC
+    # Runs at 6:50 (18:50 AM) PHT
     # PHT is UTC+8 and GitHub Actions cron schedules use UTC
     # Subtract 8 hours
-    - cron: '30 18 * * *'
+    - cron: '50 10 * * *'
 
   # Manual Trigger
   workflow_dispatch:
@@ -44,26 +45,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm     # Node.js cache
-
-      # Playwright browser cache
-      - name: Cache Playwright Browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
 
       - name: Record Start Time
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
@@ -220,26 +203,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm     # Node.js cache
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
 
-      # Playwright browser cache
-      - name: Cache Playwright Browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Record Start Time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
       - name: Run Playwright Tests
         id: tests
@@ -252,19 +220,49 @@ jobs:
         run: |
           mkdir -p browser-results
 
+          END_TIME=$(date +%s)
+          DURATION_SEC=$((END_TIME - START_TIME))
+          DURATION_MIN=$((DURATION_SEC / 60))
+          DURATION_REM_SEC=$((DURATION_SEC % 60))
+
+          case "${{ matrix.browser }}" in
+            chromium)
+              BROWSER_NAME="Chromium"
+              ;;
+            firefox)
+              BROWSER_NAME="Firefox"
+              ;;
+            webkit)
+              BROWSER_NAME="WebKit"
+              ;;
+            *)
+              BROWSER_NAME="${{ matrix.browser }}"
+              ;;
+          esac
+
           if [ "${{ steps.tests.outcome }}" = "success" ]; then
-            echo "✅ ${{ matrix.browser }}" > browser-results/${{ matrix.browser }}.txt
+            echo "✅ ${BROWSER_NAME} - Passed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/${{ matrix.browser }}.txt
           else
-            echo "❌ ${{ matrix.browser }}" > browser-results/${{ matrix.browser }}.txt
+            echo "❌ ${BROWSER_NAME} - Failed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/${{ matrix.browser }}.txt
           fi
+
+      - name: Upload Browser Result (${{ matrix.browser }})
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-result-${{ matrix.browser }}
+          path: browser-results/
+          retention-days: 14
+          # playwright-report/
+          # test-results/
 
       - name: Upload Playwright Report (${{ matrix.browser }})
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-browser-result-${{ matrix.browser }}
+          name: playwright-report-${{ matrix.browser }}
           path: |
-            browser-results
+            playwright-report/
             test-results/
           retention-days: 14
 
@@ -292,7 +290,7 @@ jobs:
       - name: Download Browser Results
         uses: actions/download-artifact@v4
         with:
-          pattern: playwright-browser-result-*
+          pattern: browser-result-*
           merge-multiple: true
           path: browser-results
 
