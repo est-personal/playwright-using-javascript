@@ -6,6 +6,12 @@ class BasePage {
         this.page = page;
     }
 
+    async check(locator) {
+        await this.page
+            .locator(locator)
+            .check();
+    }
+
     async click(locator) {
         await this.page
             .locator(locator)
@@ -24,6 +30,12 @@ class BasePage {
             .fill(value);
     }
 
+    async getAttribute(locator, attribute) {
+        return await this.page
+            .locator(locator)
+            .getAttribute(attribute);
+    }
+
     async getSelectedOptionText(locator) {
         return (await this.page
             .locator(locator)
@@ -39,16 +51,32 @@ class BasePage {
         )?.trim();
     }
 
+    async getValue(locator) {
+        return await this.page
+            .locator(locator)
+            .inputValue();
+    }
+
     async hover(locator) {
         await this.page
             .locator(locator)
             .hover();
     }
 
+    async isChecked(locator) {
+        return await this.page
+            .locator(locator)
+            .isChecked();
+    }
+
     async isVisible(locator) {
         return await this.page
             .locator(locator)
             .isVisible();
+    }
+
+    async navigate(url) {
+        await this.page.goto(url);
     }
 
     async rightClick(locator) {
@@ -71,9 +99,23 @@ class BasePage {
             .selectOption({ value });
     }
 
+    async uncheck(locator) {
+        await this.page
+            .locator(locator)
+            .uncheck();
+    }
+
     async waitForPageToLoad() {
         await this.page
             .waitForLoadState('networkidle');
+    }
+
+    async waitForVisible(locator) {
+        await this.page
+            .locator(locator)
+            .waitFor({
+                state: 'visible'
+            });
     }
 }
 

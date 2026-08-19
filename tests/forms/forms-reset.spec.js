@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
 const { GenericData } = require('../../testData/GenericData');
@@ -12,10 +12,10 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             section: page => page.getLoginSection(),
             setup: async page => {
                 await page.enterEmail(
-                    FormsData.positive.validUser.email
+                    FormsData.user.validUser.email
                 );
                 await page.enterLoginPassword(
-                    FormsData.positive.validUser.password
+                    FormsData.user.validUser.password
                 );
             },
             reset: async page => {
@@ -38,19 +38,19 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             section: page => page.getPersonalSection(),
             setup: async page => {
                 await page.enterFirstName(
-                    FormsData.positive.validUser.firstName
+                    FormsData.user.validUser.firstName
                 );
                 await page.enterLastName(
-                    FormsData.positive.validUser.lastName
+                    FormsData.user.validUser.lastName
                 );
                 await page.enterPhone(
-                    FormsData.positive.validUser.phone
+                    FormsData.user.validUser.phone
                 );
                 await page.enterDateOfBirth(
-                    FormsData.positive.validUser.dateOfBirth
+                    FormsData.user.validUser.dateOfBirth
                 );
                 await page.selectGender(
-                    FormsData.positive.validUser.gender
+                    FormsData.user.validUser.gender
                 );
             },
             reset: async page => {
@@ -88,13 +88,13 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             section: page => page.getAddressSection(),
             setup: async page => {
                 await page.selectCountry(
-                    FormsData.positive.validUser.country
+                    FormsData.user.validUser.country
                 );
                 await page.enterCity(
-                    FormsData.positive.validUser.city
+                    FormsData.user.validUser.city
                 );
                 await page.enterAboutYou(
-                    FormsData.positive.validUser.aboutYou
+                    FormsData.user.validUser.aboutYou
                 );
             },
             reset: async page => {
@@ -122,7 +122,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             section: page => page.getInterestsSection(),
             setup: async page => {
                 await page.selectInterest(
-                    FormsData.positive.validUser.allInterests
+                    FormsData.user.validUser.allInterests
                 );
             },
             reset: async page => {
@@ -140,10 +140,10 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             section: page => page.getAccountSection(),
             setup: async page => {
                 await page.enterPassword(
-                    FormsData.positive.validUser.password
+                    FormsData.user.validUser.password
                 );
                 await page.enterConfirmPassword(
-                    FormsData.positive.validUser.confirmPassword
+                    FormsData.user.validUser.confirmPassword
                 );
                 await formsPage.selectTermsAndConditions();
             },
@@ -175,7 +175,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
     resetScenarios.forEach((scenario) => {
         test(scenario.name, {
             tag: ['@regression', '@positive']
-        }, async () => {
+        }, async ({ formsPage }) => {
             await expect(
                 scenario.section(formsPage)
             ).toBeVisible();
