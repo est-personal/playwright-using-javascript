@@ -82,7 +82,14 @@ class BasePage {
     }
 
     async navigate(url) {
-        await this.page.goto(url);
+        await this.page
+            .goto(url);
+    }
+
+    async pressKey(key) {
+        await this.page
+            .keyboard
+            .press(key);
     }
 
     async rightClick(locator) {

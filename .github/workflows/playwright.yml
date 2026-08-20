@@ -11,10 +11,10 @@ on:
   # Schedule Run
   schedule:
     # Runs at 10:50 (10:50 AM) UTC
-    # Runs at 8:40 (20:40 AM) PHT
+    # Runs at 9:30 (9:30 AM) PHT
     # PHT is UTC+8 and GitHub Actions cron schedules use UTC
     # Subtract 8 hours
-    - cron: '40 12 * * *'
+    - cron: '30 1 * * *'
 
   # Manual Trigger
   workflow_dispatch:
