@@ -1,5 +1,7 @@
 
 const QaPlaygroundUrls = {
+    alertsAndDialogsPage:
+        'https://qaplayground.com/practice/alerts-dialogs',
     buttonsPage:
         'https://qaplayground.com/practice/buttons',
     dataTablesPage:

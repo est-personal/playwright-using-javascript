@@ -1,5 +1,6 @@
 const base = require('@playwright/test');
 const { expect } = require('@playwright/test');
+const { AlertsAndDialogsPage } = require('../pages/AlertsAndDialogsPage');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { DataTablesPage } = require('../pages/DataTablesPage');
 const { DropdownsPage } = require('../pages/DropdownsPage');
@@ -7,6 +8,13 @@ const { FormsPage } = require('../pages/FormsPage');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 
 exports.test = base.test.extend({
+
+    alertsAndDialogsPage: async ({ page }, use) => {
+        const alertsAndDialogsPage =
+            new AlertsAndDialogsPage(page);
+        await alertsAndDialogsPage.navigateToAlertsAndDialogs();
+        await use(alertsAndDialogsPage);
+    },
 
     buttonsPage: async ({ page }, use) => {
         const buttonsPage =

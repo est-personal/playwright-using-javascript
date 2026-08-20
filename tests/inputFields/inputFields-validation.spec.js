@@ -67,13 +67,6 @@ const defaultValueTests = [
 
 test.describe('QA Playground - Input Fields Default Value Validations', () => {
 
-    // let inputFieldsPage;
-
-    // test.beforeEach(async ({ page }) => {
-    //     inputFieldsPage = new InputFieldsPage(page);
-    //     await inputFieldsPage.navigateToInputFields();
-    // });
-
     defaultValueTests.forEach(data => {
         test(`Default Value of Scenario ${data.name}`, {
                 tag: ['@regression', '@positive']
