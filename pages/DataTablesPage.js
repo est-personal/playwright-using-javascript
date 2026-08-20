@@ -5,10 +5,10 @@ const { DataTablesLocators } = require('../locators/DataTablesLocators');
 const { DataTablesData } = require('../testData/DataTablesData');
 const { BasePage } = require('./BasePage');
 
-class DataTablesPage {
+class DataTablesPage extends BasePage {
 
     constructor(page) {
-        this.page = page;
+        super(page);
 
         this.bookAuthorHeader = page.locator(
             DataTablesLocators.bookAuthorColumn
@@ -40,7 +40,7 @@ class DataTablesPage {
         this.editPublishedInput = page.locator(
             DataTablesLocators.editBookModalPublishedInput
         );
-            
+
     }
 
     // Async
