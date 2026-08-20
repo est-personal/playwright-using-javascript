@@ -378,49 +378,49 @@ class AlertsAndDialogsPage extends BasePage {
     getOpenBackdropDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openBackdropDialogButton
+                AlertsAndDialogsLocators.backdropClickButton
         );
     }
 
     getOpenConfirmDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openConfirmDialogButton
+                AlertsAndDialogsLocators.confirmActionButton
         );
     }
 
     getOpenDeleteDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openDeleteDialogButton
+                AlertsAndDialogsLocators.destructiveConfirmButton
         );
     }
 
     getOpenKeyboardDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openKeyboardDialogButton
+                AlertsAndDialogsLocators.escapeKeyButton
         );
     }
 
     getOpenInfoDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openInfoDialogButton
+                AlertsAndDialogsLocators.closeInfoDialogButton
         );
     }
 
     getOpenNotificationButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openNotificationButton
+                AlertsAndDialogsLocators.assertContentButton
         );
     }
 
     getUnsavedDialogButton() {
         return this.page
             .locator(
-                AlertsAndDialogsLocators.openUnsavedDialogButton
+                AlertsAndDialogsLocators.cancelStayButton
         );
     }
 
