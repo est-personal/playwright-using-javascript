@@ -1,6 +1,5 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
-const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
 const { 
     addBook, 
@@ -29,7 +28,7 @@ const deleteBookScenarios = [
 const originalBook =
     DataTablesData.positive.validBook;
 
-test.describe('QA Playground - Data Table Successful Delete Validation', () => {
+test.describe('QA Playground - Data Table - Successful Delete Validations', () => {
     deleteBookScenarios.forEach(({ title, action, expectedBookExists }) => {
         test(title, {
             tag: ['@regression', '@positive']
@@ -69,7 +68,7 @@ test.describe('QA Playground - Data Table Successful Delete Validation', () => {
     });
 });
 
-test.describe('QA Playground - Data Table Delete Book Modal', () => {
+test.describe('QA Playground - Data Table - Delete Book Modal', () => {
     test('Delete Book Modal Displays Correct Message',
     {
         tag: ['@regression', '@positive']

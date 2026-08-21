@@ -1,8 +1,7 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
-const { InputFieldsPage } = require('../../pages/InputFieldsPage');
 const { InputFieldsData } = require('../../testData/InputFieldsData');
 
-const defaultValueTests = [
+const defaultValueScenarios = [
     {
         name: 'Type Movie',
         inputLocator: page => page.getMovieNameInput(),
@@ -66,8 +65,7 @@ const defaultValueTests = [
 ];
 
 test.describe('QA Playground - Input Fields Default Value Validations', () => {
-
-    defaultValueTests.forEach(data => {
+    defaultValueScenarios.forEach(data => {
         test(`Default Value of Scenario ${data.name}`, {
                 tag: ['@regression', '@positive']
         }, async ({ inputFieldsPage }) => {
@@ -93,5 +91,4 @@ test.describe('QA Playground - Input Fields Default Value Validations', () => {
             );
         });
     });
-
 });

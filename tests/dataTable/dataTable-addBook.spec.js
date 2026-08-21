@@ -1,37 +1,32 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
+const { ConstantsData } = require('../../testData/ConstantsData');
 
-const addBookPositiveTest = [
+const addBookPositiveScenarios = [
     {
         name: 'Add New Book',
         book: DataTablesData.positive.validBook,
-        expectedRowCount:
-            DataTablesData.positive.expectedResult.totalRow,
-        expectedSearchCount:
-            DataTablesData.positive.expectedResult.searchedBookCount
+        expectedRowCount: DataTablesData.positive.expectedResult.totalRow,
+        expectedSearchCount: DataTablesData.positive.expectedResult.searchedBookCount
     },
     {
         name: 'Add New Book With Blank ISBN',
         book: DataTablesData.positive.blankIsbn,
-        expectedRowCount:
-            DataTablesData.positive.expectedResult.totalRow,
-        expectedSearchCount:
-            DataTablesData.positive.expectedResult.searchedBookCount
+        expectedRowCount: DataTablesData.positive.expectedResult.totalRow,
+        expectedSearchCount: DataTablesData.positive.expectedResult.searchedBookCount
     },
     {
         name: 'Add New Book With Blank Published',
         book: DataTablesData.positive.blankPublished,
-        expectedRowCount:
-            DataTablesData.positive.expectedResult.totalRow,
-        expectedSearchCount:
-            DataTablesData.positive.expectedResult.searchedBookCount
+        expectedRowCount: DataTablesData.positive.expectedResult.totalRow,
+        expectedSearchCount: DataTablesData.positive.expectedResult.searchedBookCount
     }
 ];
 
-test.describe('QA Playground - Data Table Positive Add Book Validation', () => {
-    addBookPositiveTest.forEach(scenario => {
-        test(`${scenario.name}`, {
+test.describe('QA Playground - Data Table - Successful Add Book Validations', () => {
+    addBookPositiveScenarios.forEach(data => {
+        test(`${data.name}`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
             // Click Add Book button
@@ -42,7 +37,7 @@ test.describe('QA Playground - Data Table Positive Add Book Validation', () => {
             ).toBeVisible();
             // Populate fields in Add New Book modal
             await dataTablesPage.enterNewBookDetails(
-                scenario.book
+                data.book
             );
             // Click Add New Modal - Add Book button
             await dataTablesPage.clickAddNewBookModalAddBookButton();
@@ -79,35 +74,31 @@ test.describe('QA Playground - Data Table Positive Add Book Validation', () => {
             // Validate Book Record
             DataTablesAssertions.validateBookDetails(
                 actualBookRecord,
-                scenario.book
+                data.book
             )
         });
     });
 
 });
 
-const requiredFieldTest = [
+const requiredFieldScenarios = [
     {
         name: 'Book Name',
         data: DataTablesData.negative.blankBookName,
-        getError: page =>
-            page.getAddNewBookModalBookNameErrorMessage(),
-        expectedError:
-            DataTablesData.negative.errorMessage.bookNameRequired
+        getError: page => page.getAddNewBookModalBookNameErrorMessage(),
+        expectedError: DataTablesData.negative.errorMessage.bookNameRequired
     },
     {
         name: 'Author',
         data: DataTablesData.negative.blankAuthor,
-        getError: page =>
-            page.getAddNewBookModalAuthorErrorMessage(),
-        expectedError:
-            DataTablesData.negative.errorMessage.authorRequired
+        getError: page => page.getAddNewBookModalAuthorErrorMessage(),
+        expectedError: DataTablesData.negative.errorMessage.authorRequired
     }
 ];
 
-test.describe('QA Playground - Data Table Negative Add Book Validation', () => {
-    requiredFieldTest.forEach(scenario => {
-        test(`${scenario.name} Required Validation`, {
+test.describe('QA Playground - Data Table - Unsuccessful Add Book Validations', () => {
+    requiredFieldScenarios.forEach(data => {
+        test(`${data.name} Required Validation`, {
             tag: ['@regression', '@negative']
         }, async ({ dataTablesPage }) => {
             // Click Add Book button
@@ -118,18 +109,18 @@ test.describe('QA Playground - Data Table Negative Add Book Validation', () => {
             ).toBeVisible();
             // Populate fields in Add New Book modal
             await dataTablesPage.enterNewBookDetails(
-                scenario.data
+                data.data
             );
             // Click Add New Modal - Add Book button
             await dataTablesPage.clickAddNewBookModalAddBookButton();
             // Validate error message
             const errorMessage = 
-                await scenario.getError(dataTablesPage)
+                await data.getError(dataTablesPage)
             expect(
                 errorMessage,
                 `Error Message Mismatch In Add New Book Modal |
-                Expected to contain: "${scenario.expectedError}" | Actual: "${errorMessage}"`
-            ).toContain(scenario.expectedError);
+                Expected to contain: "${data.expectedError}" | Actual: "${errorMessage}"`
+            ).toContain(data.expectedError);
         });
     });
 
@@ -187,53 +178,47 @@ test.describe('QA Playground - Data Table Negative Add Book Validation', () => {
     });
 });
 
-const placeholderValidation = [
+const placeholderScenarios = [
     {
         field: 'Book Name',
-        locator: page =>
-            page.getAddNewBookModalBookName(),
-        expected:
-            DataTablesData.addNewModalPlaceholder.bookName
+        locator: page => page.getAddNewBookModalBookName(),
+        expected: DataTablesData.addNewModalPlaceholder.bookName
     },
     {
         field: 'Author',
-        locator: page =>
-            page.getAddNewBookModalAuthor(),
-        expected:
-            DataTablesData.addNewModalPlaceholder.author
+        locator: page => page.getAddNewBookModalAuthor(),
+        expected: DataTablesData.addNewModalPlaceholder.author
     },
     {
         field: 'ISBN',
-        locator: page =>
-            page.getAddNewBookModalIsbn(),
-        expected:
-            DataTablesData.addNewModalPlaceholder.isbn
+        locator: page => page.getAddNewBookModalIsbn(),
+        expected: DataTablesData.addNewModalPlaceholder.isbn
     },
     {
         field: 'Published',
-        locator: page =>
-            page.getAddNewBookModalPublished(),
-        expected:
-            DataTablesData.addNewModalPlaceholder.published
+        locator: page => page.getAddNewBookModalPublished(),
+        expected: DataTablesData.addNewModalPlaceholder.published
     }
 ];
 
-test.describe('QA Playground - Data Table Add Book Modal Validation', () => {
-    test('Validate Placeholders', {
-        tag: ['@regression', '@positive']
-    }, async ({ dataTablesPage }) => {
-        await dataTablesPage.clickAddBookButton();
-        await expect(
-            dataTablesPage.getAddNewBookModalTitle()
-        ).toBeVisible();
-        for (const field of placeholderValidation) {
+test.describe('QA Playground - Data Table - Add Book Modal Placeholder Validations', () => {
+    placeholderScenarios.forEach(data => {
+        test(`${data.field} Field`, {
+            tag: ['@regression', '@positive']
+        }, async ({ dataTablesPage }) => {
+            // Click Add Book button
+            await dataTablesPage.clickAddBookButton();
+            // Validate Modal
+            expect(
+                dataTablesPage.getAddNewBookModalTitle()
+            ).toBeTruthy();
+            // Validate field Placeholder
             await expect(
-                field.locator(dataTablesPage)
+                data.locator(dataTablesPage)
             ).toHaveAttribute(
                 'placeholder',
-                field.expected
+                data.expected
             );
-
-        }
+        });
     });
 });

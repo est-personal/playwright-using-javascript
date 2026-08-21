@@ -1,7 +1,7 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DropdownsData } = require('../../testData/DropdownsData');
 
-const optionsTests = [
+const optionsScenarios = [
     {
         name: 'Select Fruit',
         getOptions: page => page.getSelectFruitOptions(),
@@ -36,17 +36,18 @@ const optionsTests = [
 ];
 
 test.describe('QA Playground - Dropdowns Options Validation', () => {
-
-    optionsTests.forEach(data => {
+    optionsScenarios.forEach(data => {
         test(`${data.name} options`, {
             tag: ['@regression', '@positive']
         }, async ({ dropdownsPage }) => {
+            // Get dropdown options
             const actualOptions =
                 await data.getOptions(dropdownsPage);
             const normalizedOptions =
                 actualOptions.map(option =>
                     option.replace(/[A-Z]{2}$/, '')
                 );
+            // Validate dropdown options
             if (data.partialMatch) {
                 data.expected.forEach(expected => {
                     expect(
@@ -66,7 +67,7 @@ test.describe('QA Playground - Dropdowns Options Validation', () => {
 
 });
 
-const defaultValueTests = [
+const defaultValueScenarios = [
     {
         name: 'Select Fruit Result',
         locator: page => page.getSelectFruitResult(),
@@ -99,12 +100,12 @@ const defaultValueTests = [
     }
 ];
 
-test.describe('QA Playground - Dropdowns Default Value Validation', () => {
-
-    defaultValueTests.forEach(data => {
+test.describe('QA Playground - Dropdowns - Default Value Validation', () => {
+    defaultValueScenarios.forEach(data => {
         test(`${data.name}`, {
             tag: ['@regression', '@positive']
         }, async ({ dropdownsPage }) => {
+            // Validate default value of result
             await expect(
                 data.locator(dropdownsPage)
             ).toHaveText(

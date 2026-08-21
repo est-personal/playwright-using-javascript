@@ -1,7 +1,7 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { ButtonsData } = require('../../testData/ButtonsData');
 
-const buttonTextTests = [
+const buttonTextScenarios = [
     {
         name: 'Scenario Navigate Home Button',
         locator: page => page.getGoToHomeButton(),
@@ -44,9 +44,8 @@ const buttonTextTests = [
     }
 ];
 
-test.describe('QA Playground - Buttons Text Validations', () => {
-
-    buttonTextTests.forEach(data => {
+test.describe('QA Playground - Buttons - Text Validations', () => {
+    buttonTextScenarios.forEach(data => {
         test(`${data.name} button text`, {
             tag: ['@regression', '@positive']
         }, async ({ buttonsPage }) => {
@@ -57,10 +56,9 @@ test.describe('QA Playground - Buttons Text Validations', () => {
             );
         });
     });
-
 });
 
-const defaultValueTests = [
+const defaultValueScenarios = [
     {
         name: 'Scenario Navigate Home Default Value',
         locator: page => page.getNavigateHomeResult(),
@@ -103,9 +101,8 @@ const defaultValueTests = [
     }
 ];
 
-test.describe('QA Playground - Buttons Default Value Validations', () => {
-
-    defaultValueTests.forEach(data => {
+test.describe('QA Playground - Buttons - Placeholder Validations', () => {
+    defaultValueScenarios.forEach(data => {
         test(`${data.name} default value`, {
             tag: ['@regression', '@positive']
         }, async ({ buttonsPage }) => {
@@ -116,5 +113,4 @@ test.describe('QA Playground - Buttons Default Value Validations', () => {
             );
         });
     });
-
 });

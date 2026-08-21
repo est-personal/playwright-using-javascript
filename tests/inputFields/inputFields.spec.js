@@ -1,11 +1,8 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
-const { InputFieldsPage } = require('../../pages/InputFieldsPage');
 const { InputFieldsData } = require('../../testData/InputFieldsData');
 
 test.describe('QA Playground - Input Fields Tests', () => {
-
     test.describe('Scenario Type Movie', () => {
-
         test.beforeEach(async ({ inputFieldsPage }) => {
             await expect(
                 inputFieldsPage.getTypeMovieSection()
@@ -54,7 +51,6 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Append Tab', () => {
-
         test.beforeEach(async ({ inputFieldsPage }) => {
             await expect(
                 inputFieldsPage.getAppendTabSection()
@@ -120,7 +116,6 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Read Value', () => {
-
         test.beforeEach(async ({ inputFieldsPage }) => {
             await expect(
                 inputFieldsPage.getReadValueSection()
@@ -158,7 +153,6 @@ test.describe('QA Playground - Input Fields Tests', () => {
     });
 
     test.describe('Scenario Clear Field', () => {
-
         test.beforeEach(async ({ inputFieldsPage }) => {
             await expect(
                 inputFieldsPage.getClearFieldSection()
