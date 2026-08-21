@@ -1,6 +1,5 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { ButtonsData } = require('../../testData/ButtonsData');
-const { BasePage } = require('../../pages/BasePage');
 
 const { 
     expectColorWithinTolerance, 

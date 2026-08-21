@@ -2,7 +2,7 @@ const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
-const positiveSearchTest = [
+const positiveSearchScenarios = [
     {
         name: 'Book Name',
         searchValue: DataTablesData.existingBook.bookName
@@ -22,25 +22,25 @@ const positiveSearchTest = [
     }
 ];
 
-test.describe('QA Playground - Data Table Positive Search Validation', () => {
-    positiveSearchTest.forEach(scenario => {
-        test(`Search Existing ${scenario.name}`, {
+test.describe('QA Playground - Data Table - Successfulive Search Validations', () => {
+    positiveSearchScenarios.forEach(data => {
+        test(`Search Existing ${data.name}`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
             // Select Genre
-            if (scenario.genre) {
+            if (data.genre) {
                 await dataTablesPage.selectGenre(
-                    scenario.genre
+                    data.genre
                 );
                 await expect(
                     dataTablesPage.getGenreDropdown()
                 ).toHaveValue(
-                    scenario.genre
+                    data.genre
                 )
             }
             // Search Book
             await dataTablesPage.enterBookField(
-                scenario.searchValue
+                data.searchValue
             );
             // Get Searched Book count
             const searchedBookCount = 
@@ -60,11 +60,10 @@ test.describe('QA Playground - Data Table Positive Search Validation', () => {
                 DataTablesData.existingBook
             );
         });
-        
     });
 });
 
-const negativeSearchTest = [
+const negativeSearchScenarios = [
     {
         name: 'Non-existing Book',
         searchValue: DataTablesData.nonExistingBook
@@ -80,25 +79,25 @@ const negativeSearchTest = [
     }
 ]
 
-test.describe('QA Playground - Data Table Negative Search Validation', () => {
-    negativeSearchTest.forEach(scenario => {
-        test(`Search ${scenario.name}`, {
+test.describe('QA Playground - Data Table - Unsuccessful Search Validations', () => {
+    negativeSearchScenarios.forEach(data => {
+        test(`Search ${data.name}`, {
             tag: ['@regression', '@negative']
         }, async ({ dataTablesPage }) => {
             // Select Genre
-            if (scenario.genre) {
+            if (data.genre) {
                 await dataTablesPage.selectGenre(
-                    scenario.genre
+                    data.genre
                 );
                 await expect(
                     dataTablesPage.getGenreDropdown()
                 ).toHaveValue(
-                    scenario.genre
+                    data.genre
                 )
             }
             // Search Book
             await dataTablesPage.enterBookField(
-                scenario.searchValue
+                data.searchValue
             );
             // Get Searched Book count
             const searchedBookCount = 
@@ -118,11 +117,10 @@ test.describe('QA Playground - Data Table Negative Search Validation', () => {
                 Expected: ${DataTablesData.noBookMatched} | Actual: ${noBookMatchedMessage}`
             ).toEqual(DataTablesData.noBookMatched);
         });
-        
     });
 });
 
-test.describe('QA Playground - Data Table Search State Validation', () => {
+test.describe('QA Playground - Data Table - Search State Validation', () => {
     test('Clearing Search Restores All Rows And Resets Pagination', {
         tag: ['@regression', '@positive']
     }, async ({ dataTablesPage }) => {
@@ -171,4 +169,5 @@ test.describe('QA Playground - Data Table Search State Validation', () => {
             ].join('\n')
         ).toEqual(defaultBooks);
     });
+    
 });

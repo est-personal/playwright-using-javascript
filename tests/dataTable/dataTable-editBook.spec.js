@@ -68,7 +68,7 @@ const editBookScenarios = [
 const originalBook =
     DataTablesData.positive.validBook;
 
-test.describe('QA Playground - Data Table Successful Edit Validation', () => {
+test.describe('QA Playground - Data Table - Successful Edit Validations', () => {
     editBookScenarios.forEach(({ title, data, editAction }) => {
         test(`Edit ${title} Successfully`, {
             tag: ['@regression', '@positive']
@@ -102,13 +102,12 @@ test.describe('QA Playground - Data Table Successful Edit Validation', () => {
             );
         });
     });
-
 });
 
-test.describe('QA Playground - Data Table Cancel Edit Validation', () => {
+test.describe('QA Playground - Data Table - Cancel Edit Validation', () => {
     editBookScenarios.forEach(({ title, data, editAction }) => {
         test(`Cancel ${title} Update`, {
-            tag: ['@regression', '@negative']
+            tag: ['@regression', '@positive']
         },
         async ({ dataTablesPage }) => {
             // Add Book
@@ -140,5 +139,4 @@ test.describe('QA Playground - Data Table Cancel Edit Validation', () => {
             );
         });
     });
-
 });

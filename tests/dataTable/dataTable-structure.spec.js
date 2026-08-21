@@ -2,7 +2,7 @@ const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
-test.describe('QA Playground - Data Table Structure Validation', () => {
+test.describe('QA Playground - Data Table - Structure Validation', () => {
     test('Validate Column Headers', 
     {
         tag: ['@regression', '@positive']

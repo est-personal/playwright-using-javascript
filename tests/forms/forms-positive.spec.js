@@ -1,17 +1,7 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
-const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
-const { GenericData } = require('../../testData/GenericData');
 
 test.describe('QA Playground - Forms Tests', () => {
-
-    // let formsPage;
-
-    // test.beforeEach(async ({ page }) => {
-    //     formsPage = new FormsPage(page);
-    //     await formsPage.navigateToForms();
-    // });
-
     test.describe('Login Form', () => {
         test('Successful Login', 
             {
@@ -401,5 +391,4 @@ test.describe('QA Playground - Forms Tests', () => {
         });
 
     });
-
 });

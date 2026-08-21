@@ -273,5 +273,4 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         });
 
     });
-    
 });

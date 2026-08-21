@@ -40,40 +40,49 @@ const sortableColumns = [
     }
 ];
 
-test.describe('QA Playground - Data Table Sorting Validation', () => {
-    sortableColumns.forEach(column => {
-        test(`${column.name} Ascending Sort`, {
+test.describe('QA Playground - Data Table - Sorting Validation', () => {
+    sortableColumns.forEach(data => {
+        test(`${data.name} Ascending Sort`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
-            await column.sortAsc(dataTablesPage);
+            // Sort column in ascending
+            await data.sortAsc(dataTablesPage);
+            // Validate column aria-sort
             await expect(
-                column.getHeader(dataTablesPage)
+                data.getHeader(dataTablesPage)
             ).toHaveAttribute(
                 'aria-sort',
                 DataTablesData.ascending
             );
+            // Get values of column
             const values =
-                await column.getValues(dataTablesPage);
+                await data.getValues(dataTablesPage);
+            // Validate column sorted in ascending order
             DataTablesAssertions.validateAscending(
                 values,
-                column.name
+                data.name
             );
         });
-        test(`${column.name} Descending Sort`, {
+        
+        test(`${data.name} Descending Sort`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
-            await column.sortDesc(dataTablesPage);
+            // Sort column in descending
+            await data.sortDesc(dataTablesPage);
+            // Validate column aria-sort
             await expect(
-                column.getHeader(dataTablesPage)
+                data.getHeader(dataTablesPage)
             ).toHaveAttribute(
                 'aria-sort',
                 DataTablesData.descending
             );
+            // Get values of column
             const values =
-                await column.getValues(dataTablesPage);
+                await data.getValues(dataTablesPage);
+            // Validate column sorted in descending order
             DataTablesAssertions.validateDescending(
                 values,
-                column.name
+                data.name
             );
         });
     });

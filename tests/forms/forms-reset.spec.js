@@ -1,11 +1,7 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
-const { FormsPage } = require('../../pages/FormsPage');
 const { FormsData } = require('../../testData/FormsData');
-const { GenericData } = require('../../testData/GenericData');
 
 test.describe('QA Playground - Forms Reset Validations', () => {
-    let formsPage;
-
     const resetScenarios = [
         {
             name: 'Login Form Reset Button',
@@ -70,13 +66,13 @@ test.describe('QA Playground - Forms Reset Validations', () => {
                     page.getDateOfBirthInput()
                 ).toBeEmpty();
                 await expect(
-                    formsPage.getMaleRadioButton()
+                    page.getMaleRadioButton()
                 ).not.toBeChecked();
                 await expect(
-                    formsPage.getFemaleRadioButton()
+                    page.getFemaleRadioButton()
                 ).not.toBeChecked();
                 await expect(
-                    formsPage.getOtherRadioButton()
+                    page.getOtherRadioButton()
                 ).not.toBeChecked();
                 await expect(
                     page.getPersonalResult()
@@ -102,7 +98,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
             },
             verify: async (page, expect) => {
                 await expect(
-                    formsPage.getCountryDropdown()
+                    page.getCountryDropdown()
                 ).toContainText(
                     FormsData.placeholder.countryPlaceholder
                 );
@@ -129,7 +125,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
                 await page.clickInterestsResetButton();
             },
             verify: async (page, expect) => {
-                await formsPage.noInterestSelected();
+                await page.noInterestSelected();
                 await expect(
                     page.getInterestsResult()
                 ).not.toBeVisible();
@@ -145,7 +141,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
                 await page.enterConfirmPassword(
                     FormsData.user.validUser.confirmPassword
                 );
-                await formsPage.selectTermsAndConditions();
+                await page.selectTermsAndConditions();
             },
             reset: async page => {
                 await page.clickAccountResetButton();
@@ -158,7 +154,7 @@ test.describe('QA Playground - Forms Reset Validations', () => {
                     page.getConfirmPasswordInput()
                 ).toBeEmpty();
                 await expect(
-                    formsPage.getTermsAndConditionCheckBox()
+                    page.getTermsAndConditionCheckBox()
                 ).not.toBeChecked();
                 await expect(
                     page.getAccountResult()
@@ -167,25 +163,19 @@ test.describe('QA Playground - Forms Reset Validations', () => {
         }
     ];
 
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
-
-    resetScenarios.forEach((scenario) => {
-        test(scenario.name, {
+    resetScenarios.forEach((data) => {
+        test(data.name, {
             tag: ['@regression', '@positive']
         }, async ({ formsPage }) => {
             await expect(
-                scenario.section(formsPage)
+                data.section(formsPage)
             ).toBeVisible();
-            await scenario.setup(formsPage);
-            await scenario.reset(formsPage);
-            await scenario.verify(
+            await data.setup(formsPage);
+            await data.reset(formsPage);
+            await data.verify(
                 formsPage,
                 expect
             );
         });
     });
-
 });
