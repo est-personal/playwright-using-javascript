@@ -56,8 +56,7 @@ test.describe('QA Playground - Data Table - Successful Add Book Validations', ()
             ).toContain(DataTablesData.positive.expectedResult.totalRow);
             // Search New Book
             await dataTablesPage.enterBookField(
-                // DataTablesData.positive.validBook.bookName
-                scenario.book.bookName
+                data.book.bookName
             );
             // Get Searched Book count
             const searchedBookCount = 
