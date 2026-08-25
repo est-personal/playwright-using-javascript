@@ -13,7 +13,9 @@ const QaPlaygroundUrls = {
     homePage:
         'https://qaplayground.com/',
     inputFieldsPage:
-        'https://qaplayground.com/practice/input-fields'
+        'https://qaplayground.com/practice/input-fields',
+    radioAndCheckBoxPage:
+        'https://qaplayground.com/practice/radio-checkbox'
 };
 
 module.exports = { QaPlaygroundUrls };

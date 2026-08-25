@@ -57,6 +57,13 @@ class BasePage {
         )?.trim();
     }
 
+    async getTexts(locator) {
+        return (await this.page
+            .locator(locator)
+            .allTextContents()
+        ).map(text => text.trim());
+    }
+
     async getValue(locator) {
         return await this.page
             .locator(locator)
@@ -73,6 +80,12 @@ class BasePage {
         return await this.page
             .locator(locator)
             .isChecked();
+    }
+
+    async isDisabled(locator) {
+        return await this.page
+            .locator(locator)
+            .isDisabled();
     }
 
     async isVisible(locator) {
