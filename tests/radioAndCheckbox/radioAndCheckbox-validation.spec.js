@@ -5,49 +5,49 @@ const placeholderScenarios = [
     {
         name: 'Basic Checkbox',
         locator: page => page.getRcBasicCheckboxResult(),
-        value: RadioAndCheckboxData.placeholder.BasicCheckbox,
+        value: RadioAndCheckboxData.placeholder.basicCheckbox,
         type: 'value'
     },
     {
         name: 'Radio Group',
         locator: page => page.getRcRadioGroupResult(),
-        value: RadioAndCheckboxData.placeholder.RadioGroup,
+        value: RadioAndCheckboxData.placeholder.radioGroup,
         type: 'value'
     },
     {
         name: 'Checkbox Group',
         locator: page => page.getRcCheckboxGroupResult(),
-        value: RadioAndCheckboxData.placeholder.CheckboxGroup,
+        value: RadioAndCheckboxData.placeholder.checkboxGroup,
         type: 'value'
     },
     {
         name: 'Assert State',
         locator: page => page.getRcAssertStateResult(),
-        value: RadioAndCheckboxData.placeholder.AssertState,
+        value: RadioAndCheckboxData.placeholder.assertState,
         type: 'value'
     },
     {
         name: 'Disabled',
         locator: page => page.getRcDisabledResult(),
-        value: RadioAndCheckboxData.placeholder.Disabled,
+        value: RadioAndCheckboxData.placeholder.disabled,
         type: 'value'
     },
     {
         name: 'Sibling',
         locator: page => page.getRcSiblingResult(),
-        value: RadioAndCheckboxData.placeholder.Sibling,
+        value: RadioAndCheckboxData.placeholder.sibling,
         type: 'value'
     },
     {
         name: 'Cards',
         locator: page => page.getRcCardsResult(),
-        value: RadioAndCheckboxData.placeholder.Cards,
+        value: RadioAndCheckboxData.placeholder.cards,
         type: 'value'
     },
     {
         name: 'Dynamic',
         locator: page => page.getRcDynamicResult(),
-        value: RadioAndCheckboxData.placeholder.Dynamic,
+        value: RadioAndCheckboxData.placeholder.dynamic,
         type: 'value'
     }
 ];
