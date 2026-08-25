@@ -175,9 +175,8 @@ test.describe('QA Playground - Radio And Checkbox Tests', () => {
                 // Select radiobutton
                 await radioAndCheckboxPage.checkRcCheckboxGroup(data.option);
                 // Validate radiobutton
-                // await radioAndCheckboxPage.isRcCheckboxGroupChecked(data.option);
                 expect(
-                    await radioAndCheckboxPage.isRcCheckboxGroupChecked()
+                    await radioAndCheckboxPage.isRcCheckboxGroupChecked(data.option)
                 ).toBeTruthy();
                 // Validate RC Radio Group result
                 expect(
