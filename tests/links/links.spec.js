@@ -36,6 +36,12 @@ test.describe('QA Playground - Links Tests', () => {
                 );
                 // Navigate Back
                 await linksPage.navigateBack();
+                // Validate redirected back
+                expect(
+                    await linksPage.getCurrentUrl()
+                ).toBe(
+                    QaPlaygroundUrls.linksPage
+                );
                 // NOTE --- start
                 // Not automatable reliably due to page navigation causing state reset.
                 // Primary validation: destination URL.
@@ -46,12 +52,6 @@ test.describe('QA Playground - Links Tests', () => {
                 //     data.expected
                 // );
                 /// NOTE --- end
-                // Validate redirected back
-                expect(
-                    await linksPage.getCurrentUrl()
-                ).toBe(
-                    QaPlaygroundUrls.linksPage
-                );
             });
         });
 
@@ -109,17 +109,17 @@ test.describe('QA Playground - Links Tests', () => {
                     ).toContain(
                         data.url
                 );
-                // Validate External Links result
-                expect(
-                    await linksPage.getExternalLinksResult()
-                ).toBe(
-                    data.expected
-                );
                 // Validate redirected back
                 expect(
                     await linksPage.getCurrentUrl()
                 ).toBe(
                     QaPlaygroundUrls.linksPage
+                );
+                // Validate External Links result
+                expect(
+                    await linksPage.getExternalLinksResult()
+                ).toBe(
+                    data.expected
                 );
             });
         });
@@ -130,9 +130,9 @@ test.describe('QA Playground - Links Tests', () => {
         const brokenLinksScenarios = [
             {
                 name: 'New Tab',
+                newTab: true,
                 href: page => page.getBrokenLinksNewTabLinkHref(),
                 method: page => page.clickBrokenLinksNewTabLink(),
-                newTab: true,
                 status: 500,
                 url: LinksData.url.brokenLinks.newTab,
                 expected: LinksData.result.brokenLinks.newTab,
@@ -140,9 +140,9 @@ test.describe('QA Playground - Links Tests', () => {
             },
             {
                 name: 'Same Tab',
+                newTab: false,
                 href: page => page.getBrokenLinksSameTabLinkHref(),
                 method: page => page.clickBrokenLinksSameTabLink(),
-                newTab: false,
                 status: 500,
                 url: LinksData.url.brokenLinks.sameTab,
                 expected: LinksData.result.brokenLinks.sameTab,
@@ -150,9 +150,9 @@ test.describe('QA Playground - Links Tests', () => {
             },
             {
                 name: 'Empty Href',
+                newTab: false,
                 href: page => page.getBrokenLinksEmptyHrefLinkHref(),
                 method: page => page.clickBrokenLinksEmptyHrefLink(),
-                newTab: false,
                 url: LinksData.url.brokenLinks.emptyHref,
                 expected: LinksData.result.brokenLinks.emptyHref,
                 tags: ['@regression', '@positive']
@@ -219,6 +219,239 @@ test.describe('QA Playground - Links Tests', () => {
                 ).toBe(
                     QaPlaygroundUrls.linksPage
                 );
+            });
+        });
+
+    });
+
+    test.describe('Image Links', () => {
+        const imageLinksScenarios = [
+            {
+                name: 'Broken Image',
+                newTab: false,
+                method: page => page.clickImageLinksBrokenImageLink(),
+                url: LinksData.url.imageLinks.brokenImage,
+                expected: LinksData.result.imageLinks.brokenImage,
+                tags: ['@smoke', '@regression', '@positive']
+            },
+            {
+                name: 'Iron Man',
+                newTab: true,
+                method: page => page.clickImageLinkIronManLink(),
+                url: LinksData.url.imageLinks.ironMan,
+                expected: LinksData.result.imageLinks.ironMan,
+                tags: ['@smoke', '@regression', '@positive']
+            },
+        ];
+
+        imageLinksScenarios.forEach(data => {
+            test(`Click ${data.name}`,{
+                    tag: data.tags
+            }, async ({ linksPage, page }) => {
+                if (data.newTab) {
+                    // Wait for new tab
+                    const newPagePromise =
+                        page.context().waitForEvent('page');
+                    // Click Link
+                    await data.method(linksPage)
+                    // Validate new tab opened
+                    const newPage =
+                        await newPagePromise;
+                    await newPage.waitForLoadState();
+                    expect(
+                            newPage.url()
+                        ).toContain(
+                            data.url
+                    );
+                    // Validate redirected back
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        QaPlaygroundUrls.linksPage
+                    );
+                } else {
+                    // Click Link
+                    await data.method(linksPage)
+                    // Get number of tabs
+                    const pageCountBefore =
+                        page.context().pages().length;
+                    // Validate number of tabs
+                    expect(
+                        page.context().pages().length
+                    ).toBe(
+                        pageCountBefore
+                    );
+                    // Validate no navigation happen
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        QaPlaygroundUrls.linksPage
+                    );
+                }
+                // Validate Image Links result
+                expect(
+                    await linksPage.getImageLinksResult()
+                ).toBe(
+                    data.expected
+                );
+            });
+        });
+
+    });
+
+    test.describe('Button Links', () => {
+        const buttonLinksScenarios = [
+            {
+                name: 'Broken Button',
+                method: page => page.clickButtonLinksBrokenButtonLink(),
+                url: LinksData.url.buttonLinks.brokenButton,
+                expected: LinksData.result.buttonLinks.brokenButton,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Broken Link Button',
+                method: page => page.clickButtonLinksBrokenLinkButtonLink(),
+                url: LinksData.url.buttonLinks.brokenLinkButton,
+                expected: LinksData.result.buttonLinks.brokenLinkButton,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Home Button',
+                method: page => page.clickButtonLinksHomeButtonLink(),
+                url: LinksData.url.buttonLinks.homeButton,
+                expected: LinksData.result.buttonLinks.homeButton,
+                tags: ['@smoke', '@regression', '@positive']
+            }
+        ];
+
+        buttonLinksScenarios.forEach(data => {
+            test(`Click ${data.name}`,{
+                    tag: data.tags
+            }, async ({ linksPage, page }) => {
+                if (data.url!='') {
+                    // Click Link
+                    await data.method(linksPage)
+                    // Validate redirected URL
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        data.url
+                    );
+                    // Navigate Back
+                    await linksPage.navigateBack();
+                    // NOTE: For Same Tab
+                    // Validation of Result field is not automatable 
+                    // reliably due to page navigation causing state reset.
+                    // Primary validation: destination URL.
+                    // Validate redirected back
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        QaPlaygroundUrls.linksPage
+                    );
+                } else {
+                    // Click Link
+                    await data.method(linksPage)
+                    // Validate no navigation happen
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        QaPlaygroundUrls.linksPage
+                    );
+                    // Validate Button Links result
+                    expect(
+                        await linksPage.getButtonLinksResult()
+                    ).toBe(
+                        data.expected
+                    );
+                }
+            });
+        });
+
+    });
+
+    test.describe('Text Links', () => {
+        const textLinksScenarios = [
+            {
+                name: 'Garbled 1',
+                method: page => page.clickTextLinksGarbled1Link(),
+                url: LinksData.url.textLinks.garbled1,
+                expected: LinksData.result.textLinks.garbled1,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Garbled 2',
+                method: page => page.clickTextLinksGarbled2Link(),
+                url: LinksData.url.textLinks.garbled2,
+                expected: LinksData.result.textLinks.garbled2,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Long Text',
+                method: page => page.clickTextLinksLongTextLink(),
+                url: LinksData.url.textLinks.longText,
+                expected: LinksData.result.textLinks.longText,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Anchor Text',
+                method: page => page.clickTextLinksAnchorTextLink(),
+                url: LinksData.url.textLinks.anchorText,
+                expected: LinksData.result.textLinks.anchorText,
+                tags: ['@regression', '@positive']
+            },
+        ];
+
+        textLinksScenarios.forEach(data => {
+            test(`Click ${data.name}`,{
+                    tag: data.tags
+            }, async ({ linksPage, page }) => {
+                if (data.url=='' || data.url.includes("#")) {
+                    // Click Link
+                    await data.method(linksPage)
+                    if (data.url!='') {
+                        // Validate URL contains hash
+                        expect(
+                            new URL(await linksPage.getCurrentUrl()
+                        ).hash).toBe(
+                            data.url
+                        );
+                    } else {
+                        // Validate no navigation happen
+                        expect(
+                            await linksPage.getCurrentUrl()
+                        ).toBe(
+                            QaPlaygroundUrls.linksPage
+                        );
+                    }
+                    // Validate Text Links result
+                    expect(
+                        await linksPage.getTextLinksResult()
+                    ).toBe(
+                        data.expected
+                    );
+                } else {
+                    // Click Link
+                    await data.method(linksPage)
+                    // Validate redirected URL
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        data.url
+                    );
+                    // Navigate Back
+                    await linksPage.navigateBack();
+                    // NOTE: For Same Tab
+                    // Validation of Result field is not automatable 
+                    // reliably due to page navigation causing state reset.
+                    // Primary validation: destination URL.
+                    // Validate redirected back
+                    expect(
+                        await linksPage.getCurrentUrl()
+                    ).toBe(
+                        QaPlaygroundUrls.linksPage
+                    );
+                }
             });
         });
 
