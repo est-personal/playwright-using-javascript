@@ -6,6 +6,7 @@ const { DataTablesPage } = require('../pages/DataTablesPage');
 const { DropdownsPage } = require('../pages/DropdownsPage');
 const { FormsPage } = require('../pages/FormsPage');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
+const { LinksPage } = require('../pages/LinksPage');
 const { RadioAndCheckboxPage } = require('../pages/RadioAndCheckboxPage');
 
 exports.test = base.test.extend({
@@ -53,6 +54,13 @@ exports.test = base.test.extend({
             new InputFieldsPage(page);
         await inputFieldsPage.navigateToInputFields();
         await use(inputFieldsPage);
+    },
+
+    linksPage: async ({ page }, use) => {
+        const linksPage =
+            new LinksPage(page);
+        await linksPage.navigateToLinks();
+        await use(linksPage);
     },
 
     radioAndCheckboxPage: async ({ page }, use) => {
