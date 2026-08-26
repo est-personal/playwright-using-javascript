@@ -130,7 +130,7 @@ test.describe('QA Playground - Links Tests', () => {
         const brokenLinksScenarios = [
             {
                 name: 'New Tab',
-                newTab: false,
+                newTab: true,
                 href: page => page.getBrokenLinksNewTabLinkHref(),
                 method: page => page.clickBrokenLinksNewTabLink(),
                 status: 500,
