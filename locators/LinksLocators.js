@@ -53,18 +53,18 @@ const LinksLocators = {
         '[data-testid="scenario-links-image"]',
     textLinksAnchorTarget: 
         '[data-testid="anchor-target"]',
-    textLinksFirstLink: 
-        '[data-testid="link-text-garbled-1"]',
-    textLinksFourthLink: 
+    textLinksAnchorTextLink: 
         '[data-testid="link-text-anchor"]',
+    textLinksGarbled1Link: 
+        '[data-testid="link-text-garbled-1"]',
+    textLinksGarbled2Link: 
+        '[data-testid="link-text-garbled-2"]',
+    textLinksLongTextLink: 
+        '[data-testid="link-text-long"]',
     textLinksResult: 
         '[data-testid="result-s06"]',
-    textLinksSecondLink: 
-        '[data-testid="link-text-garbled-2"]',
     textLinksSection: 
         '[data-testid="scenario-links-text"]',
-    textLinksThirdLink: 
-        '[data-testid="link-text-long"]',
 };
 
 module.exports = { LinksLocators };

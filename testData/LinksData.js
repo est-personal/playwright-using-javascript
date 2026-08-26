@@ -117,13 +117,13 @@ const LinksData = {
                 'Clicked Iron Man image link'
         },
         textLinks: {
-            first:
-                'Clicked Garbled Link 1',
-            fourth:
+            anchorText:
                 'Navigated to #anchor-target',
-            second:
+            garbled1:
+                'Clicked Garbled Link 1',
+            garbled2:
                 'Clicked Garbled Link 2',
-            third:
+            longText:
                 'Clicked Long Text Link'
         }
     },
@@ -155,8 +155,14 @@ const LinksData = {
             sameTab:
                 'https://the-internet.herokuapp.com/status_codes/500'
         },
-        buttonLinks:
-            'Click a button link',
+        buttonLinks: {
+            brokenButton:
+                '',
+            brokenLinkButton:
+                '',
+            homeButton:
+                QaPlaygroundUrls.homePage
+        },
         externalLinks: {
             automationNotes:
                 'chrome-error://chromewebdata/',
@@ -165,14 +171,27 @@ const LinksData = {
         },
         internalLinks: {
             aboutUs:
-                'https://qaplayground.com/about-us',
+                QaPlaygroundUrls.aboutUs,
             home:
                 'https://qaplayground.com/'
         },
-        imageLinks:
-            'Click an image link',
-        textLinks:
-            'Click a text or anchor link'
+        imageLinks: {
+            brokenImage:
+                '',
+            ironMan:
+                'https://ashisheditz.com/?s=iron+man'
+        },
+        textLinks: {
+            anchorText:
+                // `${QaPlaygroundUrls.linksPage}#anchor-target`,
+                '#anchor-target',
+            garbled1:
+                QaPlaygroundUrls.homePage,
+            garbled2:
+                QaPlaygroundUrls.aboutUs,
+            longText:
+                ''
+        }
     }
 };
 

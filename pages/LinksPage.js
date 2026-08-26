@@ -36,6 +36,24 @@ class LinksPage extends BasePage {
         );
     }
 
+    async clickButtonLinksBrokenButtonLink() {
+        await this.click(
+            LinksLocators.buttonLinksBrokenButton
+        );
+    }
+
+    async clickButtonLinksBrokenLinkButtonLink() {
+        await this.click(
+            LinksLocators.buttonLinksBrokenLinkButton
+        );
+    }
+
+    async clickButtonLinksHomeButtonLink() {
+        await this.click(
+            LinksLocators.buttonLinksHomeButton
+        );
+    }
+
     async clickExternalLinksAutomationNotesLink() {
         await this.click(
             LinksLocators.externalLinksAutomationNotesLink
@@ -48,6 +66,18 @@ class LinksPage extends BasePage {
         );
     }
 
+    async clickImageLinksBrokenImageLink() {
+        await this.click(
+            LinksLocators.imageLinksBrokenImageLink
+        );
+    }
+
+    async clickImageLinkIronManLink() {
+        await this.click(
+            LinksLocators.imageLinksIronManLink
+        );
+    }
+
     async clickInternalLinksAboutUsLink() {
         await this.click(
             LinksLocators.internalLinksAboutUsLink
@@ -57,6 +87,30 @@ class LinksPage extends BasePage {
     async clickInternalLinksHomeLink() {
         await this.click(
             LinksLocators.internalLinksHomeLink
+        );
+    }
+
+    async clickTextLinksAnchorTextLink() {
+        await this.click(
+            LinksLocators.textLinksAnchorTextLink
+        );
+    }
+
+    async clickTextLinksGarbled1Link() {
+        await this.click(
+            LinksLocators.textLinksGarbled1Link
+        );
+    }
+
+    async clickTextLinksGarbled2Link() {
+        await this.click(
+            LinksLocators.textLinksGarbled2Link
+        );
+    }
+
+    async clickTextLinksLongTextLink() {
+        await this.click(
+            LinksLocators.textLinksLongTextLink
         );
     }
 

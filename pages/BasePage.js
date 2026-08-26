@@ -105,6 +105,15 @@ class BasePage {
             .isDisabled();
     }
 
+    async isImageLoaded(locator) {
+        return await this.page
+            .locator(locator)
+            .evaluate(
+                img => img.complete && img.naturalWidth > 0
+            );
+    }
+
+
     async isVisible(locator) {
         return await this.page
             .locator(locator)

@@ -1,5 +1,7 @@
 
 const QaPlaygroundUrls = {
+    aboutUs:
+        'https://qaplayground.com/about-us',
     alertsAndDialogsPage:
         'https://qaplayground.com/practice/alerts-dialogs',
     buttonsPage:
