@@ -243,28 +243,28 @@ class LinksPage extends BasePage {
 
     async getTextLinksAnchorTextLinkHref() {
         return await this.getAttribute(
-            LinksLocators.textLinksFourthLink,
+            LinksLocators.textLinksAnchorTextLink,
             'href'
         );
     }
 
     async getTextLinksGarbled1LinkHref() {
         return await this.getAttribute(
-            LinksLocators.textLinksFirstLink,
+            LinksLocators.textLinksGarbled1Link,
             'href'
         );
     }
 
     async getTextLinksGarbled2LinkHref() {
         return await this.getAttribute(
-            LinksLocators.textLinksSecondLink,
+            LinksLocators.textLinksGarbled2Link,
             'href'
         );
     }
 
     async getTextLinksLongTextLinkHref() {
         return await this.getAttribute(
-            LinksLocators.textLinksThirdLink,
+            LinksLocators.textLinksLongTextLink,
             'href'
         );
     }
