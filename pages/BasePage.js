@@ -42,12 +42,29 @@ class BasePage {
             .getAttribute(attribute);
     }
 
+    async getCurrentUrl() {
+        return this.page
+            .url();
+    }
+
+    async getResponseStatus(responsePromise) {
+        const response = 
+            await responsePromise;
+        return response.status();
+    }
+
     async getSelectedOptionText(locator) {
         return (await this.page
             .locator(locator)
             .locator('option:checked')
             .textContent()
         )?.trim();
+    }
+
+    async getStatusCode(request, url) {
+        const response =
+            await request.get(url);
+        return response.status();
     }
 
     async getText(locator) {
@@ -99,6 +116,11 @@ class BasePage {
             .goto(url);
     }
 
+    async navigateBack() {
+        await this.page
+            .goBack();
+    }
+
     async pressKey(key) {
         await this.page
             .keyboard
@@ -129,6 +151,14 @@ class BasePage {
         await this.page
             .locator(locator)
             .uncheck();
+    }
+
+    async waitForNewPage() {
+        const newPagePromise =
+            this.page.
+                context()
+                .waitForEvent('page');
+        return newPagePromise;
     }
 
     async waitForPageToLoad() {

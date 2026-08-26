@@ -1,0 +1,70 @@
+// Arrange Alphabetically
+// Locators for QA Playground - Links Page
+const LinksLocators = {
+    apiLinksResult: 
+        '[data-testid="result-s07"]',
+    apiLinksSection: 
+        '[data-testid="scenario-links-api"]',
+    apiResultMessage: 
+        '.alert-success',
+    brokenLinksEmptyHrefLink: 
+        '[data-testid="link-broken-empty"]',
+    brokenLinksNewTabLink: 
+        '[data-testid="link-broken-newtab"]',
+    brokenLinksResult: 
+        '[data-testid="result-s03"]',
+    brokenLinksSameTabLink: 
+        '[data-testid="link-broken-same"]',
+    brokenLinksSection: 
+        '[data-testid="scenario-links-broken"]',
+    buttonLinksBrokenButton: 
+        '[data-testid="link-btn-broken"]',
+    buttonLinksBrokenLinkButton: 
+        '[data-testid="link-btn-broken-2"]',
+    buttonLinksHomeButton: 
+        '[data-testid="link-btn-home"]',
+    buttonLinksResult: 
+        '[data-testid="result-s05"]',
+    buttonLinksSection: 
+        '[data-testid="scenario-links-button"]',
+    externalLinksAutomationNotesLink: 
+        '[data-testid="link-external-selenium"]',
+    externalLinksCompleteCourseLink: 
+        '[data-testid="link-external-course"]',
+    externalLinksResult: 
+        '[data-testid="result-s02"]',
+    externalLinksSection: 
+        '[data-testid="scenario-links-external"]',
+    internalLinksHomeLink: 
+        '[data-testid="link-internal-home"]',
+    internalLinksAboutUsLink: 
+        '[data-testid="link-internal-about"]',
+    internalLinksResult: 
+        '[data-testid="result-s01"]',
+    internalLinksSection: 
+        '[data-testid="scenario-links-internal"]',
+    imageLinksBrokenImageLink: 
+        '[data-testid="link-image-broken"]',
+    imageLinksIronManLink: 
+        '[data-testid="link-image-ironman"]',
+    imageLinksResult: 
+        '[data-testid="result-s04"]',
+    imageLinksSection: 
+        '[data-testid="scenario-links-image"]',
+    textLinksAnchorTarget: 
+        '[data-testid="anchor-target"]',
+    textLinksFirstLink: 
+        '[data-testid="link-text-garbled-1"]',
+    textLinksFourthLink: 
+        '[data-testid="link-text-anchor"]',
+    textLinksResult: 
+        '[data-testid="result-s06"]',
+    textLinksSecondLink: 
+        '[data-testid="link-text-garbled-2"]',
+    textLinksSection: 
+        '[data-testid="scenario-links-text"]',
+    textLinksThirdLink: 
+        '[data-testid="link-text-long"]',
+};
+
+module.exports = { LinksLocators };

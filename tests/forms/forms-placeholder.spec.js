@@ -63,13 +63,6 @@ const placeholderScenarios = [
 ];
 
 test.describe('QA Playground - Forms Placeholder Validations', () => {
-    
-    let formsPage;
-
-    test.beforeEach(async ({ page }) => {
-        formsPage = new FormsPage(page);
-        await formsPage.navigateToForms();
-    });
 
     placeholderScenarios.forEach((scenario) => {
         test(scenario.name, {
