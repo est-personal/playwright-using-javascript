@@ -120,17 +120,17 @@ class LinksPage extends BasePage {
         );
     }
 
-    async getBrokenLinksEmptyHrefLinkHref() {
+    async getBrokenLinksEmptyHrefLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.brokenLinksEmptyHrefLink,
-            'href'
+            attribute
         );
     }
 
-    async getBrokenLinksNewTabLinkHref() {
+    async getBrokenLinksNewTabLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.brokenLinksNewTabLink,
-            'href'
+            attribute
         );
     }
 
@@ -140,31 +140,31 @@ class LinksPage extends BasePage {
         );
     }
 
-    async getBrokenLinksSameTabLinkHref() {
+    async getBrokenLinksSameTabLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.brokenLinksSameTabLink,
-            'href'
+            attribute
         );
     }
 
-    async getButtonLinksBrokenButtonHref() {
+    async getButtonLinksBrokenButtonAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.buttonLinksBrokenButton,
-            'href'
+            attribute
         );
     }
 
-    async getButtonLinksBrokenLinkButtonHref() {
+    async getButtonLinksBrokenLinkButtonAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.buttonLinksBrokenLinkButton,
-            'href'
+            attribute
         );
     }
 
-    async getButtonLinksHomeButtonHref() {
+    async getButtonLinksHomeButtonAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.buttonLinksHomeButton,
-            'href'
+            attribute
         );
     }
 
@@ -174,17 +174,24 @@ class LinksPage extends BasePage {
         );
     }
 
-    async getExternalLinksAutomationNotesLinkHref() {
+    async getExternalLinksAutomationNotesLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.externalLinksAutomationNotesLink,
-            'href'
+            attribute
         );
     }
 
-    async getExternalLinksCompleteCourseLinkHref() {
+    async getExternalLinksCompleteCourseLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.externalLinksCompleteCourseLink,
-            'href'
+            attribute
+        );
+    }
+
+    async getExternalLinksCompleteCourseTargetAttribute(attribute) {
+        return await this.getAttribute(
+            LinksLocators.externalLinksCompleteCourseLink,
+            'target'
         );
     }
 
@@ -194,17 +201,17 @@ class LinksPage extends BasePage {
         );
     }
 
-    async getImageLinksBrokenImageLinkHref() {
+    async getImageLinksBrokenImageLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.imageLinksBrokenImageLink,
-            'href'
+            attribute
         );
     }
 
-    async getImageLinksIronManLinkHref() {
+    async getImageLinksIronManLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.imageLinksIronManLink,
-            'href'
+            attribute
         );
     }
 
@@ -214,17 +221,17 @@ class LinksPage extends BasePage {
         );
     }
 
-    async getInternalLinksAboutUsLinkHref() {
+    async getInternalLinksAboutUsLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.internalLinksAboutUsLink,
-            'href'
+            attribute
         );
     }
 
-    async getInternalLinksHomeLinkHref() {
+    async getInternalLinksHomeLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.internalLinksHomeLink,
-            'href'
+            attribute
         );
     }
 
@@ -237,35 +244,35 @@ class LinksPage extends BasePage {
     async getLinkUrl(linkLocator) {
         return await this.getAttribute(
             linkLocator,
-            'href'
+            attribute
         );
     }
 
-    async getTextLinksAnchorTextLinkHref() {
+    async getTextLinksAnchorTextLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.textLinksAnchorTextLink,
-            'href'
+            attribute
         );
     }
 
-    async getTextLinksGarbled1LinkHref() {
+    async getTextLinksGarbled1LinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.textLinksGarbled1Link,
-            'href'
+            attribute
         );
     }
 
-    async getTextLinksGarbled2LinkHref() {
+    async getTextLinksGarbled2LinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.textLinksGarbled2Link,
-            'href'
+            attribute
         );
     }
 
-    async getTextLinksLongTextLinkHref() {
+    async getTextLinksLongTextLinkAttribute(attribute) {
         return await this.getAttribute(
             LinksLocators.textLinksLongTextLink,
-            'href'
+            attribute
         );
     }
 
