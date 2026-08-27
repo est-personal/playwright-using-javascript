@@ -128,24 +128,22 @@ const LinksData = {
         }
     },
     target: {
-        apiLinks:
-            'Click an API link',
-        brokenLinks:
-            'Click a broken link',
-        buttonLinks:
-            'Click a button link',
-        externalLinks:
-            'Click an external link',
-        internalLinks:
-            'Click an internal link',
-        imageLinks:
-            'Click an image link',
-        textLinks:
-            'Click a text or anchor link'
+        brokenLinks: {
+            newTab:
+                '_blank'
+        },
+        externalLinks: {
+            automationNotes:
+                '_blank',
+            completeCourse:
+                '_blank'
+        },
+        imageLinks: {
+            ironMan:
+                '_blank'
+        }
     },
     url: {
-        apiLinks:
-            'Click an API link',
         brokenLinks: {
             emptyHref:
                 QaPlaygroundUrls.linksPage,

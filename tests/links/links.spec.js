@@ -131,7 +131,7 @@ test.describe('QA Playground - Links Tests', () => {
             {
                 name: 'New Tab',
                 newTab: true,
-                href: page => page.getBrokenLinksNewTabLinkHref(),
+                href: page => page.getBrokenLinksNewTabLinkAttribute('href'),
                 method: page => page.clickBrokenLinksNewTabLink(),
                 status: 500,
                 url: LinksData.url.brokenLinks.newTab,
@@ -141,7 +141,7 @@ test.describe('QA Playground - Links Tests', () => {
             {
                 name: 'Same Tab',
                 newTab: false,
-                href: page => page.getBrokenLinksSameTabLinkHref(),
+                href: page => page.getBrokenLinksSameTabLinkAttribute('href'),
                 method: page => page.clickBrokenLinksSameTabLink(),
                 status: 500,
                 url: LinksData.url.brokenLinks.sameTab,
@@ -151,7 +151,7 @@ test.describe('QA Playground - Links Tests', () => {
             {
                 name: 'Empty Href',
                 newTab: false,
-                href: page => page.getBrokenLinksEmptyHrefLinkHref(),
+                href: page => page.getBrokenLinksEmptyHrefLinkAttribute('href'),
                 method: page => page.clickBrokenLinksEmptyHrefLink(),
                 url: LinksData.url.brokenLinks.emptyHref,
                 expected: LinksData.result.brokenLinks.emptyHref,
@@ -452,6 +452,63 @@ test.describe('QA Playground - Links Tests', () => {
                         QaPlaygroundUrls.linksPage
                     );
                 }
+            });
+        });
+
+    });
+
+    test.describe('API Links', () => {
+        const apiLinksScenarios = [
+            {
+                name: 'Create User (201)',
+                expected: LinksData.result.apiLinks.createUser,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'No Content (204)',
+                expected: LinksData.result.apiLinks.noContent,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Moved (301)',
+                expected: LinksData.result.apiLinks.moved,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Bad Request (400)',
+                expected: LinksData.result.apiLinks.badRequest,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Unauthorized (401)',
+                expected: LinksData.result.apiLinks.unauthorized,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Forbidden (403)',
+                expected: LinksData.result.apiLinks.forbidden,
+                tags: ['@regression', '@positive']
+            },
+            {
+                name: 'Not Found (404)',
+                expected: LinksData.result.apiLinks.notFound,
+                tags: ['@regression', '@positive']
+            }
+        ];
+
+        apiLinksScenarios.forEach(data => {
+            test(`Click ${data.name}`,{
+                    tag: data.tags
+            }, async ({ linksPage, page }) => {
+                await linksPage.clickApiLinksStatusCodeButton(
+                    data.name
+                );
+                // Validate API Links result
+                expect(
+                    await linksPage.getApiLinksResult()
+                ).toBe(
+                    data.expected
+                );
             });
         });
 
