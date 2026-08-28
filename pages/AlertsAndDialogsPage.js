@@ -2,6 +2,7 @@
 // Keywords for QA Playground - Alerts and Dialogs Page
 const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
 const { AlertsAndDialogsLocators } = require('../locators/AlertsAndDialogsLocators');
+const { AlertsAndDialogsActions } = require('../helpers/AlertsAndDialogsActions');
 const { BasePage } = require('./BasePage');
 
 class AlertsAndDialogsPage extends BasePage {
@@ -11,25 +12,16 @@ class AlertsAndDialogsPage extends BasePage {
     }
 
     // Async
-    async clickAssertContentButton() {
-       await this.click(
-            AlertsAndDialogsLocators.assertContentButton
+    async clickBackdropClickInsideModalArea() {
+        const dialogBox = this.page.locator(
+            AlertsAndDialogsLocators.backdropClickDialog
         );
+        await dialogBox.click({
+            position: { x: 50, y: 50 }
+        });
     }
 
-    async clickAssertContentModalGotItButton() {
-       await this.click(
-            AlertsAndDialogsLocators.assertContentModalGotItButton
-        );
-    }
-
-    async clickBackdropClickButton() {
-       await this.click(
-            AlertsAndDialogsLocators.backdropClickButton
-        );
-    }
-
-    async clickBackdropClickDismissArea() {
+    async clickBackdropClickOutsideModalArea() {
         const dialogBox = this.page.locator(
             AlertsAndDialogsLocators.backdropClickDialog
         );
@@ -40,102 +32,27 @@ class AlertsAndDialogsPage extends BasePage {
         );
     }
 
-    async clickBackdropClickInsideArea() {
-        const dialogBox = this.page.locator(
-            AlertsAndDialogsLocators.backdropClickDialog
-        );
-        await dialogBox.click({
-            position: { x: 50, y: 50 }
-        });
-    }
-
-    async clickCancelStayButton() {
-       await this.click(
-            AlertsAndDialogsLocators.cancelStayButton
+    async clickDialogButton(locator) {
+        await this.click(
+            locator
         );
     }
 
-    async clickCancelStayModalLeaveButton() {
-       await this.click(
-            AlertsAndDialogsLocators.cancelStayModalLeaveButton
+    async clickScenarioButton(section, notifId) {
+        if (notifId) {
+            await this.clickScopedDismissDialogButton(
+                notifId
+            );
+            return;
+        }
+        await this.clickDialogButton(
+            AlertsAndDialogsActions[section].button
         );
     }
 
-    async clickCancelStayModalStayButton() {
-       await this.click(
-            AlertsAndDialogsLocators.cancelStayModalStayButton
-        );
-    }
-
-    async clickCloseInfoDialogButton() {
-       await this.click(
-            AlertsAndDialogsLocators.closeInfoDialogButton
-        );
-    }
-
-    async clickCloseInfoDialogModalGotItButton() {
-       await this.click(
-            AlertsAndDialogsLocators.closeInfoDialogModalGotItButton
-        );
-    }
-
-    async clickCloseInfoDialogModalXButton() {
-       await this.click(
-            AlertsAndDialogsLocators.closeInfoDialogModalXButton
-        );
-    }
-
-    async clickConfirmActionButton() {
-       await this.click(
-            AlertsAndDialogsLocators.confirmActionButton
-        );
-    }
-
-    async clickConfirmActionModalCancelButton() {
-       await this.click(
-            AlertsAndDialogsLocators.confirmActionModalCancelButton
-        );
-    }
-
-    async clickConfirmActionModalConfirmButton() {
-       await this.click(
-            AlertsAndDialogsLocators.confirmActionModalConfirmButton
-        );
-    }
-
-    async clickDestructiveConfirmButton() {
-       await this.click(
-            AlertsAndDialogsLocators.destructiveConfirmButton
-        );
-    }
-
-    async clickDestructiveConfirmModalCancelButton() {
-       await this.click(
-            AlertsAndDialogsLocators.destructiveConfirmModalCancelButton
-        );
-    }
-
-    async clickDestructiveConfirmModalDeleteAccountButton() {
-       await this.click(
-            AlertsAndDialogsLocators.destructiveConfirmModalDeleteAccountButton
-        );
-    }
-
-    async clickEscapeKeyButton() {
-       await this.click(
-            AlertsAndDialogsLocators.escapeKeyButton
-        );
-    }
-
-    async clickScopedDismissLowDiskSpaceButton() {
-       await this.click(
-            AlertsAndDialogsLocators.scopedDismissLowDiskSpaceDismissButton
-        );
-    }
-
-    async clickScopedDismissModalCancelButton() {
-       await this.click(
-            AlertsAndDialogsLocators.scopedDismissModalCancelButton
+    async clickScopedDismissDialogButton(notifId) {
+        await this.click(
+            this.getScopedDismissButton(notifId)
         );
     }
 
@@ -157,207 +74,24 @@ class AlertsAndDialogsPage extends BasePage {
         );
     }
 
-    async clickScopedDismissSecurityAlertButton() {
-       await this.click(
-            AlertsAndDialogsLocators.scopedDismissSecurityAlertDismissButton
-        );
+    async getModalContent(titleLocator, messageLocator) {
+        return {
+            title: await this.getText(titleLocator),
+            message: await this.getText(messageLocator)
+        };
     }
 
-    async clickScopedDismissSessionExpiringSoonButton() {
-       await this.click(
-            AlertsAndDialogsLocators.scopedDismissSessionExpiringSoonDismissButton
-        );
+    async getModalMessage(locator) {
+        return await this.getText(locator);
     }
 
-    async getAssertContentModalMessage() {
+    async getModalTitle(locator) {
+        return await this.getText(locator);
+    }
+
+    async getResult(locator) {
         return await this.getText(
-            AlertsAndDialogsLocators.assertContentModalMessage
-        );
-    }
-
-    async getAssertContentModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.assertContentModalTitle
-        );
-    }
-
-    async getAssertContentResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.assertContentResult
-        );
-    }
-
-    async getBackdropClickModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.backdropClickModalMessage
-        );
-    }
-
-    async getBackdropClickModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.backdropClickModalTitle
-        );
-    }
-
-    async getBackdropClickResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.backdropClickResult
-        );
-    }
-
-    async getCancelStayModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.cancelStayModalMessage
-        );
-    }
-
-    async getCancelStayModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.cancelStayModalTitle
-        );
-    }
-
-    async getCancelStayResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.cancelStayResult
-        );
-    }
-
-    async getCloseInfoDialogModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.closeInfoDialogModalMessage
-        );
-    }
-
-    async getCloseInfoDialogModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.closeInfoDialogModalTitle
-        );
-    }
-
-    async getCloseInfoDialogResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.closeInfoDialogResult
-        );
-    }
-
-    async getConfirmActionModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.confirmActionModalMessage
-        );
-    }
-
-    async getConfirmActionModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.confirmActionModalTitle
-        );
-    }
-
-    async getConfirmActionResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.confirmActionResult
-        );
-    }
-
-    async getDestructiveConfirmModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.destructiveConfirmModalMessage
-        );
-    }
-
-    async getDestructiveConfirmModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.destructiveConfirmModalTitle
-        );
-    }
-
-    async getDestructiveConfirmResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.destructiveConfirmResult
-        );
-    }
-
-    async getEscapeKeyModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.escapeKeyModalMessage
-        );
-    }
-
-    async getEscapeKeyModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.escapeKeyModalTitle
-        );
-    }
-
-    async getEscapeKeyResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.escapeKeyResult
-        );
-    }
-
-    async getScopedDismissModalMessage() {
-        return await this.getText(
-            AlertsAndDialogsLocators.scopedDismissModalMessage
-        );
-    }
-
-    async getScopedDismissModalTitle() {
-        return await this.getText(
-            AlertsAndDialogsLocators.scopedDismissModalTitle
-        );
-    }
-
-    async getScopedDismissResult() {
-        return await this.getText(
-            AlertsAndDialogsLocators.scopedDismissResult
-        );
-    }
-
-    async isAssertContentModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.assertContentModalTitle
-        );
-    }
-
-    async isBackdropClickModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.backdropClickModalTitle
-        );
-    }
-
-    async isCancelStayModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.cancelStayModalTitle
-        );
-    }
-
-    async isCloseInfoDialogModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.closeInfoDialogModalTitle
-        );
-    }
-
-    async isConfirmActionModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.confirmActionModalTitle
-        );
-    }
-
-    async isDestructiveConfirmModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.destructiveConfirmModalTitle
-        );
-    }
-
-    async isEscapeKeyModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.escapeKeyModalTitle
-        );
-    }
-
-    async isScopedDismissModalVisible() {
-        return await this.isVisible(
-            AlertsAndDialogsLocators.scopedDismissModalTitle
+            locator
         );
     }
 
@@ -368,6 +102,17 @@ class AlertsAndDialogsPage extends BasePage {
     }
 
     // Non-Async
+    getButtonLocator(section, notifId) {
+        return notifId
+            ? this.getScopedDismissButton(notifId)
+            : AlertsAndDialogsActions[section].button;
+    }
+
+    getDialogButton(locator) {
+        return this.page
+            .locator(locator);
+    }
+
     getNotificationDismissButton(notifId) {
         return this.page
             .locator(
@@ -375,55 +120,9 @@ class AlertsAndDialogsPage extends BasePage {
         );
     }
 
-    getOpenBackdropDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.backdropClickButton
-        );
-    }
-
-    getOpenConfirmDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.confirmActionButton
-        );
-    }
-
-    getOpenDeleteDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.destructiveConfirmButton
-        );
-    }
-
-    getOpenKeyboardDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.escapeKeyButton
-        );
-    }
-
-    getOpenInfoDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.closeInfoDialogButton
-        );
-    }
-
-    getOpenNotificationButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.assertContentButton
-        );
-    }
-
-    getUnsavedDialogButton() {
-        return this.page
-            .locator(
-                AlertsAndDialogsLocators.cancelStayButton
-        );
-    }
-
+    getScopedDismissButton(notifId) {
+        return `[data-notif-id="notif-${notifId}"] [data-testid="notif-dismiss-btn"]`;
+    };
 }
 
 module.exports = { AlertsAndDialogsPage };
