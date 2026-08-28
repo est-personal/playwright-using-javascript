@@ -1,144 +1,276 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { AlertsAndDialogsData } = require('../../testData/AlertsAndDialogsData');
+const { AlertsAndDialogsActions } = require('../../helpers/AlertsAndDialogsActions');
+const { AlertsAndDialogsAssertions } = require('../../helpers/AlertsAndDialogsAssertions');
 
-const buttonTextScenarios = [
+const scenarios = [
     {
         name: 'Close Info Dialog',
-        locator: page => page.getOpenInfoDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.closeInfoDialog
+        section: 'closeInfoDialog',
+        expectedButton: AlertsAndDialogsData.buttonText.closeInfoDialog,
+        expectedResult: AlertsAndDialogsData.placeholder.closeInfoDialog,
+        expectedTitle: AlertsAndDialogsData.modalTitle.closeInfoDialog,
+        expectedMessage: AlertsAndDialogsData.modalMessage.closeInfoDialog
     },
     {
         name: 'Confirm Action',
-        locator: page => page.getOpenConfirmDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.confirmAction
+        section: 'confirmAction',
+        expectedButton: AlertsAndDialogsData.buttonText.confirmAction,
+        expectedResult: AlertsAndDialogsData.placeholder.confirmAction,
+        expectedTitle: AlertsAndDialogsData.modalTitle.confirmAction,
+        expectedMessage: AlertsAndDialogsData.modalMessage.confirmAction
     },
     {
         name: 'Cancel Stay',
-        locator: page => page.getUnsavedDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.cancelStay
+        section: 'cancelStay',
+        expectedButton: AlertsAndDialogsData.buttonText.cancelStay,
+        expectedResult: AlertsAndDialogsData.placeholder.cancelStay,
+        expectedTitle: AlertsAndDialogsData.modalTitle.cancelStay,
+        expectedMessage: AlertsAndDialogsData.modalMessage.cancelStay
     },
     {
         name: 'Destructive Confirm',
-        locator: page => page.getOpenDeleteDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.destructiveConfirm
+        section: 'destructiveConfirm',
+        expectedButton: AlertsAndDialogsData.buttonText.destructiveConfirm,
+        expectedResult: AlertsAndDialogsData.placeholder.destructiveConfirm,
+        expectedTitle: AlertsAndDialogsData.modalTitle.destructiveConfirm,
+        expectedMessage: AlertsAndDialogsData.modalMessage.destructiveConfirm
     },
     {
         name: 'Backdrop Click',
-        locator: page => page.getOpenBackdropDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.backdropClick
+        section: 'backdropClick',
+        expectedButton: AlertsAndDialogsData.buttonText.backdropClick,
+        expectedResult: AlertsAndDialogsData.placeholder.backdropClick,
+        expectedTitle: AlertsAndDialogsData.modalTitle.backdropClick,
+        expectedMessage: AlertsAndDialogsData.modalMessage.backdropClick
     },
     {
         name: 'Escape Key',
-        locator: page => page.getOpenKeyboardDialogButton(),
-        expected: AlertsAndDialogsData.buttonText.escapeKey
+        section: 'escapeKey',
+        expectedButton: AlertsAndDialogsData.buttonText.escapeKey,
+        expectedResult: AlertsAndDialogsData.placeholder.escapeKey,
+        expectedTitle: AlertsAndDialogsData.modalTitle.escapeKey,
+        expectedMessage: AlertsAndDialogsData.modalMessage.escapeKey
     },
     {
         name: 'Assert Content',
-        locator: page => page.getOpenNotificationButton(),
-        expected: AlertsAndDialogsData.buttonText.assertContent
+        section: 'assertContent',
+        expectedButton: AlertsAndDialogsData.buttonText.assertContent,
+        expectedResult: AlertsAndDialogsData.placeholder.assertContent,
+        expectedTitle: AlertsAndDialogsData.modalTitle.assertContent,
+        expectedMessage: AlertsAndDialogsData.modalMessage.assertContent
     },
     {
         name: 'Scoped Dismiss: Low Disk Space',
-        locator: page => page.getNotificationDismissButton(1),
-        expected: AlertsAndDialogsData.buttonText.scopedDismiss
+        section: 'scopedDismiss',
+        notifId: 1,
+        expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+        expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss,
+        expectedTitle: AlertsAndDialogsData.modalTitle.scopedDismiss.lowDiskSpace,
+        expectedMessage: AlertsAndDialogsData.modalMessage.scopedDismiss.lowDiskSpace
     },
     {
         name: 'Scoped Dismiss: Session Expiring Soon',
-        locator: page => page.getNotificationDismissButton(2),
-        expected: AlertsAndDialogsData.buttonText.scopedDismiss
+        section: 'scopedDismiss',
+        notifId: 2,
+        expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+        expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss,
+        expectedTitle: AlertsAndDialogsData.modalTitle.scopedDismiss.sessionExpiringSoon,
+        expectedMessage: AlertsAndDialogsData.modalMessage.scopedDismiss.sessionExpiringSoon
     },
     {
         name: 'Scoped Dismiss: Security Alert',
-        locator: page => page.getNotificationDismissButton(3),
-        expected: AlertsAndDialogsData.buttonText.scopedDismiss
+        section: 'scopedDismiss',
+        notifId: 3,
+        expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+        expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss,
+        expectedTitle: AlertsAndDialogsData.modalTitle.scopedDismiss.securityAlert,
+        expectedMessage: AlertsAndDialogsData.modalMessage.scopedDismiss.securityAlert
     }
 ];
+// const scenarios = [
+    // {
+    //     name: 'Close Info Dialog',
+    //     section: 'closeInfoDialog',
+    //     expectedButton: AlertsAndDialogsData.buttonText.closeInfoDialog,
+    //     expectedResult: AlertsAndDialogsData.placeholder.closeInfoDialog
+    // },
+    // {
+    //     name: 'Confirm Action',
+    //     section: 'confirmAction',
+    //     expectedButton: AlertsAndDialogsData.buttonText.confirmAction,
+    //     expectedResult: AlertsAndDialogsData.placeholder.confirmAction
+    // },
+    // {
+    //     name: 'Cancel Stay',
+    //     section: 'cancelStay',
+    //     expectedButton: AlertsAndDialogsData.buttonText.cancelStay,
+    //     expectedResult: AlertsAndDialogsData.placeholder.cancelStay
+    // },
+    // {
+    //     name: 'Destructive Confirm',
+    //     section: 'destructiveConfirm',
+    //     expectedButton: AlertsAndDialogsData.buttonText.destructiveConfirm,
+    //     expectedResult: AlertsAndDialogsData.placeholder.destructiveConfirm
+    // },
+    // {
+    //     name: 'Backdrop Click',
+    //     section: 'backdropClick',
+    //     expectedButton: AlertsAndDialogsData.buttonText.backdropClick,
+    //     expectedResult: AlertsAndDialogsData.placeholder.backdropClick
+    // },
+    // {
+    //     name: 'Escape Key',
+    //     section: 'escapeKey',
+    //     expectedButton: AlertsAndDialogsData.buttonText.escapeKey,
+    //     expectedResult: AlertsAndDialogsData.placeholder.escapeKey
+    // },
+    // {
+    //     name: 'Assert Content',
+    //     section: 'assertContent',
+    //     expectedButton: AlertsAndDialogsData.buttonText.assertContent,
+    //     expectedResult: AlertsAndDialogsData.placeholder.assertContent
+    // },
+    // {
+    //     name: 'Scoped Dismiss: Low Disk Space',
+    //     section: 'scopedDismiss',
+    //     notifId: 1,
+    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
+    // },
+    // {
+    //     name: 'Scoped Dismiss: Session Expiring Soon',
+    //     section: 'scopedDismiss',
+    //     notifId: 2,
+    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
+    // },
+    // {
+    //     name: 'Scoped Dismiss: Security Alert',
+    //     section: 'scopedDismiss',
+    //     notifId: 3,
+    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
+    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
+    // }
+// ];
 
 test.describe('QA Playground - Alerts And Dialogs - Button Text Validations', () => {
-    buttonTextScenarios.forEach(data => {
+    scenarios.forEach(data => {
         test(`Scenario ${data.name}`, {
             tag: ['@regression', '@positive']
         }, async ({ alertsAndDialogsPage }) => {
+            // Validate Button text
             await expect(
-                data.locator(alertsAndDialogsPage)
-            ).toHaveText(
-                data.expected
+                await alertsAndDialogsPage.getText(
+                    alertsAndDialogsPage.getButtonLocator(
+                        data.section,
+                        data.notifId
+                    )
+                )
+            ).toBe(
+                data.expectedButton
             );
         });
     });
 });
 
-const placeholderScenarios = [
-    {
-        name: 'Close Info Dialog',
-        locator: page => page.getCloseInfoDialogResult(),
-        value: AlertsAndDialogsData.placeholder.closeInfoDialog,
-        type: 'value'
-    },
-    {
-        name: 'Confirm Action',
-        locator: page => page.getConfirmActionResult(),
-        value: AlertsAndDialogsData.placeholder.confirmAction,
-        type: 'value'
-    },
-    {
-        name: 'Cancel Stay',
-        locator: page => page.getCancelStayResult(),
-        value: AlertsAndDialogsData.placeholder.cancelStay,
-        type: 'value'
-    },
-    {
-        name: 'Destructive Confirm',
-        locator: page => page.getDestructiveConfirmResult(),
-        value: AlertsAndDialogsData.placeholder.destructiveConfirm,
-        type: 'value'
-    },
-    {
-        name: 'Backdrop Click',
-        locator: page => page.getBackdropClickResult(),
-        value: AlertsAndDialogsData.placeholder.backdropClick,
-        type: 'value'
-    },
-    {
-        name: 'Escape Key',
-        locator: page => page.getEscapeKeyResult(),
-        value: AlertsAndDialogsData.placeholder.escapeKey,
-        type: 'value'
-    },
-    {
-        name: 'Assert Content',
-        locator: page => page.getAssertContentResult(),
-        value: AlertsAndDialogsData.placeholder.assertContent,
-        type: 'value'
-    },
-    {
-        name: 'Scoped Dismiss',
-        locator: page => page.getScopedDismissResult(),
-        value: AlertsAndDialogsData.placeholder.scopedDismiss,
-        type: 'value'
-    }
-];
+const placeholderScenarios = scenarios.filter(
+    (data, index, array) =>
+        index === array.findIndex(
+            item => item.section === data.section
+        )
+);
 
 test.describe('QA Playground - Alerts And Dialogs - Default Result Text Validations', () => {
     placeholderScenarios.forEach(data => {
         test(`Scenario ${data.name}`, {
                 tag: ['@regression', '@positive']
         }, async ({ alertsAndDialogsPage }) => {
-            if (data.type === 'placeholder') {
-                expect(
-                    await data.locator(alertsAndDialogsPage)
-                ).toHaveAttribute(
-                    'placeholder',
-                    data.value
-                );
-            } 
-            else {
-                expect(
-                    await data.locator(alertsAndDialogsPage)
-                ).toBe(
-                    data.value
-                );
-            }
+            // Validate default text in Result
+            await expect(
+                await alertsAndDialogsPage.getResult(
+                    AlertsAndDialogsActions[data.section].result
+                )
+            ).toBe(
+                data.expectedResult
+            );
         });
     });
 });
+
+test.describe('QA Playground - Alerts And Dialogs - Modal Content Validations', () => {
+    scenarios.forEach(data => {
+        test(`Scenario ${data.name}`, {
+            tag: ['@regression', '@positive']
+        }, async ({ alertsAndDialogsPage }) => {
+            // Click button
+            await alertsAndDialogsPage.clickScenarioButton(
+                data.section,
+                data.notifId
+            );
+            // Use Actions helper
+            const modalContent = 
+                AlertsAndDialogsActions[data.section];
+            // Validate modal content
+            await AlertsAndDialogsAssertions.validateModalContent(
+                alertsAndDialogsPage,
+                modalContent.title,
+                data.expectedTitle,
+                modalContent.message,
+                data.expectedMessage
+            );
+        });
+    });
+});
+
+// data.locator(alertsAndDialogsPage)
+// const placeholderScenarios = [
+//     {
+//         name: 'Close Info Dialog',
+//         locator: page => page.getCloseInfoDialogResult(),
+//         value: AlertsAndDialogsData.placeholder.closeInfoDialog,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Confirm Action',
+//         locator: page => page.getConfirmActionResult(),
+//         value: AlertsAndDialogsData.placeholder.confirmAction,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Cancel Stay',
+//         locator: page => page.getCancelStayResult(),
+//         value: AlertsAndDialogsData.placeholder.cancelStay,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Destructive Confirm',
+//         locator: page => page.getDestructiveConfirmResult(),
+//         value: AlertsAndDialogsData.placeholder.destructiveConfirm,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Backdrop Click',
+//         locator: page => page.getBackdropClickResult(),
+//         value: AlertsAndDialogsData.placeholder.backdropClick,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Escape Key',
+//         locator: page => page.getEscapeKeyResult(),
+//         value: AlertsAndDialogsData.placeholder.escapeKey,
+//         type: 'value'
+//     },
+//     {
+//         name: 'Assert Content',
+//         locator: page => page.getAssertContentResult(),
+//         value: AlertsAndDialogsData.placeholder.assertContent,
+//         type: 'value'
+//     },
+    // {
+    //     name: 'Scoped Dismiss',
+    //     locator: page => page.getScopedDismissResult(),
+    //     value: AlertsAndDialogsData.placeholder.scopedDismiss,
+    //     type: 'value'
+    // }
+// ];

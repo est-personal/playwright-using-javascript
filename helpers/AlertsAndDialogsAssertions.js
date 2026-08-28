@@ -2,13 +2,32 @@ const { expect } = require('@playwright/test');
 
 class AlertsAndDialogsAssertions {
     static async validateModalContent(
-        actualModalTitle,
+        page,
+        titleLocator,
         expectedModalTitle,
-        actualModalMessage,
+        messageLocator,
         expectedModalMessage
     ) {
-        expect(await actualModalTitle).toBe(expectedModalTitle);
-        expect(await actualModalMessage).toBe(expectedModalMessage);
+        // Get Modal Title
+        const actualTitle =
+            await page
+                .getText(titleLocator);
+        // Get Modal Message
+        const actualMessage =
+            await page
+                .getText(messageLocator);
+        // Validate Modal Title
+        expect(
+            actualTitle
+        ).toBe(
+            expectedModalTitle
+        );
+        // Validate Modal Message
+        expect(
+            actualMessage
+        ).toBe(
+            expectedModalMessage
+        );
     }
 
 }
