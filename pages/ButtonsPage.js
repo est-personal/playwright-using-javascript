@@ -14,66 +14,22 @@ class ButtonsPage extends BasePage {
     // Async
     async clickAndHold(duration) {
         const button = this.page.locator(
-            ButtonsLocators.clickAndHoldButton
+            ButtonsLocators.clickHoldButton
         );
         await button.hover();
         await this.page.mouse.down();
         await this.page.waitForTimeout(duration);
     }
 
-    async clickDisabledButton() {
-        await this.page
-            .locator(ButtonsLocators.disabledButton)
-            .click({
-                force: true
-            });
-    }
-
-    async clickDoubleClickMeButton() {
+    async clickDialogButton(locator) {
         await this.click(
-            ButtonsLocators.doubleClickMeButton
+            locator
         );
     }
 
-    async clickDoYouKnowMySizeButton() {
-        await this.click(
-            ButtonsLocators.doYouKnowMySizeButton
-        );
-    }
-
-    async clickFindLocationButton() {
-        await this.click(
-            ButtonsLocators.findLocationButton
-        );
-    }
-
-    async clickFindMyColorButton() {
-       await this.click(
-        ButtonsLocators.findMyColorButton
-        );
-    }
-
-    async clickGoToHomeButton() {
-        await this.click(
-            ButtonsLocators.goToHomeButton
-        );
-    }
-
-    async clickRightClickMeButton() {
-        await this.click(
-            ButtonsLocators.rightClickMeButton
-        );
-    }
-
-    async doubleClickDoubleClickMeButton() {
+    async doubleClickDialogButton(locator) {
         await this.doubleClick(
-            ButtonsLocators.doubleClickMeButton
-        );
-    }
-
-    async doubleClickRightClickMeButton() {
-        await this.doubleClick(
-            ButtonsLocators.rightClickMeButton
+            locator
         );
     }
 
@@ -140,18 +96,6 @@ class ButtonsPage extends BasePage {
             width: Math.round(size.width),
             height: Math.round(size.height)
         };
-    }
-
-    async getDisabledButtonState() {
-        return await this.page
-        .locator(ButtonsLocators.disabledButton)
-        .isEnabled();
-    }
-
-    async getDisabledButtonAttribute() {
-        return await this.page
-            .locator(ButtonsLocators.disabledButton)
-            .getAttribute('disabled');
     }
 
     async getDisplayedColor() {
@@ -267,10 +211,11 @@ class ButtonsPage extends BasePage {
         };
     }
 
-    async getHoldResultMessage() {
-        const result = this.page.locator(
-            ButtonsLocators.clickHoldResult
-        );
+    async getResultText(locator) {
+        const result = this.page.locator(locator);
+        await result.waitFor({
+            state: 'visible'
+        });
         return (
             await result.textContent()
         )?.trim();
@@ -278,21 +223,10 @@ class ButtonsPage extends BasePage {
 
     async holdButton() {
         const button = this.page.locator(
-            ButtonsLocators.clickAndHoldButton
+            ButtonsLocators.clickHoldButton
         );
         await button.hover();
         await this.page.mouse.down();
-    }
-
-    async isDisabledButtonDisabled() {
-        return await this.page
-            .locator(ButtonsLocators.disabledButton)
-            .isDisabled();
-    }
-    
-    async isSuccessDisplayed() {
-        const result = await this.getHoldResultMessage();
-        return result?.includes(ButtonsData.expectedClickAndHoldValue);
     }
 
     async navigateToButtons() {
@@ -308,131 +242,18 @@ class ButtonsPage extends BasePage {
         await this.page.mouse.up();
     }
 
-    async rightClickDoubleClickMeButton() {
+    async rightClickDialogButton(locator) {
         await this.rightClick(
-            ButtonsLocators.doubleClickMeButton
-        );
-    }
-
-    async rightClickRightClickMeButton() {
-        await this.rightClick(
-            ButtonsLocators.rightClickMeButton
+            locator
         );
     }
 
     // Non-Async
-    getClickAndHoldButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.clickAndHoldButton
+    async getResult(locator) {
+        return await this.getText(
+            locator
         );
     }
-
-    getClickHoldResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.clickHoldResult
-        );
-    }
-
-    getDisabledButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.disabledButton
-        );
-    }
-
-    getDisabledResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.disabledResult
-        );
-    }
-
-    getDoubleClickMeButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.doubleClickMeButton
-        );
-    }
-
-    getDoubleClickResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.doubleClickResult
-        );
-    }
-
-    getDoYouKnowMySizeButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.doYouKnowMySizeButton
-        );
-    }
-
-    getFindLocationButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.findLocationButton
-        );
-    }
-
-    getFindMyColorButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.findMyColorButton
-        );
-    }
-
-    getGetColorResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.getColorResult
-        );
-    }
-
-    getGetCoordinatesResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.getCoordinatesResult
-        );
-    }
-
-    getGetSizeResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.getSizeResult
-        );
-    }
-
-    getGoToHomeButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.goToHomeButton
-        );
-    }
-
-    getNavigateHomeResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.navigateHomeResult
-        );
-    }
-
-    getRightClickMeButton() {
-        return this.page
-            .locator(
-                ButtonsLocators.rightClickMeButton
-        );
-    }
-
-    getRightClickResult() {
-        return this.page
-            .locator(
-                ButtonsLocators.rightClickResult
-        );
-    }
-
 }
 
 module.exports = { ButtonsPage };

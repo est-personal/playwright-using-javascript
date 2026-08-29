@@ -88,75 +88,10 @@ const scenarios = [
         expectedMessage: AlertsAndDialogsData.modalMessage.scopedDismiss.securityAlert
     }
 ];
-// const scenarios = [
-    // {
-    //     name: 'Close Info Dialog',
-    //     section: 'closeInfoDialog',
-    //     expectedButton: AlertsAndDialogsData.buttonText.closeInfoDialog,
-    //     expectedResult: AlertsAndDialogsData.placeholder.closeInfoDialog
-    // },
-    // {
-    //     name: 'Confirm Action',
-    //     section: 'confirmAction',
-    //     expectedButton: AlertsAndDialogsData.buttonText.confirmAction,
-    //     expectedResult: AlertsAndDialogsData.placeholder.confirmAction
-    // },
-    // {
-    //     name: 'Cancel Stay',
-    //     section: 'cancelStay',
-    //     expectedButton: AlertsAndDialogsData.buttonText.cancelStay,
-    //     expectedResult: AlertsAndDialogsData.placeholder.cancelStay
-    // },
-    // {
-    //     name: 'Destructive Confirm',
-    //     section: 'destructiveConfirm',
-    //     expectedButton: AlertsAndDialogsData.buttonText.destructiveConfirm,
-    //     expectedResult: AlertsAndDialogsData.placeholder.destructiveConfirm
-    // },
-    // {
-    //     name: 'Backdrop Click',
-    //     section: 'backdropClick',
-    //     expectedButton: AlertsAndDialogsData.buttonText.backdropClick,
-    //     expectedResult: AlertsAndDialogsData.placeholder.backdropClick
-    // },
-    // {
-    //     name: 'Escape Key',
-    //     section: 'escapeKey',
-    //     expectedButton: AlertsAndDialogsData.buttonText.escapeKey,
-    //     expectedResult: AlertsAndDialogsData.placeholder.escapeKey
-    // },
-    // {
-    //     name: 'Assert Content',
-    //     section: 'assertContent',
-    //     expectedButton: AlertsAndDialogsData.buttonText.assertContent,
-    //     expectedResult: AlertsAndDialogsData.placeholder.assertContent
-    // },
-    // {
-    //     name: 'Scoped Dismiss: Low Disk Space',
-    //     section: 'scopedDismiss',
-    //     notifId: 1,
-    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
-    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
-    // },
-    // {
-    //     name: 'Scoped Dismiss: Session Expiring Soon',
-    //     section: 'scopedDismiss',
-    //     notifId: 2,
-    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
-    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
-    // },
-    // {
-    //     name: 'Scoped Dismiss: Security Alert',
-    //     section: 'scopedDismiss',
-    //     notifId: 3,
-    //     expectedButton: AlertsAndDialogsData.buttonText.scopedDismiss,
-    //     expectedResult: AlertsAndDialogsData.placeholder.scopedDismiss
-    // }
-// ];
 
 test.describe('QA Playground - Alerts And Dialogs - Button Text Validations', () => {
     scenarios.forEach(data => {
-        test(`Scenario ${data.name}`, {
+        test(`${data.name} Section`, {
             tag: ['@regression', '@positive']
         }, async ({ alertsAndDialogsPage }) => {
             // Validate Button text
@@ -183,7 +118,7 @@ const placeholderScenarios = scenarios.filter(
 
 test.describe('QA Playground - Alerts And Dialogs - Default Result Text Validations', () => {
     placeholderScenarios.forEach(data => {
-        test(`Scenario ${data.name}`, {
+        test(`${data.name} Section`, {
                 tag: ['@regression', '@positive']
         }, async ({ alertsAndDialogsPage }) => {
             // Validate default text in Result
@@ -200,7 +135,7 @@ test.describe('QA Playground - Alerts And Dialogs - Default Result Text Validati
 
 test.describe('QA Playground - Alerts And Dialogs - Modal Content Validations', () => {
     scenarios.forEach(data => {
-        test(`Scenario ${data.name}`, {
+        test(`${data.name} Section`, {
             tag: ['@regression', '@positive']
         }, async ({ alertsAndDialogsPage }) => {
             // Click button
@@ -222,55 +157,3 @@ test.describe('QA Playground - Alerts And Dialogs - Modal Content Validations', 
         });
     });
 });
-
-// data.locator(alertsAndDialogsPage)
-// const placeholderScenarios = [
-//     {
-//         name: 'Close Info Dialog',
-//         locator: page => page.getCloseInfoDialogResult(),
-//         value: AlertsAndDialogsData.placeholder.closeInfoDialog,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Confirm Action',
-//         locator: page => page.getConfirmActionResult(),
-//         value: AlertsAndDialogsData.placeholder.confirmAction,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Cancel Stay',
-//         locator: page => page.getCancelStayResult(),
-//         value: AlertsAndDialogsData.placeholder.cancelStay,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Destructive Confirm',
-//         locator: page => page.getDestructiveConfirmResult(),
-//         value: AlertsAndDialogsData.placeholder.destructiveConfirm,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Backdrop Click',
-//         locator: page => page.getBackdropClickResult(),
-//         value: AlertsAndDialogsData.placeholder.backdropClick,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Escape Key',
-//         locator: page => page.getEscapeKeyResult(),
-//         value: AlertsAndDialogsData.placeholder.escapeKey,
-//         type: 'value'
-//     },
-//     {
-//         name: 'Assert Content',
-//         locator: page => page.getAssertContentResult(),
-//         value: AlertsAndDialogsData.placeholder.assertContent,
-//         type: 'value'
-//     },
-    // {
-    //     name: 'Scoped Dismiss',
-    //     locator: page => page.getScopedDismissResult(),
-    //     value: AlertsAndDialogsData.placeholder.scopedDismiss,
-    //     type: 'value'
-    // }
-// ];

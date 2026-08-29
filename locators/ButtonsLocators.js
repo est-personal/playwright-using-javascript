@@ -1,7 +1,7 @@
 // Arrange Alphabetically
 // Locators for QA Playground - Buttons Page
 const ButtonsLocators = {
-    clickAndHoldButton: 
+    clickHoldButton: 
         '[data-testid="btn-click-hold"]',
     clickHoldResult: 
         '[data-testid="result-s06"]',
@@ -9,27 +9,27 @@ const ButtonsLocators = {
         '[data-testid="btn-disabled"]',
     disabledResult: 
         '[data-testid="result-s05"]',
-    doubleClickMeButton: 
+    doubleClickButton: 
         '[data-testid="btn-double-click"]',
     doubleClickResult: 
         '[data-testid="result-s07"]',
-    doYouKnowMySizeButton: 
-        '[data-testid="btn-get-size"]',
-    findLocationButton: 
-        '[data-testid="btn-get-coordinates"]',
-    findMyColorButton: 
+    getColorButton: 
         '[data-testid="btn-get-color"]',
     getColorResult: 
         '[data-testid="result-s03"]',
+    getCoordinatesButton: 
+        '[data-testid="btn-get-coordinates"]',
     getCoordinatesResult: 
         '[data-testid="result-s02"]',
+    getSizeButton: 
+        '[data-testid="btn-get-size"]',
     getSizeResult: 
         '[data-testid="result-s04"]',
-    goToHomeButton: 
+    navigateHomeButton: 
         '[data-testid="btn-navigate-home"]',
     navigateHomeResult: 
         '[data-testid="result-s01"]',
-    rightClickMeButton: 
+    rightClickButton: 
         '[data-testid="btn-right-click"]',
     rightClickResult: 
         '[data-testid="result-s08"]'
