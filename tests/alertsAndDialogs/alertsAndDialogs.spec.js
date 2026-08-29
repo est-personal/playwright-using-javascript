@@ -181,7 +181,6 @@ test.describe('QA Playground - Alerts And Dialogs Tests', () => {
 
     scenarios.forEach(data => {
         test.describe(`${data.scenario} Section`, () => {
-        // scenarios.forEach(data => {
             test(`${data.name}`, {
                 tag: data.tags
             }, async ({ alertsAndDialogsPage }) => {
@@ -206,6 +205,7 @@ test.describe('QA Playground - Alerts And Dialogs Tests', () => {
                 ).toBe(
                     data.expectedVisible
                 );
+                // Validate result
                 if (data.validateResult !== false) {
                     expect(
                         await alertsAndDialogsPage.getResult(
