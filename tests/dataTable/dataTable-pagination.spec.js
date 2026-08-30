@@ -1,45 +1,51 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 
+const { 
+    getPageSnapshot
+} = require('../../helpers/DataTablesActions');
+
 test.describe('QA Playground - Data Table Pagination Validation', () => {
     test('Validate Pagination Next And Previous Navigation', 
     {
         tag: ['@regression', '@positive']
     },
     async ({ dataTablesPage }) => {
-        // Capture Page 1 data
-        const pageOneBooks =
-            await dataTablesPage.getBookNameRows();
-        const pageOneInfo =
-            await dataTablesPage.getTableRowCount();
+        // Capture Page Info
+        const pageOne =
+            await getPageSnapshot(
+                dataTablesPage
+            );
         // Navigate to page 2
         await dataTablesPage.clickNextButton();
         // Capture Page 2 data
-        const pageTwoBooks =
-            await dataTablesPage.getBookNameRows();
-        const pageTwoInfo =
-            await dataTablesPage.getTableRowCount();
+        const pageTwo =
+            await getPageSnapshot(
+                dataTablesPage
+            );
         // Validate page indicator updated
         expect(
             pageTwoInfo,
-            `Pagination Indicator Update Failed | Actual: "${pageTwoInfo}"`
+            `Pagination Indicator Update Failed | Actual: "${pageTwo.pageInfo}"`
         ).toContain(
             DataTablesData.pageTwo
         );
         // Validate record set changed
         expect(
-            pageTwoBooks,
+            pageTwo.books,
                 [
                 'Pagination Record Validation Failed',
-                `Page 1 Records: ${JSON.stringify(pageOneBooks)}`,
-                `Page 2 Records: ${JSON.stringify(pageTwoBooks)}`
+                `Page 1 Records: ${JSON.stringify(pageOne.books)}`,
+                `Page 2 Records: ${JSON.stringify(pageTwo.books)}`
             ].join('\n')
-        ).not.toEqual(pageOneBooks);
+        ).not.toEqual(pageOne.books);
         // Navigate back to page 1
         await dataTablesPage.clickPreviousButton();
         // Capture Page 1 data
         const returnedBooks =
-            await dataTablesPage.getBookNameRows();
+            await dataTablesPage.getColumnRows(
+                'bookName'
+            );
         const returnedInfo =
             await dataTablesPage.getTableRowCount();
         // Validate page indicator updated
@@ -54,10 +60,10 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
             returnedBooks,
                 [
                 'Pagination Record Validation Failed',
-                `Expected: ${JSON.stringify(pageOneBooks)}`,
+                `Expected: ${JSON.stringify(pageOne.books)}`,
                 `Actual: ${JSON.stringify(returnedBooks)}`
             ].join('\n')
-        ).toEqual(pageOneBooks);
+        ).toEqual(pageOne.books);
     });
 
     test('Validate Previous Button Disabled On First Page', 
@@ -77,7 +83,9 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
     },
     async ({ dataTablesPage }) => {
         // Navigate to last page
-        await dataTablesPage.clickPage(5);
+        await dataTablesPage.clickPage(
+            DataTablesData.lastPage
+        );
         // Validate Next button is disabled
         await expect(
             dataTablesPage.getNextButton()
@@ -94,7 +102,6 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
             await dataTablesPage.getTotalPages();
         // const allBooks = new Set();
         const displayedBooks = new Set();
-        const duplicateBooks = [];
         let previousBooks = [];
         for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
             // Click Page Number
@@ -117,7 +124,9 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
             ).toBe(pageNumber);
             // Capture Active Page data
             const currentBooks =
-                await dataTablesPage.getBookNameRows();
+                await dataTablesPage.getColumnRows(
+                    'bookName'
+                );
             // Validate no duplicate record
             currentBooks.forEach(book => {
                 expect(
@@ -134,9 +143,13 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
                 expect.soft(
                     rowCount,
                     `Unexpected row count on Page ${pageNumber}`
-                ).toBe(5);
+                ).toBe(
+                    DataTablesData.defaultRowCount
+                );
             } else {
-                expect.soft(rowCount).toBeLessThanOrEqual(5);
+                expect.soft(rowCount).toBeLessThanOrEqual(
+                    DataTablesData.defaultRowCount
+                );
             }
             // Validate Active Page data
             expect.soft(

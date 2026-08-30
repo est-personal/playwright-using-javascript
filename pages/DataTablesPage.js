@@ -27,19 +27,15 @@ class DataTablesPage extends BasePage {
         this.editAuthorInput = page.locator(
             DataTablesLocators.editBookModalAuthorInput
         );
-        this.editBookNameInput = page.locator(
-            DataTablesLocators.editBookModalBookNameInput
-        );
-        this.editAuthorInput = page.locator(
-            DataTablesLocators.editBookModalAuthorInput
-        );
         this.editIsbnInput = page.locator(
             DataTablesLocators.editBookModalIsbnInput
         );
+        this.editBookNameInput = page.locator(
+            DataTablesLocators.editBookModalBookNameInput
+        );        
         this.editPublishedInput = page.locator(
             DataTablesLocators.editBookModalPublishedInput
         );
-
     }
 
     // Async
@@ -51,35 +47,55 @@ class DataTablesPage extends BasePage {
             .click();
     }
 
-    async clickAddNewBookModalAddBookButton() {
-        await this.page
-            .locator(
-                DataTablesLocators.addNewBookModalAddBookButton
-            )
-            .click();
-    }
-
-    async clickAddNewBookModalCancelButton() {
-        await this.page
-            .locator(
-                DataTablesLocators.addNewBookModalCancelButton
-            )
-            .click();
-    }
-
-    async clickDeleteBookModalCancelButton() {
-        await this.page
-            .locator(
+    async clickModalButton(button) {
+        const buttons = {
+            addBook:
+                DataTablesLocators.addNewBookModalAddBookButton,
+            addBookCancel:
+                DataTablesLocators.addNewBookModalCancelButton,
+            editSave:
+                DataTablesLocators.editBookModalSaveChangesButton,
+            editCancel:
+                DataTablesLocators.editBookModalCancelButton,
+            delete:
+                'button[aria-label^="Confirm delete"]',
+            deleteCancel:
                 DataTablesLocators.deleteBookModalCancelButton
-            ).click();
+        };
+        await this.page.locator(
+            buttons[button]
+        ).click();
     }
 
-    async clickDeleteBookModalDeleteButton() {
-        await this.page
-            .locator(
-                'button[aria-label^="Confirm delete"]'
-            ).click();
-    }
+    // async clickAddNewBookModalAddBookButton() {
+    //     await this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalAddBookButton
+    //         )
+    //         .click();
+    // }
+
+    // async clickAddNewBookModalCancelButton() {
+    //     await this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalCancelButton
+    //         )
+    //         .click();
+    // }
+
+    // async clickDeleteBookModalCancelButton() {
+    //     await this.page
+    //         .locator(
+    //             DataTablesLocators.deleteBookModalCancelButton
+    //         ).click();
+    // }
+
+    // async clickDeleteBookModalDeleteButton() {
+    //     await this.page
+    //         .locator(
+    //             'button[aria-label^="Confirm delete"]'
+    //         ).click();
+    // }
 
     async clickDeleteButton(bookName) {
         const row = this.page.locator(
@@ -92,21 +108,21 @@ class DataTablesPage extends BasePage {
         }).click();
     }
 
-    async clickEditBookModalCancelButton() {
-        await this.page
-            .locator(
-                DataTablesLocators.editBookModalCancelButton
-            )
-            .click();
-    }
+    // async clickEditBookModalCancelButton() {
+    //     await this.page
+    //         .locator(
+    //             DataTablesLocators.editBookModalCancelButton
+    //         )
+    //         .click();
+    // }
 
-    async clickEditBookModalSaveChangesButton() {
-        await this.page
-            .locator(
-                DataTablesLocators.editBookModalSaveChangesButton
-            )
-            .click();
-    }
+    // async clickEditBookModalSaveChangesButton() {
+    //     await this.page
+    //         .locator(
+    //             DataTablesLocators.editBookModalSaveChangesButton
+    //         )
+    //         .click();
+    // }
 
     async clickEditButton() {
         await this.page
@@ -200,10 +216,19 @@ class DataTablesPage extends BasePage {
         await this.editPublishedInput.fill(published);
     }
 
+    async enterNewBook(field, value) {
+        await this.getAddNewBookField(field)
+            .fill(value);
+    }
+
     async enterNewBookDetails(book) {
         await this.enterAddNewBookModalBookNameField(book.bookName);
         await this.enterAddNewBookModalAuthorField(book.author);
-        await this.selectAddNewBookModalGenre(book.genre);
+        // await this.selectAddNewBookModalGenre(book.genre);
+        await this.selectGenre(
+            'addBook',
+            book.genre
+        );
         await this.enterAddNewBookModalIsbnField(book.isbn);
         await this.enterAddNewBookModalPublishedField(book.published);
     }
@@ -222,55 +247,55 @@ class DataTablesPage extends BasePage {
         .textContent();
     }
 
-    async getBookAuthorRows() {
-        const bookAuthors =
-            await this.page.locator(
-                DataTablesLocators.bookAuthorRowValue
-            ).allTextContents();
-        return bookAuthors.map(
-            bookAuthor => bookAuthor.trim()
-        );
-    }
+    // async getBookAuthorRows() {
+    //     const bookAuthors =
+    //         await this.page.locator(
+    //             DataTablesLocators.bookAuthorRowValue
+    //         ).allTextContents();
+    //     return bookAuthors.map(
+    //         bookAuthor => bookAuthor.trim()
+    //     );
+    // }
 
-    async getBookGenreRows() {
-        const bookGenres =
-            await this.page.locator(
-                DataTablesLocators.bookGenreRowValue
-            ).allTextContents();
-        return bookGenres.map(
-            bookGenre => bookGenre.trim()
-        );
-    }
+    // async getBookGenreRows() {
+    //     const bookGenres =
+    //         await this.page.locator(
+    //             DataTablesLocators.bookGenreRowValue
+    //         ).allTextContents();
+    //     return bookGenres.map(
+    //         bookGenre => bookGenre.trim()
+    //     );
+    // }
 
-    async getBookIsbnRows() {
-        const bookIsbns =
-            await this.page.locator(
-                DataTablesLocators.bookIsbnRowValue
-            ).allTextContents();
-        return bookIsbns.map(
-            bookIsbn => bookIsbn.trim()
-        );
-    }
+    // async getBookIsbnRows() {
+    //     const bookIsbns =
+    //         await this.page.locator(
+    //             DataTablesLocators.bookIsbnRowValue
+    //         ).allTextContents();
+    //     return bookIsbns.map(
+    //         bookIsbn => bookIsbn.trim()
+    //     );
+    // }
 
-    async getBookNameRows() {
-        const bookNames =
-            await this.page.locator(
-                DataTablesLocators.bookNameRowValue
-            ).allTextContents();
-        return bookNames.map(
-            bookName => bookName.trim()
-        );
-    }
+    // async getBookNameRows() {
+    //     const bookNames =
+    //         await this.page.locator(
+    //             DataTablesLocators.bookNameRowValue
+    //         ).allTextContents();
+    //     return bookNames.map(
+    //         bookName => bookName.trim()
+    //     );
+    // }
 
-    async getBookPublishedRows() {
-        const bookPublish =
-            await this.page.locator(
-                DataTablesLocators.bookPublishedRowValue
-            ).allTextContents();
-        return bookPublish.map(
-            bookPublished => bookPublished.trim()
-        );
-    }
+    // async getBookPublishedRows() {
+    //     const bookPublish =
+    //         await this.page.locator(
+    //             DataTablesLocators.bookPublishedRowValue
+    //         ).allTextContents();
+    //     return bookPublish.map(
+    //         bookPublished => bookPublished.trim()
+    //     );
+    // }
 
     async getBookRecord(rowIndex = 0) {
         const row = this.page.locator(
@@ -286,6 +311,13 @@ class DataTablesPage extends BasePage {
             isbn: cells[4]?.trim(),
             published: cells[5]?.trim()
         };
+    }
+
+    async getColumnRows(column) {
+        const values = await this.getColumnRowsLocator(column)
+            .allTextContents();
+
+        return values.map(value => value.trim());
     }
 
     async getCurrentPageText() {
@@ -375,114 +407,195 @@ class DataTablesPage extends BasePage {
         ).toBeVisible();
     }
 
-    async selectAddNewBookModalGenre(genre) {
-        const dropdown = this.page.locator(
-            DataTablesLocators.addNewBookModalGenreDropdown
+    // async selectAddNewBookModalGenre(genre) {
+    //     const dropdown = this.page.locator(
+    //         DataTablesLocators.addNewBookModalGenreDropdown
+    //     );
+    //     await dropdown.selectOption({ 
+    //         value: genre 
+    //     });
+    // }
+
+    // async selectEditBookModalGenre(genre) {
+    //     const dropdown = this.page.locator(
+    //         DataTablesLocators.editBookModalGenreDropdown
+    //     );
+    //     await dropdown.selectOption({ 
+    //         value: genre 
+    //     });
+    // }
+
+    // async selectGenre(genre) {
+    //     const dropdown = this.page.locator(
+    //         DataTablesLocators.allGenresDropdown
+    //     );
+    //     await dropdown.selectOption({ 
+    //         value: genre 
+    //     });
+    // }
+
+    async selectDropdown(locator, value) {
+        await this.page
+            .locator(locator)
+            .selectOption({ value });
+    }
+
+    async selectGenre(type, value) {
+        const dropdowns = {
+            filter:
+                DataTablesLocators.allGenresDropdown,
+            addBook:
+                DataTablesLocators.addNewBookModalGenreDropdown,
+            editBook:
+                DataTablesLocators.editBookModalGenreDropdown
+        };
+        await this.selectDropdown(
+            dropdowns[type],
+            value
         );
-        await dropdown.selectOption({ 
-            value: genre 
-        });
     }
 
-    async selectEditBookModalGenre(genre) {
-        const dropdown = this.page.locator(
-            DataTablesLocators.editBookModalGenreDropdown
-        );
-        await dropdown.selectOption({ 
-            value: genre 
-        });
+    async sortColumn(column, order = 'asc') {
+        const header =
+            this.getSortableColumn(column);
+        await header.click();
+        if (order === 'desc') {
+            await header.click();
+        }
     }
 
-    async selectGenre(genre) {
-        const dropdown = this.page.locator(
-            DataTablesLocators.allGenresDropdown
-        );
-        await dropdown.selectOption({ 
-            value: genre 
-        });
-    }
+    // async sortBookAuthorAscending() {
+    //     await this.bookAuthorHeader.click();
+    // }
 
-    async sortBookAuthorAscending() {
-        await this.bookAuthorHeader.click();
-    }
+    // async sortBookAuthorDescending() {
+    //     await this.bookAuthorHeader.click();
+    //     await this.bookAuthorHeader.click();
+    // }
 
-    async sortBookAuthorDescending() {
-        await this.bookAuthorHeader.click();
-        await this.bookAuthorHeader.click();
-    }
+    // async sortBookGenreAscending() {
+    //     await this.bookGenreHeader.click();
+    // }
 
-    async sortBookGenreAscending() {
-        await this.bookGenreHeader.click();
-    }
+    // async sortBookGenreDescending() {
+    //     await this.bookGenreHeader.click();
+    //     await this.bookGenreHeader.click();
+    // }
 
-    async sortBookGenreDescending() {
-        await this.bookGenreHeader.click();
-        await this.bookGenreHeader.click();
-    }
+    // async sortBookIsbnAscending() {
+    //     await this.bookIsbnHeader.click();
+    // }
 
-    async sortBookIsbnAscending() {
-        await this.bookIsbnHeader.click();
-    }
+    // async sortBookIsbnDescending() {
+    //     await this.bookIsbnHeader.click();
+    //     await this.bookIsbnHeader.click();
+    // }
 
-    async sortBookIsbnDescending() {
-        await this.bookIsbnHeader.click();
-        await this.bookIsbnHeader.click();
-    }
+    // async sortBookNameAscending() {
+    //     await this.bookNameHeader.click();
+    // }
 
-    async sortBookNameAscending() {
-        await this.bookNameHeader.click();
-    }
+    // async sortBookNameDescending() {
+    //     await this.bookNameHeader.click();
+    //     await this.bookNameHeader.click();
+    // }
 
-    async sortBookNameDescending() {
-        await this.bookNameHeader.click();
-        await this.bookNameHeader.click();
-    }
+    // async sortBookPublishedAscending() {
+    //     await this.bookPublishedHeader.click();
+    // }
 
-    async sortBookPublishedAscending() {
-        await this.bookPublishedHeader.click();
-    }
-
-    async sortBookPublishedDescending() {
-        await this.bookPublishedHeader.click();
-        await this.bookPublishedHeader.click();
-    }
+    // async sortBookPublishedDescending() {
+    //     await this.bookPublishedHeader.click();
+    //     await this.bookPublishedHeader.click();
+    // }
 
     async updateBookDetails(book) {
         await this.enterEditBookModalBookNameField(book.bookName);
         await this.enterEditBookModalAuthorField(book.author);
-        await this.selectEditBookModalGenre(book.genre);
+        // await this.selectEditBookModalGenre(book.genre);
+        await this.selectGenre(
+            'editBook',
+            book.genre
+        );
         await this.enterEditBookModalIsbnField(book.isbn);
         await this.enterEditBookModalPublishedField(book.published);
     }
 
     // Sync
-    getAddNewBookModalAuthor() {
-        return this.page
-            .locator(
-                DataTablesLocators.addNewBookModalAuthorInput
-        );
-    }
-
-    getAddNewBookModalBookName() {
-        return this.page
-            .locator(
-                DataTablesLocators.addNewBookModalBookNameInput
-        );
-    }
-
-    getAddNewBookModalIsbn() {
-        return this.page
-            .locator(
-                DataTablesLocators.addNewBookModalIsbnInput
-        );
-    }
-
-    getAddNewBookModalPublished() {
-        return this.page
-            .locator(
+    getAddNewBookField(field) {
+        const fields = {
+            bookName:
+                DataTablesLocators.addNewBookModalBookNameInput,
+            bookAuthor:
+                DataTablesLocators.addNewBookModalAuthorInput,
+            bookIsbn:
+                DataTablesLocators.addNewBookModalIsbnInput,
+            bookPublished:
                 DataTablesLocators.addNewBookModalPublishedInput
-        );
+        };
+        return this.page.locator(fields[field]);
     }
+
+    getColumnHeader(column) {
+        const columns = {
+            bookName: DataTablesLocators.bookNameColumn,
+            bookGenre: DataTablesLocators.bookGenreColumn,
+            bookAuthor: DataTablesLocators.bookAuthorColumn,
+            bookIsbn: DataTablesLocators.bookIsbnColumn,
+            bookPublished: DataTablesLocators.bookPublishedColumn
+        };
+        return this.page.locator(columns[column]);
+    }
+
+    getColumnRowsLocator(column) {
+        const columns = {
+            bookName: DataTablesLocators.bookNameRowValue,
+            bookGenre: DataTablesLocators.bookGenreRowValue,
+            bookAuthor: DataTablesLocators.bookAuthorRowValue,
+            bookIsbn: DataTablesLocators.bookIsbnRowValue,
+            bookPublished: DataTablesLocators.bookPublishedRowValue
+        };
+        return this.page.locator(columns[column]);
+    }
+
+    getSortableColumn(column) {
+        const columns = {
+            bookName: this.bookNameHeader,
+            bookGenre: this.bookGenreHeader,
+            bookAuthor: this.bookAuthorHeader,
+            bookIsbn: this.bookIsbnHeader,
+            bookPublished: this.bookPublishedHeader
+        };
+        return columns[column];
+    }
+
+    // getAddNewBookModalAuthor() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalAuthorInput
+    //     );
+    // }
+
+    // getAddNewBookModalBookName() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalBookNameInput
+    //     );
+    // }
+
+    // getAddNewBookModalIsbn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalIsbnInput
+    //     );
+    // }
+
+    // getAddNewBookModalPublished() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.addNewBookModalPublishedInput
+    //     );
+    // }
 
     getAddNewBookModalTitle() {
         return this.page
@@ -491,40 +604,40 @@ class DataTablesPage extends BasePage {
         );
     }
 
-    getBookAuthorColumn() {
-        return this.page
-            .locator(
-                DataTablesLocators.bookAuthorColumn
-        );
-    }
+    // getBookAuthorColumn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.bookAuthorColumn
+    //     );
+    // }
 
-    getBookGenreColumn() {
-        return this.page
-            .locator(
-                DataTablesLocators.bookGenreColumn
-        );
-    }
+    // getBookGenreColumn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.bookGenreColumn
+    //     );
+    // }
 
-    getBookIsbnColumn() {
-        return this.page
-            .locator(
-                DataTablesLocators.bookIsbnColumn
-        );
-    }
+    // getBookIsbnColumn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.bookIsbnColumn
+    //     );
+    // }
 
-    getBookNameColumn() {
-        return this.page
-            .locator(
-                DataTablesLocators.bookNameColumn
-        );
-    }
+    // getBookNameColumn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.bookNameColumn
+    //     );
+    // }
 
-    getBookPublishedColumn() {
-        return this.page
-            .locator(
-                DataTablesLocators.bookPublishedColumn
-        );
-    }
+    // getBookPublishedColumn() {
+    //     return this.page
+    //         .locator(
+    //             DataTablesLocators.bookPublishedColumn
+    //     );
+    // }
 
     getDeleteBookModalBookName() {
         return this.page.getByTestId(

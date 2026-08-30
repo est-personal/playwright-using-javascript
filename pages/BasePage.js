@@ -113,7 +113,6 @@ class BasePage {
             );
     }
 
-
     async isVisible(locator) {
         return await this.page
             .locator(locator)

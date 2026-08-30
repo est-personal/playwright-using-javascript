@@ -5,31 +5,36 @@ const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 const positiveSearchScenarios = [
     {
         name: 'Book Name',
-        searchValue: DataTablesData.existingBook.bookName
+        searchValue: DataTablesData.existingBook.bookName,
+        tags: ['@smoke', '@regression', '@positive']
     },
     {
         name: 'Author',
-        searchValue: DataTablesData.existingBook.author
+        searchValue: DataTablesData.existingBook.author,
+        tags: ['@regression', '@positive']
     },
     {
         name: 'ISBN',
-        searchValue: DataTablesData.existingBook.isbn
+        searchValue: DataTablesData.existingBook.isbn,
+        tags: ['@regression', '@positive']
     },
     {
         name: 'Book Name With Correct Genre',
         searchValue: DataTablesData.existingBook.bookName,
-        genre: DataTablesData.existingBook.genre
+        genre: DataTablesData.existingBook.genre,
+        tags: ['@regression', '@positive']
     }
 ];
 
-test.describe('QA Playground - Data Table - Successfulive Search Validations', () => {
+test.describe('QA Playground - Data Table - Successful Search Validations', () => {
     positiveSearchScenarios.forEach(data => {
         test(`Search Existing ${data.name}`, {
-            tag: ['@regression', '@positive']
+            tag: data.tags
         }, async ({ dataTablesPage }) => {
             // Select Genre
             if (data.genre) {
                 await dataTablesPage.selectGenre(
+                    "filter",
                     data.genre
                 );
                 await expect(
@@ -87,6 +92,7 @@ test.describe('QA Playground - Data Table - Unsuccessful Search Validations', ()
             // Select Genre
             if (data.genre) {
                 await dataTablesPage.selectGenre(
+                    "filter",
                     data.genre
                 );
                 await expect(
@@ -126,7 +132,9 @@ test.describe('QA Playground - Data Table - Search State Validation', () => {
     }, async ({ dataTablesPage }) => {
         // Capture Page 1 records
         const defaultBooks =
-        await dataTablesPage.getBookNameRows();
+        await dataTablesPage.getColumnRows(
+            'bookName'
+        );
         // Navigate to Page 3
         await dataTablesPage.clickPage(3);
         // Search Existing Book
@@ -159,7 +167,9 @@ test.describe('QA Playground - Data Table - Search State Validation', () => {
         ).toContain(DataTablesData.totalRow);
         // Verify original records restored
         const restoredBooks =
-            await dataTablesPage.getBookNameRows();
+            await dataTablesPage.getColumnRows(
+                'bookName'
+            );
         expect(
             restoredBooks,
             [

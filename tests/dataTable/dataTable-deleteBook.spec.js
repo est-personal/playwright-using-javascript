@@ -11,16 +11,12 @@ const {
 const deleteBookScenarios = [
     {
         title: 'Delete Book',
-        action: async page => {
-            await page.clickDeleteBookModalDeleteButton();
-        },
+        button: 'delete',
         expectedBookExists: 'deleted'
     },
     {
         title: 'Cancel Delete Book',
-        action: async page => {
-            await page.clickDeleteBookModalCancelButton();
-        },
+        button: 'deleteCancel',
         expectedBookExists: 'notDeleted'
     }
 ];
@@ -29,8 +25,8 @@ const originalBook =
     DataTablesData.positive.validBook;
 
 test.describe('QA Playground - Data Table - Successful Delete Validations', () => {
-    deleteBookScenarios.forEach(({ title, action, expectedBookExists }) => {
-        test(title, {
+    deleteBookScenarios.forEach(data => {
+        test(`${data.title}`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
             // Add Book
@@ -44,9 +40,11 @@ test.describe('QA Playground - Data Table - Successful Delete Validations', () =
                 originalBook.bookName
             );
             // Delete Book or Cancel Delete Book
-            await action(dataTablesPage);
+            await dataTablesPage.clickModalButton(
+                data.button
+            );
             // Validate Book
-            if (expectedBookExists=='notDeleted') {
+            if (data.expectedBookExists=='notDeleted') {
                 await verifyBookRecord(
                     dataTablesPage,
                     originalBook
@@ -91,6 +89,8 @@ test.describe('QA Playground - Data Table - Delete Book Modal', () => {
                 .getDeleteBookModalMessageText()
         ).toBe(expectedMessage);
         // Click Delete Book Modal - Delete button
-        await dataTablesPage.clickDeleteBookModalDeleteButton();
+        await dataTablesPage.clickModalButton(
+            'delete'
+        );
     });
 });

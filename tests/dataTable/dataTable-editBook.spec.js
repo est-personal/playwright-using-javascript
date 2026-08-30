@@ -40,7 +40,8 @@ const editBookScenarios = [
         title: 'Genre',
         data: DataTablesData.editExistingBook.updateGenre,
         editAction: async (page, data) => {
-            await page.selectEditBookModalGenre(
+            await page.selectGenre(
+                'editBook',
                 data.genre
             );
         }
@@ -89,7 +90,9 @@ test.describe('QA Playground - Data Table - Successful Edit Validations', () => 
                 data
             );
             // Click Edit Book Modal - Save Changes button
-            await dataTablesPage.clickEditBookModalSaveChangesButton();
+            await dataTablesPage.clickModalButton(
+                'editSave'
+            );
             // Validate Book Record
             await verifyBookRecord(
                 dataTablesPage,
@@ -126,7 +129,9 @@ test.describe('QA Playground - Data Table - Cancel Edit Validation', () => {
                 data
             );
             // Click Edit Book Modal - Cancel button
-            await dataTablesPage.clickEditBookModalCancelButton();
+            await dataTablesPage.clickModalButton(
+                'editCancel'
+            );
             // Validate Book Record
             await verifyBookRecord(
                 dataTablesPage,
