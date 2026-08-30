@@ -25,7 +25,7 @@ test.describe('QA Playground - Data Table Pagination Validation', () => {
             );
         // Validate page indicator updated
         expect(
-            pageTwoInfo,
+            pageTwo.pageInfo,
             `Pagination Indicator Update Failed | Actual: "${pageTwo.pageInfo}"`
         ).toContain(
             DataTablesData.pageTwo
