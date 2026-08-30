@@ -80,7 +80,9 @@ test.describe('QA Playground - Data Table - Structure Validation', () => {
     async ({ dataTablesPage }) => {
         // Get Book Name Column values
         const actualBookNames = 
-            await dataTablesPage.getBookNameRows();
+            await dataTablesPage.getColumnRows(
+                'bookName'
+            );
         // Validate no empty values
         actualBookNames.forEach((bookName, index) => {
             expect(
@@ -121,7 +123,9 @@ test.describe('QA Playground - Data Table - Structure Validation', () => {
     async ({ dataTablesPage }) => {
         // Get ISBN column values
         const isbnValues = 
-            await dataTablesPage.getBookIsbnRows();
+            await dataTablesPage.getColumnRows(
+                'bookIsbn'
+            );
         // Validate ISBN column values
         isbnValues.forEach(isbn => {
             expect(
@@ -138,6 +142,7 @@ test.describe('QA Playground - Data Table - Structure Validation', () => {
     async ({ dataTablesPage }) => {
         // Select Genre
         await dataTablesPage.selectGenre(
+            'filter',
             DataTablesData.existingBook.genre
         );
         const selectedGenre = dataTablesPage.getGenreDropdown();
@@ -146,7 +151,9 @@ test.describe('QA Playground - Data Table - Structure Validation', () => {
         );
         // Validate Genre column
         const actualBookGenres =
-        await dataTablesPage.getBookGenreRows();
+            await dataTablesPage.getColumnRows(
+                'bookGenre'
+            );
         DataTablesAssertions.validateGenres(
             actualBookGenres,
             DataTablesData.existingBook.genre

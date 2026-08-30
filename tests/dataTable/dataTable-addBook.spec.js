@@ -40,7 +40,9 @@ test.describe('QA Playground - Data Table - Successful Add Book Validations', ()
                 data.book
             );
             // Click Add New Modal - Add Book button
-            await dataTablesPage.clickAddNewBookModalAddBookButton();
+            await dataTablesPage.clickModalButton(
+                'addBook'
+            );
             // Validate Add New Book modal is not displayed
             await expect(
                 dataTablesPage.getAddNewBookModalTitle()
@@ -111,7 +113,9 @@ test.describe('QA Playground - Data Table - Unsuccessful Add Book Validations', 
                 data.data
             );
             // Click Add New Modal - Add Book button
-            await dataTablesPage.clickAddNewBookModalAddBookButton();
+            await dataTablesPage.clickModalButton(
+                'addBook'
+            );
             // Validate error message
             const errorMessage = 
                 await data.getError(dataTablesPage)
@@ -139,7 +143,9 @@ test.describe('QA Playground - Data Table - Unsuccessful Add Book Validations', 
             DataTablesData.positive.validBook
         );
         // Click Add New Modal - Cancel button
-        await dataTablesPage.clickAddNewBookModalCancelButton();
+        await dataTablesPage.clickModalButton(
+            'addBookCancel'
+        );
         // Validate Add New Book modal is not displayed
         await expect(
             dataTablesPage.getAddNewBookModalTitle()
@@ -180,22 +186,22 @@ test.describe('QA Playground - Data Table - Unsuccessful Add Book Validations', 
 const placeholderScenarios = [
     {
         field: 'Book Name',
-        locator: page => page.getAddNewBookModalBookName(),
+        locator: page => page.getAddNewBookField('bookName'),
         expected: DataTablesData.addNewModalPlaceholder.bookName
     },
     {
         field: 'Author',
-        locator: page => page.getAddNewBookModalAuthor(),
+        locator: page => page.getAddNewBookField('bookAuthor'),
         expected: DataTablesData.addNewModalPlaceholder.author
     },
     {
         field: 'ISBN',
-        locator: page => page.getAddNewBookModalIsbn(),
+        locator: page => page.getAddNewBookField('bookIsbn'),
         expected: DataTablesData.addNewModalPlaceholder.isbn
     },
     {
         field: 'Published',
-        locator: page => page.getAddNewBookModalPublished(),
+        locator: page => page.getAddNewBookField('bookPublished'),
         expected: DataTablesData.addNewModalPlaceholder.published
     }
 ];

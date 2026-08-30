@@ -2,61 +2,49 @@ const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DataTablesData } = require('../../testData/DataTablesData');
 const { DataTablesAssertions } = require('../../helpers/DataTablesAssertions');
 
-const sortableColumns = [
+const sortScenarios = [
     {
         name: 'Book Name',
-        sortAsc: page => page.sortBookNameAscending(),
-        sortDesc: page => page.sortBookNameDescending(),
-        getValues: page => page.getBookNameRows(),
-        getHeader: page => page.getBookNameColumn()
+        column: 'bookName',
     },
     {
         name: 'Book Genre',
-        sortAsc: page => page.sortBookGenreAscending(),
-        sortDesc: page => page.sortBookGenreDescending(),
-        getValues: page => page.getBookGenreRows(),
-        getHeader: page => page.getBookGenreColumn()
+        column: 'bookGenre',
     },
     {
         name: 'Book Author',
-        sortAsc: page => page.sortBookAuthorAscending(),
-        sortDesc: page => page.sortBookAuthorDescending(),
-        getValues: page => page.getBookAuthorRows(),
-        getHeader: page => page.getBookAuthorColumn()
+        column: 'bookAuthor',
     },
     {
         name: 'Book ISBN',
-        sortAsc: page => page.sortBookIsbnAscending(),
-        sortDesc: page => page.sortBookIsbnDescending(),
-        getValues: page => page.getBookIsbnRows(),
-        getHeader: page => page.getBookIsbnColumn()
+        column: 'bookIsbn',
     },
     {
-        name: 'Published',
-        sortAsc: page => page.sortBookPublishedAscending(),
-        sortDesc: page => page.sortBookPublishedDescending(),
-        getValues: page => page.getBookPublishedRows(),
-        getHeader: page => page.getBookPublishedColumn()
+        name: 'Book Published',
+        column: 'bookPublished',
     }
 ];
 
 test.describe('QA Playground - Data Table - Sorting Validation', () => {
-    sortableColumns.forEach(data => {
+    sortScenarios.forEach(data => {
         test(`${data.name} Ascending Sort`, {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
             // Sort column in ascending
-            await data.sortAsc(dataTablesPage);
+            await dataTablesPage.sortColumn(
+                data.column,
+                'asc'
+            );
             // Validate column aria-sort
             await expect(
-                data.getHeader(dataTablesPage)
+                dataTablesPage.getColumnHeader(data.column)
             ).toHaveAttribute(
                 'aria-sort',
                 DataTablesData.ascending
             );
             // Get values of column
             const values =
-                await data.getValues(dataTablesPage);
+                await dataTablesPage.getColumnRows(data.column);
             // Validate column sorted in ascending order
             DataTablesAssertions.validateAscending(
                 values,
@@ -68,17 +56,20 @@ test.describe('QA Playground - Data Table - Sorting Validation', () => {
             tag: ['@regression', '@positive']
         }, async ({ dataTablesPage }) => {
             // Sort column in descending
-            await data.sortDesc(dataTablesPage);
+            await dataTablesPage.sortColumn(
+                data.column,
+                'desc'
+            );
             // Validate column aria-sort
             await expect(
-                data.getHeader(dataTablesPage)
+                dataTablesPage.getColumnHeader(data.column)
             ).toHaveAttribute(
                 'aria-sort',
                 DataTablesData.descending
             );
             // Get values of column
             const values =
-                await data.getValues(dataTablesPage);
+                await dataTablesPage.getColumnRows(data.column);
             // Validate column sorted in descending order
             DataTablesAssertions.validateDescending(
                 values,

@@ -142,6 +142,8 @@ const DataTablesData = {
         'Book Published',
         'Actions'
     ],
+    lastPage:
+        5,
     noBookMatched:
         'No books match your search',
     notApplicable:

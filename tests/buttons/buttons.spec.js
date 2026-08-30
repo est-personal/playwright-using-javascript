@@ -18,7 +18,6 @@ const scenarios = [
         name: 'Click Go To Home',
         section: 'navigateHome',
         action: page => page.clickDialogButton(ButtonsLocators.navigateHomeButton),
-        // expectedButtonText: ButtonsData.navigateHomeButtonText,
         expectedResult: ButtonsData.result.navigateHome,
         tags: ['@smoke', '@regression', '@positive']
     },
@@ -27,7 +26,6 @@ const scenarios = [
         name: 'Double Click Button',
         section: 'doubleClick',
         action: page => page.doubleClickDialogButton(ButtonsLocators.doubleClickButton),
-        // expectedButtonText: ButtonsData.doubleClickButtonText,
         expectedResult: ButtonsData.result.doubleClick,
         tags: ['@smoke', '@regression', '@positive']
     },
@@ -36,7 +34,6 @@ const scenarios = [
         name: 'Click Button',
         section: 'doubleClick',
         action: page => page.clickDialogButton(ButtonsLocators.doubleClickButton),
-        // expectedButtonText: ButtonsData.doubleClickButtonText,
         expectedResult: ButtonsData.placeholder.doubleClick,
         tags: ['@regression', '@negative']
     },
@@ -45,7 +42,6 @@ const scenarios = [
         name: 'Right Click Button',
         section: 'doubleClick',
         action: page => page.rightClickDialogButton(ButtonsLocators.doubleClickButton),
-        // expectedButtonText: ButtonsData.doubleClickButtonText,
         expectedResult: ButtonsData.placeholder.doubleClick,
         tags: ['@regression', '@negative']
     },
@@ -54,7 +50,6 @@ const scenarios = [
         name: 'Right Click Button',
         section: 'rightClick',
         action: page => page.rightClickDialogButton(ButtonsLocators.rightClickButton),
-        // expectedButtonText: ButtonsData.rightClickButtonText,
         expectedResult: ButtonsData.result.rightClick,
         tags: ['@smoke', '@regression', '@positive']
     },
@@ -63,7 +58,6 @@ const scenarios = [
         name: 'Click Button',
         section: 'rightClick',
         action: page => page.clickDialogButton(ButtonsLocators.rightClickButton),
-        // expectedButtonText: ButtonsData.rightClickButtonText,
         expectedResult: ButtonsData.placeholder.rightClick,
         tags: ['@regression', '@negative']
     },
@@ -72,7 +66,6 @@ const scenarios = [
         name: 'Double Click Button',
         section: 'rightClick',
         action: page => page.doubleClickDialogButton(ButtonsLocators.rightClickButton),
-        // expectedButtonText: ButtonsData.rightClickButtonText,
         expectedResult: ButtonsData.placeholder.rightClick,
         tags: ['@regression', '@negative']
     }
