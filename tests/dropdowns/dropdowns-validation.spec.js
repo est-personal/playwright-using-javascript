@@ -1,42 +1,54 @@
 const {test, expect} = require('../../fixtures/Pages.fixture');
 const { DropdownsData } = require('../../testData/DropdownsData');
 
-const optionsScenarios = [
+const scenarios = [
     {
         name: 'Select Fruit',
-        getOptions: page => page.getSelectFruitOptions(),
-        expected: DropdownsData.options.fruit
+        getOptions: page => page.getDropdownOptions('fruit'),
+        options: 'fruit',
+        expectedOption: DropdownsData.options.fruit,
+        expectedResult: DropdownsData.defaultValue.selectFruitResult
     },
     {
         name: 'Select Country',
-        getOptions: page => page.getSelectCountryOptions(),
-        expected: DropdownsData.options.country
+        getOptions: page => page.getDropdownOptions('country'),
+        options: 'country',
+        expectedOption: DropdownsData.options.country,
+        expectedResult: DropdownsData.defaultValue.selectCountryResult
     },
     {
         name: 'Select Language',
-        getOptions: page => page.getSelectLanguageOptions(),
-        expected: DropdownsData.options.language
+        getOptions: page => page.getDropdownOptions('language'),
+        options: 'language',
+        expectedOption: DropdownsData.options.language,
+        expectedResult: DropdownsData.defaultValue.selectLanguageResult
     },
     {
         name: 'Multi-Select Heroes',
         getOptions: page => page.getMultiSelectHeroesOptions(),
-        expected: DropdownsData.options.heroes
+        options: 'heroes',
+        expectedOption: DropdownsData.options.heroes,
+        expectedResult: DropdownsData.defaultValue.multiSelectHeroesResult
     },
     {
         name: 'Custom Priority',
         getOptions: page => page.getCustomPriorityOptions(),
-        expected: DropdownsData.options.priority
+        options: 'priority',
+        expectedOption: DropdownsData.options.priority,
+        expectedResult: DropdownsData.defaultValue.customPriorityResult
     },
     {
         name: 'Searchable City',
         getOptions: page => page.getSearchableCityOptions(),
-        expected: DropdownsData.options.city,
+        options: 'city',
+        expectedOption: DropdownsData.options.city,
+        expectedResult: DropdownsData.defaultValue.searchCityResult
         // partialMatch: true
     }
 ];
 
 test.describe('QA Playground - Dropdowns Options Validation', () => {
-    optionsScenarios.forEach(data => {
+    scenarios.forEach(data => {
         test(`${data.name} options`, {
             tag: ['@regression', '@positive']
         }, async ({ dropdownsPage }) => {
@@ -49,7 +61,7 @@ test.describe('QA Playground - Dropdowns Options Validation', () => {
                 );
             // Validate dropdown options
             if (data.partialMatch) {
-                data.expected.forEach(expected => {
+                data.expectedOption.forEach(expected => {
                     expect(
                         normalizedOptions.some(actual =>
                             actual.startsWith(expected)
@@ -59,7 +71,7 @@ test.describe('QA Playground - Dropdowns Options Validation', () => {
             } 
             else {
                 expect(normalizedOptions).toEqual(
-                    expect.arrayContaining(data.expected)
+                    expect.arrayContaining(data.expectedOption)
                 );
             }
         });
@@ -67,49 +79,16 @@ test.describe('QA Playground - Dropdowns Options Validation', () => {
 
 });
 
-const defaultValueScenarios = [
-    {
-        name: 'Select Fruit Result',
-        locator: page => page.getSelectFruitResult(),
-        expected: DropdownsData.defaultValue.selectFruitResult
-    },
-    {
-        name: 'Select Country Result',
-        locator: page => page.getSelectCountryResult(),
-        expected: DropdownsData.defaultValue.selectCountryResult
-    },
-    {
-        name: 'Select Language Result',
-        locator: page => page.getSelectLanguageResult(),
-        expected: DropdownsData.defaultValue.selectLanguageResult
-    },
-    {
-        name: 'Multi-Select Heroes Result',
-        locator: page => page.getMultiSelectHeroesResult(),
-        expected: DropdownsData.defaultValue.multiSelectHeroesResult
-    },
-    {
-        name: 'Custom Priority Result',
-        locator: page => page.getCustomPriorityResult(),
-        expected: DropdownsData.defaultValue.customPriorityResult
-    },
-    {
-        name: 'Search City Result',
-        locator: page => page.getSearchCityResult(),
-        expected: DropdownsData.defaultValue.searchCityResult
-    }
-];
-
 test.describe('QA Playground - Dropdowns - Default Value Validation', () => {
-    defaultValueScenarios.forEach(data => {
+    scenarios.forEach(data => {
         test(`${data.name}`, {
             tag: ['@regression', '@positive']
         }, async ({ dropdownsPage }) => {
             // Validate default value of result
             await expect(
-                data.locator(dropdownsPage)
+                dropdownsPage.getResult(data.options)
             ).toHaveText(
-                data.expected
+                data.expectedResult
             );
         });
     });

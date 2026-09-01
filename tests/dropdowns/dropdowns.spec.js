@@ -9,23 +9,30 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Select Fruit section to be visible
-            await expect(
-                dropdownsPage.getSelectFruitSection()
-            ).toBeVisible();
+            // // Wait for Select Fruit section to be visible
+            // await expect(
+            //     dropdownsPage.getDropdownOptions(
+            //         'fruit'
+            //     )
+            // ).toBeVisible();
             // Select option from Select Fruit dropdown
-            await dropdownsPage.selectFruit(
+            await dropdownsPage.selectDropdown(
+                'fruit',
                 DropdownsData.input.fruit
             );
             // Retrieve selected fruit
             const selectedFruit = 
-                await dropdownsPage.getSelectedFruit();
+                await dropdownsPage.getSelectedDropdownValue(
+                    'fruit'
+                );
             expect(selectedFruit).toBe(
                 DropdownsData.input.fruit
             );
             // Validate text is reflected in Select Fruit result
             await expect(
-                dropdownsPage.getSelectFruitResult()
+                dropdownsPage.getResult(
+                    'fruit'
+                )
             ).toHaveText(
                 `${DropdownsData.result.selectedFruit}${DropdownsData.input.fruit}`
             );
@@ -39,17 +46,22 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Select Country section to be visible
-            await expect(
-                dropdownsPage.getSelectCountrySection()
-            ).toBeVisible();
+            // // Wait for Select Country section to be visible
+            // await expect(
+            //     dropdownsPage.getDropdownOptions(
+            //         'country'
+            //     )
+            // ).toBeVisible();
             // Select option from Select Country dropdown
-            await dropdownsPage.selectCountry(
+            await dropdownsPage.selectDropdown(
+                'country',
                 DropdownsData.valueAttribute.country.argentina
             );
             // Retrieve selected country
             const selectedCountry = 
-                await dropdownsPage.getSelectedCountry();
+                await dropdownsPage.getSelectedDropdownValue(
+                    'country'
+                );
             expect(selectedCountry).toBe(
                 DropdownsData.input.country.argentina
             );
@@ -57,7 +69,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             const expectedResult =
                 `${DropdownsData.result.selectedCountry}${DropdownsData.input.country.argentina} (${DropdownsData.valueAttribute.country.argentina})`;
             await expect(
-                dropdownsPage.getSelectCountryResult()
+                dropdownsPage.getResult(
+                    'country'
+                )
             ).toHaveText(expectedResult);
         });
 
@@ -69,17 +83,22 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Select Language section to be visible
-            await expect(
-                dropdownsPage.getSelectLanguageSection()
-            ).toBeVisible();
+            // // Wait for Select Language section to be visible
+            // await expect(
+            //     dropdownsPage.getDropdownOptions(
+            //         'language'
+            //     )
+            // ).toBeVisible();
             // Select option from Select Language dropdown
-            await dropdownsPage.selectLanguage(
+            await dropdownsPage.selectDropdown(
+                'language',
                 DropdownsData.input.language.javaScript
             );
             // Retrieve selected language
             const selectedLanguage = 
-                await dropdownsPage.getSelectedLanguage();
+                await dropdownsPage.getSelectedDropdownValue(
+                    'language'
+                );
             expect(selectedLanguage).toBe(
                 DropdownsData.input.language.javaScript
             );
@@ -87,7 +106,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             const expectedResult =
                 `${DropdownsData.result.selectedLanguage}${DropdownsData.input.language.javaScript}`;
             await expect(
-                dropdownsPage.getSelectLanguageResult()
+                dropdownsPage.getResult(
+                    'language'
+                )
             ).toHaveText(expectedResult);
         });
 
@@ -96,21 +117,27 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 tag: ['@regression', '@positive']
             },
         async ({ dropdownsPage }) => {
-            // Wait for Select Language section to be visible
-            await expect(
-                dropdownsPage.getSelectLanguageSection()
-            ).toBeVisible();
+            // // Wait for Select Language section to be visible
+            // await expect(
+            //     dropdownsPage.getSection(
+            //         'langauge'
+            //     )
+            // ).toBeVisible();
             // Click Select Last button
             await dropdownsPage.clickSelectLastButton();
             // Retrieve selected language
             const selectedLanguage = 
-                await dropdownsPage.getSelectedLanguage();
+                await dropdownsPage.getSelectedDropdownValue(
+                    'language'
+                );
             expect(selectedLanguage).toBe(
                 DropdownsData.input.language.typeScript
             );
             // Validate text is reflected in Select Language result
             await expect(
-                dropdownsPage.getSelectLanguageResult()
+                dropdownsPage.getResult(
+                    'language'
+                )
             ).toHaveText(
                 DropdownsData.result.selectLanguageAllResult
             );
@@ -124,10 +151,12 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
     async ({ dropdownsPage }) => {
-        // Wait for Multi-Select Heroes section to be visible
-        await expect(
-            dropdownsPage.getMultiSelectHeroesSection()
-        ).toBeVisible();
+        // // Wait for Multi-Select Heroes section to be visible
+        // await expect(
+        //     dropdownsPage.getSection(
+        //         'heroes'
+        //     )
+        // ).toBeVisible();
         // Select option from Multi-Select Heroes dropdown
         await dropdownsPage.selectHeroes(
             DropdownsData.input.heroes
@@ -141,7 +170,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
         );
         // Validate text is reflected in Multi-Select Heroes result
         await expect(
-            dropdownsPage.getMultiSelectHeroesResult()
+            dropdownsPage.getResult(
+                'heroes'
+            )
         ).toHaveText(
             DropdownsData.result.multiSelectHeroesResult
         );
@@ -152,22 +183,26 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@regression', '@negative']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Multi-Select Heroes section to be visible
-            await expect(
-                dropdownsPage.getMultiSelectHeroesSection()
-            ).toBeVisible();
+            // // Wait for Multi-Select Heroes section to be visible
+            // await expect(
+            //     dropdownsPage.getSection(
+            //         'heroes'
+            //     )
+            // ).toBeVisible();
             // Select option from Multi-Select Heroes dropdown
             await dropdownsPage.selectHeroes(
                 DropdownsData.input.heroes
             );
             // Validate text is reflected in Multi-Select Heroes result
             await expect(
-                dropdownsPage.getMultiSelectHeroesResult()
+                dropdownsPage.getResult(
+                    'heroes'
+                )
             ).toHaveText(
                 DropdownsData.result.multiSelectHeroesResult
             );
             // Deselect option from Multi-Select Heroes dropdown
-            await dropdownsPage.updateSelectedHeroes(
+            await dropdownsPage.selectHeroes(
                 DropdownsData.input.remainingHeroes
             );
             // Retrieve selected heroes
@@ -183,7 +218,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             });
             // Validate text is reflected in Multi-Select Heroes result
             await expect(
-                dropdownsPage.getMultiSelectHeroesResult()
+                dropdownsPage.getResult(
+                    'heroes'
+                )
             ).toHaveText(
                 DropdownsData.result.selectedHeroes +
                     DropdownsData.input.remainingHeroes.join(', ')
@@ -198,10 +235,12 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Custom Priority section to be visible
-            await expect(
-                dropdownsPage.getCustomPrioritySection()
-            ).toBeVisible();
+            // // Wait for Custom Priority section to be visible
+            // await expect(
+            //     dropdownsPage.getSection(
+            //         'priority'
+            //     )
+            // ).toBeVisible();
             // Select option from Custom Priority dropdown
             await dropdownsPage.selectPriority(
                 DropdownsData.input.priority.highPriority
@@ -216,7 +255,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             const expectedResult =
                 `${DropdownsData.result.prioritySelected}${DropdownsData.input.priority.highPriority}`;
             await expect(
-                dropdownsPage.getCustomPriorityResult()
+                dropdownsPage.getResult(
+                    'priority'
+                )
             ).toHaveText(expectedResult);
         });
 
@@ -225,12 +266,14 @@ test.describe('QA Playground - Dropdowns Tests', () => {
                 tag: ['@regression', '@positive']
             },
         async ({ dropdownsPage }) => {
-            // Wait for Custom Priority section to be visible
-            await expect(
-                dropdownsPage.getCustomPrioritySection()
-            ).toBeVisible();
+            // // Wait for Custom Priority section to be visible
+            // await expect(
+            //     dropdownsPage.getSection(
+            //         'priority'
+            //     )
+            // ).toBeVisible();
             // Select option from Custom Priority dropdown
-            await dropdownsPage.getCustomPriorityDropdown().click();
+            await dropdownsPage.getDropdown('priority').click();
             await dropdownsPage.getPriorityOption(
                 DropdownsData.input.priority.mediumPriority
             ).click();
@@ -244,7 +287,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             const expectedResult =
                 `${DropdownsData.result.prioritySelected}${DropdownsData.input.priority.mediumPriority}`;
             await expect(
-                dropdownsPage.getCustomPriorityResult()
+                dropdownsPage.getResult(
+                    'priority'
+                )
             ).toHaveText(expectedResult);
         });
 
@@ -256,10 +301,12 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             tag: ['@smoke', '@regression', '@positive']
         },
         async ({ dropdownsPage }) => {
-            // Wait for Select City section to be visible
-            await expect(
-                dropdownsPage.getSearchCitySection()
-            ).toBeVisible();
+            // // Wait for Select City section to be visible
+            // await expect(
+            //     dropdownsPage.getSection(
+            //         'city'
+            //     )
+            // ).toBeVisible();
             // Select option from Select City dropdown
             await dropdownsPage.selectCity(
                 DropdownsData.input.city.pune
@@ -268,7 +315,9 @@ test.describe('QA Playground - Dropdowns Tests', () => {
             const expectedResult =
                 `${DropdownsData.result.citySelected}${DropdownsData.input.city.pune} (${DropdownsData.valueAttribute.city.pune})`;
             await expect(
-                dropdownsPage.getSearchCityResult()
+                dropdownsPage.getResult(
+                    'city'
+                )
             ).toHaveText(expectedResult);
         });
 
