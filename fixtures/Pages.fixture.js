@@ -8,6 +8,7 @@ const { FormsPage } = require('../pages/FormsPage');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 const { LinksPage } = require('../pages/LinksPage');
 const { RadioAndCheckboxPage } = require('../pages/RadioAndCheckboxPage');
+const { TabsAndWindowsPage } = require('../pages/TabsAndWindowsPage');
 
 exports.test = base.test.extend({
 
@@ -68,6 +69,13 @@ exports.test = base.test.extend({
             new RadioAndCheckboxPage(page);
         await radioAndCheckboxPage.navigateToRadioAndCheckbox();
         await use(radioAndCheckboxPage);
+    },
+
+    tabsAndWindowsPage: async ({ page }, use) => {
+        const tabsAndWindowsPage =
+            new TabsAndWindowsPage(page);
+        await tabsAndWindowsPage.navigateToTabsAndWindows();
+        await use(tabsAndWindowsPage);
     },
 
 });

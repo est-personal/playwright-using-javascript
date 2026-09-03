@@ -18,8 +18,12 @@ const QaPlaygroundUrls = {
         'https://qaplayground.com/practice/input-fields',
     linksPage:
         'https://qaplayground.com/practice/links',
+    practicePage:
+        'https://qaplayground.com/practice',
     radioAndCheckBoxPage:
-        'https://qaplayground.com/practice/radio-checkbox'
+        'https://qaplayground.com/practice/radio-checkbox',
+    tabsAndwindowsPage:
+        'https://qaplayground.com/practice/tabs-windows'
 };
 
 module.exports = { QaPlaygroundUrls };
