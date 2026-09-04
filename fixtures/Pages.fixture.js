@@ -3,6 +3,7 @@ const { expect } = require('@playwright/test');
 const { AlertsAndDialogsPage } = require('../pages/AlertsAndDialogsPage');
 const { ButtonsPage } = require('../pages/ButtonsPage');
 const { DataTablesPage } = require('../pages/DataTablesPage');
+const { DatePickerPage } = require('../pages/DatePickerPage');
 const { DropdownsPage } = require('../pages/DropdownsPage');
 const { FormsPage } = require('../pages/FormsPage');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
@@ -34,6 +35,13 @@ exports.test = base.test.extend({
             dataTablesPage.getInteractiveTableSection()
         ).toBeVisible();
         await use(dataTablesPage);
+    },
+
+    datePickerPage: async ({ page }, use) => {
+        const datePickerPage =
+            new DatePickerPage(page);
+        await datePickerPage.navigateToDatePicker();
+        await use(datePickerPage);
     },
 
     dropdownsPage: async ({ page }, use) => {

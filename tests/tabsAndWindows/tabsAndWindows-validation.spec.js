@@ -57,5 +57,4 @@ test.describe('QA Playground - Tabs and Windows - Default Value Validation', () 
             );
         });
     });
-
 });
