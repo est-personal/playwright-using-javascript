@@ -8,6 +8,8 @@ const QaPlaygroundUrls = {
         'https://qaplayground.com/practice/buttons',
     dataTablesPage:
         'https://qaplayground.com/practice/data-table',
+    datePickerPage:
+        'https://qaplayground.com/practice/date-picker',
     dropdownsPage:
         'https://qaplayground.com/practice/dropdowns',
     formsPage:
