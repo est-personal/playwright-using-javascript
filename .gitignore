@@ -8,3 +8,5 @@ node_modules/
 /playwright/.auth/
 /dependency-versions.txt
 folder-summary.txt
+/allure-report/
+/allure-results/
