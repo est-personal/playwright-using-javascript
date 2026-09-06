@@ -125,7 +125,7 @@ jobs:
 
           rm -rf portfolio/allure-report
 
-          cp -R allure-history portfolio/allure-report
+          cp -R allure-report portfolio/allure-report
 
           find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
 
