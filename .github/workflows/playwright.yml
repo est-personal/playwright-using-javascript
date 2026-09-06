@@ -124,26 +124,24 @@ jobs:
           git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
 
           rm -rf portfolio/allure-report
-          mkdir -p portfolio/reports
 
-          cp -r allure-history portfolio/allure-report
+          cp -R allure-history portfolio/allure-report
+
+          find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
 
           cd portfolio
-
-          pwd
-          find . -maxdepth 3 -type d
-
-          echo "===== reports ====="
-          ls -R reports || true
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
+          echo "===== Allure Report Contents ====="
+          find . -name ".git"
+
           git add .
+
           git commit -m "Update Allure Report" || echo "No changes"
 
           git push origin main
-
 
       - name: Generate Folder Summary
         if: always()
