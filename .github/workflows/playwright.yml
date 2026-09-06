@@ -113,9 +113,10 @@ jobs:
         with:
           personal_token: ${{ secrets.PORTFOLIO_PAT }}
           external_repository: est-personal/est-personal.github.io
-          # publish_branch: main
-          # publish_dir: allure-history
-          # destination_dir: reports/allure
+          publish_branch: main
+          publish_dir: allure-history
+          destination_dir: reports/allure
+          keep_files: true
 
       - name: Generate Folder Summary
         if: always()
