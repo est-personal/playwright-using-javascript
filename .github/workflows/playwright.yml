@@ -123,12 +123,18 @@ jobs:
         run: |
           git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
 
-          rm -rf portfolio/reports/allure
+          rm -rf portfolio/allure-report
           mkdir -p portfolio/reports
 
-          cp -r allure-history portfolio/reports/allure
+          cp -r allure-history portfolio/allure-report
 
           cd portfolio
+
+          pwd
+          find . -maxdepth 3 -type d
+
+          echo "===== reports ====="
+          ls -R reports || true
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
