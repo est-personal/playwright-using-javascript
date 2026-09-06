@@ -107,15 +107,41 @@ jobs:
           echo "===== allure-history ====="
           ls -la allure-history || true
 
-      - name: Publish Allure Report
+      # - name: Publish Allure Report
+      #   if: always()
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     personal_token: ${{ secrets.PORTFOLIO_PAT }}
+      #     external_repository: est-personal/est-personal.github.io
+      #     publish_branch: main
+      #     publish_dir: allure-history
+      #     # destination_dir: reports/allure
+      #     keep_files: true
+
+      - name: Publish Allure to Portfolio
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.PORTFOLIO_PAT }}
-          external_repository: est-personal/est-personal.github.io
-          # publish_branch: main
-          # publish_dir: allure-history
-          # destination_dir: reports/allure
+        run: |
+          git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
+
+          rm -rf portfolio/allure-report
+
+          cp -R allure-report portfolio/allure-report
+
+          find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
+
+          cd portfolio
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          echo "===== Allure Report Contents ====="
+          find . -name ".git"
+
+          git add .
+
+          git commit -m "Update Allure Report" || echo "No changes"
+
+          git push origin main
 
       - name: Generate Folder Summary
         if: always()
