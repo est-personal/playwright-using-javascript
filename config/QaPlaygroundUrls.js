@@ -20,6 +20,8 @@ const QaPlaygroundUrls = {
         'https://qaplayground.com/practice/input-fields',
     linksPage:
         'https://qaplayground.com/practice/links',
+    modalWindowsPage:
+        'https://qaplayground.com/practice/modals',
     practicePage:
         'https://qaplayground.com/practice',
     radioAndCheckBoxPage:
