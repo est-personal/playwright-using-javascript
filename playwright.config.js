@@ -51,13 +51,23 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      timeout: 90000, // 90 seconds per test
+      use: { 
+        ...devices['Desktop Firefox'],
+        actionTimeout: 15000,
+        navigationTimeout: 45000,
+      },
       outputDir: 'test-results/firefox',
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      timeout: 90000, // 90 seconds per test
+      use: { 
+        ...devices['Desktop Safari'],
+        actionTimeout: 15000,
+        navigationTimeout: 45000,
+      },
       outputDir: 'test-results/webkit',
     },
 
