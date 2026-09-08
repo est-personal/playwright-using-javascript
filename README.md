@@ -15,33 +15,34 @@ This project demonstrates a scalable UI test automation framework built using Pl
 ---
 
 ## Table of Contents
-- #overview
-- #features
-- #project-structure
-- #prerequisites
-- [Installation](#installations
-- [CI/CD Workflow- #slack-notifications
-- #test-result-classification
-- #reports
-- [Future Enhancements](#future
+- [Overview](#overview)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running Tests](#running-tests)
+- [CI/CD Workflow](#ci-cd-workflow)
+- [Slack Notifications](#slack-notifications)
+- [Test Result Classification](#test-result-classification)
+- [Reports](#reports)
+- [Future Enhancements](#future-enhancements)
 
 ---
 
 ## Features
-- Playwright Test Runner
 - Page Object Model (POM)
 - Data-Driven Testing
 - Cross-Browser Testing
   - Chromium
   - Firefox
   - WebKit
-- HTML Reports
-- JSON Reports
-- JUnit XML Reports
+- Playwright Test Runner
+- Playwright Reporter
+- Allure Reporter
 - GitHub Actions CI/CD
 - Jenkins Pipeline Integration
 - Slack Notifications
-- Test Result Summary by Test File
+- Gitlab Syncing
 
 ---
 
@@ -50,21 +51,35 @@ This project demonstrates a scalable UI test automation framework built using Pl
 playwright-using-javascript/
 ├── .github/
 │   └── workflows/
+├── config/
+│   ├── QaPlaygroundUrls.js
+├── fixtures/
+│   ├── Pages.fixtures.js
+├── helpers/
+│   ├── AlertsAndDialogsActions.js
+│   ├── AlertsAndDialogsAssertions.js
+├── locators/
+│   ├── AlertsAndDialogsLocators.js
+│   └── DropdownsLocators.js
 ├── pages/
-│   ├── LoginPage.js
-│   └── HomePage.js
-├── tests/
-│   ├── forms/
-│   ├── buttons/
-│   ├── dropdowns/
-│   └── inputFields/
+│   ├── AlertsAndDialogsPage.js
+│   └── DropdownsPage.js
 ├── testData/
-├── utils/
-├── test-results/
-├── playwright-report/
-├── playwright.config.js
+│   ├── AlertsAndDialogsData.js
+│   ├── DropdownsData.js
+├── tests/
+│   ├── alertsAndDialogs/
+│   |   ├── alertsAndDialogs-validation.spec.js
+│   |   ├── alertsAndDialogs.spec.js
+│   ├── dropdowns/
+│   |   ├── dropdowns-validation.spec.js
+│   |   ├── dropdowns.spec.js
 ├── Jenkinsfile
-└── package.json
+├── package-lock.json
+├── package.json
+├── playwright.config.js
+├── playwrightRunner.bat
+├── README.md
 ```
 
 ---
@@ -72,9 +87,10 @@ playwright-using-javascript/
 ## Prerequisites
 Check if the following are installed on your machine:
 ```bash
+git --version
 node -v
 npm -v
-git --version
+allure --version
 ```
 
 ---
@@ -172,55 +188,7 @@ Pipeline Parameters:
 ## Slack Notifications
 A Slack notification is sent after every workflow execution.
 
-### GitHub Actions Included Information
-- Run Status
-- Repository Name
-- Overall Result
-  - Total Tests
-  - Passed Tests
-  - Failed Tests
-  - Flaky Tests
-  - Skipped Tests
-- Playwright Test Summary (grouped by folder)
-  - Total Tests
-  - Passed Tests
-  - Failed Tests
-  - Flaky Tests
-  - Skipped Tests
-- Pull Request Details (PR #, PR Title, Author, Branch)
-- Duration
-- PR Link
-- Workflow Link
-
-### Jenkins Included Information
-- Run Status
-- Total Tests
-- Passed Tests
-- Failed Tests
-- Flaky Tests
-- Skipped Tests
-- Playwright Report
-- Browser
-- Execution Mode
-- Mode (Headless or Headed)
-- Test Suite
-- Tag
-- Retries
-- Workers
-- Author
-- Email
-- Repository Name
-- Branch
-- Trigger (started by)
-- Job (Jenkins job name)
-- Build #
-- Pull Request Details (Commit, Message, author)
-- Duration
-- Build Link
-
-### Sample Output
-
-GITHUB ACTIONS
+### Github Actions
 ```text
 ✅ Playwright Tests Passed
 📦 Repository: est-personal/playwright-using-javascript
@@ -235,7 +203,7 @@ GITHUB ACTIONS
 🔍 Workflow: https://github.com/est-personal/playwright-using-javascript/actions/runs/31337602104
 ```
 
-JENKINS
+### Jenkins
 ```text
 🟡 PLAYWRIGHT TESTS COMPLETED WITH FAILURES
 🧪 Total: 336
@@ -297,7 +265,7 @@ folder-summary.txt
 ---
 
 ## Future Enhancements
-- Allure Reporting
+- Github Pages
 - Docker Integration
 - Azure DevOps Pipeline
 - Email Notifications
