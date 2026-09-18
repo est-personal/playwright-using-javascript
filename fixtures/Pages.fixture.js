@@ -9,6 +9,7 @@ const { FormsPage } = require('../pages/FormsPage');
 const { InputFieldsPage } = require('../pages/InputFieldsPage');
 const { LinksPage } = require('../pages/LinksPage');
 const { ModalWindowsPage } = require('../pages/ModalWindowsPage');
+const { MultiSelectPage } = require('../pages/MultiSelectPage');
 const { RadioAndCheckboxPage } = require('../pages/RadioAndCheckboxPage');
 const { TabsAndWindowsPage } = require('../pages/TabsAndWindowsPage');
 
@@ -76,8 +77,15 @@ exports.test = base.test.extend({
     modalWindowsPage: async ({ page }, use) => {
         const modalWindowsPage =
             new ModalWindowsPage(page);
-        await modalWindowsPage.navigateToTabsAndWindows();
+        await modalWindowsPage.navigateToModalWindows();
         await use(modalWindowsPage);
+    },
+
+    multiSelectPage: async ({ page }, use) => {
+        const multiSelectPage =
+            new MultiSelectPage(page);
+        await multiSelectPage.navigateToMultiSelect();
+        await use(multiSelectPage);
     },
 
     radioAndCheckboxPage: async ({ page }, use) => {

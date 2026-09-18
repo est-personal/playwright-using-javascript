@@ -22,6 +22,8 @@ const QaPlaygroundUrls = {
         'https://qaplayground.com/practice/links',
     modalWindowsPage:
         'https://qaplayground.com/practice/modals',
+    multiSelectPage:
+        'https://qaplayground.com/practice/multi-select',
     practicePage:
         'https://qaplayground.com/practice',
     radioAndCheckBoxPage:
