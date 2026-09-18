@@ -1,0 +1,241 @@
+name: Playwright Tests - Scheduled Run
+
+permissions:
+  contents: write
+
+env:
+  CI: true
+
+on:
+  schedule:
+    # PHT is UTC+8 and GitHub Actions cron schedules use UTC
+    # Min Hrs Day Month Day-of-Week 
+    # Chromium - Daily at 06:00 PHT
+    - cron: '0 22 * * *'
+    # Firefox - every Monday at 20:30 PHT
+    - cron: '30 12 * * 1'
+    # WebKit - every Friday at 10:00 PHT
+    - cron: '0 2 * * 5'
+
+jobs:
+  cross-browser:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Determine Browser
+        id: browser
+        run: |
+          case "${{ github.event.schedule }}" in
+            "0 22 * * *")
+              echo "browser=chromium" >> $GITHUB_OUTPUT
+              ;;
+            "30 12 * * 1")
+              echo "browser=firefox" >> $GITHUB_OUTPUT
+              ;;
+            "0 2 * * 5")
+              echo "browser=webkit" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Unknown schedule"
+              exit 1
+              ;;
+          esac
+
+      - name: Set Browser Name
+        id: browser_name
+        run: |
+          case "${{ steps.browser.outputs.browser }}" in
+            chromium)
+              echo "name=Chromium" >> $GITHUB_OUTPUT
+              ;;
+            firefox)
+              echo "name=Firefox" >> $GITHUB_OUTPUT
+              ;;
+            webkit)
+              echo "name=WebKit" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Notify Slack Schedule Started
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 Scheduled Playwright execution started
+              📦 Repository: ${{ github.repository }}
+              🖱️ Browser: ${{ steps.browser_name.outputs.name }}
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
+
+      - name: Record Start Time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Run Playwright Tests
+        id: tests
+        continue-on-error: true
+        run: |
+          npx playwright test --project=${{ steps.browser.outputs.browser }}
+
+      - name: Save Browser Result
+        if: always()
+        run: |
+          mkdir -p browser-results
+
+          END_TIME=$(date +%s)
+          DURATION_SEC=$((END_TIME - START_TIME))
+          DURATION_MIN=$((DURATION_SEC / 60))
+          DURATION_REM_SEC=$((DURATION_SEC % 60))
+
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "✅ ${{ steps.browser_name.outputs.name }} - Passed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/result.txt
+          else
+            echo "❌ ${{ steps.browser_name.outputs.name }} - Failed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/result.txt
+          fi
+
+      - name: Upload Browser Result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-result
+          path: browser-results/
+
+      - name: Get Allure History
+        if: steps.browser.outputs.browser == 'chromium'
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        if: steps.browser.outputs.browser == 'chromium'
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Debug Allure Files
+        if: steps.browser.outputs.browser == 'chromium'
+        run: |
+          echo "===== allure-results ====="
+          ls -la allure-results || true
+
+          echo "===== allure-report ====="
+          ls -la allure-report || true
+
+          echo "===== allure-history ====="
+          ls -la allure-history || true
+
+      - name: Publish Allure to Portfolio
+        if: ${{ always() && steps.tests.outcome == 'success' && steps.browser.outputs.browser == 'chromium' }}
+        run: |
+          git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
+
+          rm -rf portfolio/allure-report
+
+          cp -R allure-report portfolio/allure-report
+
+          find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
+
+          cd portfolio
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          echo "===== Allure Report Contents ====="
+          find . -name ".git"
+
+          git add .
+
+          git commit -m "Update Allure Report (Chromium)" || echo "No changes"
+
+          git push origin main
+
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ steps.browser.outputs.browser }}
+          path: |
+            playwright-report/
+            allure-report/
+            allure-results/
+            test-results/
+          retention-days: 14
+
+      - name: Fail Workflow If Tests Failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
+
+  notify-scheduled-run:
+    needs: cross-browser
+    if: ${{ always() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Schedule Status
+        id: schedule_status
+        run: |
+          if [ "${{ needs.cross-browser.result }}" = "success" ]; then
+            echo "ICON=✅" >> $GITHUB_OUTPUT
+            echo "STATUS=Passed" >> $GITHUB_OUTPUT
+          else
+            echo "ICON=❌" >> $GITHUB_OUTPUT
+            echo "STATUS=Failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download Browser Results
+        uses: actions/download-artifact@v4
+        with:
+          # pattern: browser-result-*
+          name: browser-result
+          merge-multiple: true
+          path: browser-results
+
+      - name: Generate Browser Summary
+        id: browser_summary
+        run: |
+          {
+            echo "RESULTS<<EOF"
+            cat browser-results/result.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Verify Browser Results
+        run: |
+          ls -R browser-results
+          cat browser-results/result.txt
+
+      - name: Notify Slack Scheduled Run
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "${{ steps.schedule_status.outputs.ICON }} Daily Playwright Health Check ${{ steps.schedule_status.outputs.STATUS }}
+
+              📦 Repository: ${{ github.repository }}
+
+              🌙 Trigger: Schedule
+              🔢 Run Number: ${{ github.run_number }}
+
+              Browser Results:
+              ${{ steps.browser_summary.outputs.RESULTS }}
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
