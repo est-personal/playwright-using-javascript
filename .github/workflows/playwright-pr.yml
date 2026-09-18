@@ -1,0 +1,201 @@
+name: Playwright Tests - Before Merging PR
+
+permissions:
+  contents: write
+
+env:
+  CI: true
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  # Manual Trigger
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser to run
+        required: true
+        default: chromium
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
+
+# Concurrency control
+concurrency:
+  group: playwright-${{ github.workflow }}-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30     # Job timeout
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Playwright
+        uses: ./.github/actions/setup-playwright
+
+      - name: Record Start Time
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Run Playwright Tests
+        id: tests
+        continue-on-error: true
+        run: |
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+                echo "Running Chromium for PR validation..."
+                npx playwright test --project=chromium
+            fi
+
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                echo "Running browser selected from workflow_dispatch..."
+
+                if [ "${{ inputs.browser }}" = "all" ]; then
+                    npx playwright test
+                else
+                    npx playwright test --project=${{ inputs.browser }}
+                fi
+            fi
+
+      - name: Verify Playwright JSON Report
+        if: always()
+        run: |
+          echo "===== Test Results ====="
+          ls -R test-results || true
+          echo "===== Playwright Report ====="
+          ls -R playwright-report || true
+
+      - name: Get Allure History
+        if: always()
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Debug Allure Files
+        if: always()
+        run: |
+          echo "===== allure-results ====="
+          ls -la allure-results || true
+
+          echo "===== allure-report ====="
+          ls -la allure-report || true
+
+          echo "===== allure-history ====="
+          ls -la allure-history || true
+
+      - name: Generate Folder Summary
+        if: always()
+        run: node scripts/test-summary.js
+
+      - name: Read Folder Summary
+        if: always()
+        id: summary
+        run: |
+          {
+            echo 'SUMMARY<<EOF'
+            cat folder-summary.txt
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Calculate Duration
+        if: always()
+        run: |
+          END_TIME=$(date +%s)
+          DURATION_SEC=$((END_TIME - START_TIME))
+          DURATION_MIN=$((DURATION_SEC / 60))
+          DURATION_REM_SEC=$((DURATION_SEC % 60))
+          echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
+
+      - name: Upload Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            allure-report/
+            allure-results/
+            test-results/
+            folder-summary.txt
+          retention-days: 14
+
+      - name: Set Slack Context
+        id: slack_context
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            {
+              echo "DETAILS<<EOF"
+              echo "🔀 PR: #${{ github.event.pull_request.number }}"
+              echo "📝 Title: ${{ github.event.pull_request.title }}"
+              echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+              echo "🌿 Branch: ${{ github.head_ref }}"
+              echo ""
+              echo "🔗 PR:"
+              echo "${{ github.event.pull_request.html_url }}"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            {
+              echo "DETAILS<<EOF"
+              echo "🖱️ Browser: ${{ inputs.browser }}"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set Slack Status
+        if: always()
+        id: slack_status
+        run: |
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "ICON=✅" >> $GITHUB_OUTPUT
+            echo "STATUS=Passed" >> $GITHUB_OUTPUT
+          else
+            echo "ICON=❌" >> $GITHUB_OUTPUT
+            echo "STATUS=Failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack
+        if: always()
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "${{ steps.slack_status.outputs.ICON }} Playwright Tests ${{ steps.slack_status.outputs.STATUS }}
+
+                📦 Repository: ${{ github.repository }}
+
+                ${{ steps.summary.outputs.SUMMARY }}
+
+                ${{ steps.slack_context.outputs.DETAILS }}
+
+                📅 Trigger: ${{ github.event_name }}
+                ⏱ Duration: ${{ env.DURATION }}
+
+                🔍 Workflow:
+                <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Fail Workflow If Tests Failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
