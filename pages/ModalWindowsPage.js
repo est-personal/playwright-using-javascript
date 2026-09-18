@@ -43,7 +43,7 @@ class ModalWindowsPage extends BasePage {
         );
     }
 
-    async navigateToTabsAndWindows() {
+    async navigateToModalWindows() {
         await this.navigate(
             QaPlaygroundUrls.modalWindowsPage
         );
