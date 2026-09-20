@@ -1,0 +1,166 @@
+name: Publish Playwright Report
+
+permissions:
+  contents: write
+
+env:
+  CI: true
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'
+
+concurrency:
+  group: publish-playwright-report
+  cancel-in-progress: false
+
+jobs:
+  publish-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Determine Run Week
+        id: biweekly
+        run: |
+          WEEK=$(date +%U)
+
+          if [ $((WEEK % 2)) -eq 0 ]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout Repository
+        if: ${{ steps.biweekly.outputs.run == 'true' }}
+        uses: actions/checkout@v4
+
+      - name: Setup Playwright
+        if: ${{ steps.biweekly.outputs.run == 'true' }}
+        uses: ./.github/actions/setup-playwright
+
+      - name: Notify Slack Started
+        if: ${{ steps.biweekly.outputs.run == 'true' }}
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚀 Chromium report publishing started
+
+              📦 Repository: ${{ github.repository }}
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Run Chromium Tests
+        if: ${{ steps.biweekly.outputs.run == 'true' }}
+        id: tests
+        continue-on-error: true
+        run: |
+          npx playwright test --project=chromium
+
+      - name: Get Allure History
+        if: ${{ always() && steps.biweekly.outputs.run == 'true' }}
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        if: ${{ always() && steps.biweekly.outputs.run == 'true' }}
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Debug Allure Files
+        if: ${{ always() && steps.biweekly.outputs.run == 'true' }}
+        run: |
+          echo "===== allure-results ====="
+          ls -la allure-results || true
+
+          echo "===== allure-report ====="
+          ls -la allure-report || true
+
+          echo "===== allure-history ====="
+          ls -la allure-history || true
+
+      - name: Upload Reports
+        if: ${{ always() && steps.biweekly.outputs.run == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-allure-report
+          path: |
+            playwright-report/
+            allure-report/
+            allure-results/
+            test-results/
+          retention-days: 14
+
+      - name: Publish Allure to Portfolio
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        run: |
+          git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
+
+          rm -rf portfolio/allure-report
+
+          cp -R allure-report portfolio/allure-report
+
+          find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
+
+          cd portfolio
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+
+          git commit -m "Update Allure Report - Run #${{ github.run_number }}" || echo "No changes"
+
+          git push origin main
+
+      - name: Notify Slack Success
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "✅ Chromium report published successfully
+
+              📦 Repository: ${{ github.repository }}
+
+              🔢 Run Number: ${{ github.run_number }}
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Notify Slack Failure
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "❌ Chromium report publishing failed
+
+              📦 Repository: ${{ github.repository }}
+
+              🔢 Run Number: ${{ github.run_number }}
+
+              🔗 Workflow:
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+            }
+
+      - name: Fail Workflow If Tests Failed
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        run: exit 1
