@@ -6,6 +6,8 @@ const UiPracticeTablesLocators = {
             '[data-testid="departments-clear-btn"]',
         columnHeader: 
             '[data-testid="departments-table"] th',
+        columnValues: (columnIndex) =>
+            `[data-testid="departments-table"] tbody tr td:nth-child(${columnIndex})`,
         dropdown: 
             '[data-testid="departments-filter"]',
         editButton: (productName) =>
@@ -32,6 +34,8 @@ const UiPracticeTablesLocators = {
             '[data-testid="products-clear-btn"]',
         columnHeader: 
             '[data-testid="products-table"] th',
+        columnValues: (columnIndex) =>
+            `[data-testid="products-table"] tbody tr td:nth-child(${columnIndex})`,
         dropdown: 
             '[data-testid="products-category-filter"]',
         editButton: (productName) =>
