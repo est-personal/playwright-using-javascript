@@ -11,9 +11,12 @@ class MultiSelectPage extends BasePage {
     }
 
     // Async
-    async clickPreSelectAllButton() {
+    async clickButton(section) {
+        if (section.includes('msSelectAll')) {
+            await this.openDropdown('msSelectAll');
+        }
         await this.click(
-            MultiSelectLocators.msDeselect.button
+            this.getButtonsLocator(section)
         );
     }
 
@@ -22,14 +25,11 @@ class MultiSelectPage extends BasePage {
             process.platform === 'darwin'
                 ? 'Meta'
                 : 'Control';
-
         await this.page.keyboard.down(modifier);
-
         await this.page
             .locator(this.getOptionsLocator(section))
             .locator(`option:text-is("${option}")`)
             .click();
-
         await this.page.keyboard.up(modifier);
     }
 
@@ -45,19 +45,79 @@ class MultiSelectPage extends BasePage {
         );
     }
 
+    async getTextResult(section) {
+        return await this.getText(
+            this.getTextsLocator(section)
+        );
+    }
+
     async navigateToMultiSelect() {
         await this.navigate(
             QaPlaygroundUrls.multiSelectPage
         );
     }
 
-    async selectOptions(section, options) {
-        const locator = this.getOptionsLocator(section);
+    async openDropdown(section) {
+        const trigger = this.page.locator(
+            this.getTriggersLocator(section)
+        );
+        const isOpen =
+            await trigger.getAttribute('aria-expanded');
+        if (isOpen !== 'true') {
+            await trigger.click();
+        }
+    }
 
+    async removeTag(tags) {
+        const tagList = Array.isArray(tags)
+            ? tags
+            : [tags];
+        for (const tag of tagList) {
+            await this.click(
+                this.getButtonTagsValue(tag)
+            );
+        }
+        await this.page.keyboard.press('Escape');
+    }
+
+    async searchAndSelectOptions(options) {
         const optionList = Array.isArray(options)
             ? options
             : [options];
+        for (const option of optionList) {
+            await this.searchOption(option)
+            await this.page
+                .locator('[role="option"]')
+                .first()
+                .click();
+        }
+    }
 
+    async searchOption(value) {
+        await this.fill(
+            MultiSelectLocators.msSearchable.input,
+            value
+        );
+    }
+
+    async selectCustomOptions(section, options) {
+        const optionList = Array.isArray(options)
+            ? options
+            : [options];
+        await this.openDropdown(section)
+        for (const option of optionList) {
+            await this.click(
+                this.getCustomOptionsValue(option)
+            );
+        }
+        await this.page.keyboard.press('Escape');
+    }
+
+    async selectOptions(section, options) {
+        const locator = this.getOptionsLocator(section);
+        const optionList = Array.isArray(options)
+            ? options
+            : [options];
         await this.page
             .locator(locator)
             .selectOption(
@@ -70,28 +130,41 @@ class MultiSelectPage extends BasePage {
     // Non-Async
     getButtonsLocator(section) {
         const sections = {
-            // msCustom: MultiSelectLocators.msCustom.result,
             msDeselect: MultiSelectLocators.msDeselect.button,
-            // msGrouped: MultiSelectLocators.msGrouped.result,
-            // msMulti: MultiSelectLocators.msMulti.result,
-            // msSearchable: MultiSelectLocators.msSearchable.result,
-            // msSelectAll: MultiSelectLocators.msSelectAll.result,
-            // msSingle: MultiSelectLocators.msSingle.result,
-            // msTagRemove: MultiSelectLocators.msTagRemove.result
+            msSelectAll: MultiSelectLocators.msSelectAll.selectAllButton,
+            msSelectAllClear: MultiSelectLocators.msSelectAll.clearAllButton,
+            msTagRemove: MultiSelectLocators.msTagRemove.button
         };
         return sections[section];
     }
 
+    getButtonTagsValue(tag) {
+        return MultiSelectLocators.msTagRemove.removeTagValue(tag);
+    }
+
+    getCustomOptionsValue(option) {
+        const optionMap = {
+            'React': 'react',
+            'Vue.js': 'vue',
+            'Angular': 'angular',
+            'Svelte': 'svelte'
+        };
+        return MultiSelectLocators.msCustom.optionValue(
+            optionMap[option]
+        );
+    }
+
+    getNoResultsLocator() {
+        return this.page.locator(
+            MultiSelectLocators.msSearchable.noResult
+        );
+    }
+
     getOptionsLocator(section) {
         const sections = {
-            // msCustom: MultiSelectLocators.msCustom.result,
             msDeselect: MultiSelectLocators.msDeselect.option,
-            // msGrouped: MultiSelectLocators.msGrouped.result,
             msMulti: MultiSelectLocators.msMulti.option,
-            // msSearchable: MultiSelectLocators.msSearchable.result,
-            // msSelectAll: MultiSelectLocators.msSelectAll.result,
             msSingle: MultiSelectLocators.msSingle.option,
-            // msTagRemove: MultiSelectLocators.msTagRemove.result
         };
         return sections[section];
     }
@@ -106,6 +179,43 @@ class MultiSelectPage extends BasePage {
             msSelectAll: MultiSelectLocators.msSelectAll.result,
             msSingle: MultiSelectLocators.msSingle.result,
             msTagRemove: MultiSelectLocators.msTagRemove.result
+        };
+        return sections[section];
+    }
+
+    getSearchOption(option) {
+        const optionMap = {
+            'React': 'react',
+            'Vue.js': 'vue',
+            'Angular': 'angular',
+            'Svelte': 'svelte',
+            'Next.js': 'next'
+        };
+        return this.page.locator(
+            MultiSelectLocators.msSearchable.optionValue(optionMap[option])
+        );
+    }
+
+    getTagsOption(section, tag) {
+        const sections = {
+            msSearchable: MultiSelectLocators.msSearchable.tag(tag),
+            msTagRemove: MultiSelectLocators.msTagRemove.tag(tag)
+        };
+        return this.page.locator(sections[section]);
+    }
+
+    getTextsLocator(section) {
+        const sections = {
+            msCustom: MultiSelectLocators.msCustom.text,
+            msSelectAll: MultiSelectLocators.msSelectAll.text,
+        };
+        return sections[section];
+    }
+
+    getTriggersLocator(section) {
+        const sections = {
+            msCustom: MultiSelectLocators.msCustom.trigger,
+            msSelectAll: MultiSelectLocators.msSelectAll.trigger,
         };
         return sections[section];
     }
