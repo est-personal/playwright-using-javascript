@@ -29,7 +29,9 @@ const QaPlaygroundUrls = {
     radioAndCheckBoxPage:
         'https://qaplayground.com/practice/radio-checkbox',
     tabsAndwindowsPage:
-        'https://qaplayground.com/practice/tabs-windows'
+        'https://qaplayground.com/practice/tabs-windows',
+    uiPracticeTablesPage:
+        'https://qaplayground.com/ui-practice/tables'
 };
 
 module.exports = { QaPlaygroundUrls };

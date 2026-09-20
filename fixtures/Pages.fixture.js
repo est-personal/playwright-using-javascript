@@ -12,6 +12,7 @@ const { ModalWindowsPage } = require('../pages/ModalWindowsPage');
 const { MultiSelectPage } = require('../pages/MultiSelectPage');
 const { RadioAndCheckboxPage } = require('../pages/RadioAndCheckboxPage');
 const { TabsAndWindowsPage } = require('../pages/TabsAndWindowsPage');
+const { UiPracticeTablesPage } = require('../pages/demo/UiPracticeTablesPage');
 
 exports.test = base.test.extend({
 
@@ -100,6 +101,13 @@ exports.test = base.test.extend({
             new TabsAndWindowsPage(page);
         await tabsAndWindowsPage.navigateToTabsAndWindows();
         await use(tabsAndWindowsPage);
+    },
+
+    uiPracticeTablesPage: async ({ page }, use) => {
+        const uiPracticeTablesPage =
+            new UiPracticeTablesPage(page);
+        await uiPracticeTablesPage.navigateToUiPracticeTables();
+        await use(uiPracticeTablesPage);
     },
 
 });
