@@ -1,6 +1,23 @@
 const { expect } = require('@playwright/test');
+const { UiPracticeTablesData } = require('../../testData/demo/UiPracticeTablesData');
 
 class UiPracticeTablesAssertions {
+    static async validateActivePage(uiPracticeTablesPage, section, expectedPage) {
+        expect(
+            await uiPracticeTablesPage.getActivePage(section)
+        ).toBe(String(expectedPage));
+    }
+
+    static async validateButtonDisabled(uiPracticeTablesPage, locator) {
+        await expect(locator)
+            .toBeDisabled();
+    }
+
+    static async validateButtonEnabled(uiPracticeTablesPage, locator) {
+        await expect(locator)
+            .toBeEnabled();
+    }
+
     static async validateColumnSorting(pageObject, locator, order, type = 'text') {
         // Get values
         const values = (
@@ -32,9 +49,6 @@ class UiPracticeTablesAssertions {
             default:
                 actual = values;
         }
-        // console.log('Type:', type);
-        // console.log('Original Values:', values);
-        // console.log('Actual:', actual);
         // Sort if asc or desc
         expected = [...actual].sort((a, b) =>
             order === 'asc'
@@ -42,7 +56,15 @@ class UiPracticeTablesAssertions {
                 : a < b ? 1 : -1
         );
         // Validate sort order
-        await expect(actual).toEqual(expected);
+        expect(actual).toEqual(expected);
+    }
+
+    static async validatePageInfo(uiPracticeTablesPage, section, expectedInfo, totalRecord) {
+        await expect(
+            uiPracticeTablesPage.getPageInfoLocator(section)
+        ).toHaveText(
+            `${UiPracticeTablesData.text.showing}${expectedInfo}${UiPracticeTablesData.text.of}${totalRecord}`
+        );
     }
 
     static async validateTableDisplayed(uiPracticeTablesPage, tableLocators) {

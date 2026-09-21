@@ -21,6 +21,12 @@ const UiPracticeTablesData = {
             'Actions'
         ]
     },
+    text: {
+        of:
+            ' of ',
+        showing:
+            'Showing '
+    },
     // Scenario Data
     sortData: [
         {
@@ -141,10 +147,34 @@ const UiPracticeTablesData = {
         {
             name: 'Shopping Products Table',
             section: 'shoppingProductsTable',
+            column: 'Product',
+            defaultActivePage: '1',
+            pageInfo: {
+                page1:
+                    '1–4',
+                page2:
+                    '5–8',
+                page3:
+                    '9–12',
+                totalCount:
+                    '12'
+            }
         },
         {
             name: 'Departments Table',
             section: 'departmentsTable',
+            column: 'Name',
+            defaultActivePage: '1',
+            pageInfo: {
+                page1:
+                    '1–5',
+                page2:
+                    '6–10',
+                page3:
+                    '11–15',
+                totalCount:
+                    '15'
+            }
         }
     ]
 };
