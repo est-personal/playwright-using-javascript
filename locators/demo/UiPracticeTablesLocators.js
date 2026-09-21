@@ -2,6 +2,8 @@
 // Locators for QA Playground - UI Practice - Tables Page
 const UiPracticeTablesLocators = {
     departmentsTable: {
+        activePage: 
+            '[data-testid="section-departments"] [class="pag-btnactive"]',
         clearAllButton: 
             '[data-testid="departments-clear-btn"]',
         columnHeader: 
@@ -14,22 +16,26 @@ const UiPracticeTablesLocators = {
             `tr:has(td:text-is("${productName}")) [data-testid*="products-edit-btn-"]   `,
         nextButton: 
             '[data-testid="departments-next"]',
+        pageButton: (number) =>
+            `[data-testid="departments-btn-${(number)}"]`,
         pageInfo: 
             '[data-testid="departments-info"]',
-        pageNumber: (number) =>
-            `[data-testid="departments-btn-${(number)}"]`,
         previousButton: 
             '[data-testid="departments-prev"]',
         searchInput: 
             '[data-testid="departments-search"]',
         table: 
             '[data-testid="departments-table"]',
-        tableRow:
+        tableColumnData: (column) =>
+            `[data-testid="departments-table"] [data-testid*="departments-${(column)}"]`,
+        tableRows:
             '[data-testid="departments-table"] tr',
         totalText: 
             '[data-testid="departments-row-count"]',
     },
     shoppingProductsTable: {
+        activePage: 
+            '[data-testid="section-shopping-products"] [class="pag-btnactive"]',
         clearAllButton: 
             '[data-testid="products-clear-btn"]',
         columnHeader: 
@@ -42,17 +48,19 @@ const UiPracticeTablesLocators = {
             `tr:has(td:text-is("${productName}")) [data-testid*="products-edit-btn-"]   `,
         nextButton: 
             '[data-testid="products-next"]',
+        pageButton: (number) =>
+            `[data-testid="products-btn-${(number)}"]`,
         pageInfo: 
             '[data-testid="products-info"]',
-        pageNumber: (number) =>
-            `[data-testid="products-btn-${(number)}"]`,
         previousButton: 
             '[data-testid="products-prev"]',
         searchInput: 
             '[data-testid="products-search"]',
         table: 
             '[data-testid="products-table"]',
-        tableRow:
+        tableColumnData: (column) =>
+            `[data-testid="products-table"] [data-testid*="products-${(column)}"]`,
+        tableRows:
             '[data-testid="products-table"] tr',
         totalText: 
             '[data-testid="products-row-count"]',
