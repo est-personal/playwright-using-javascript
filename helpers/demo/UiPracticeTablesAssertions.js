@@ -59,12 +59,62 @@ class UiPracticeTablesAssertions {
         expect(actual).toEqual(expected);
     }
 
-    static async validatePageInfo(uiPracticeTablesPage, section, expectedInfo, totalRecord) {
+    static async validateColumnValues(
+        page,
+        section,
+        columnIndex,
+        expected
+    ) {
+        const values =
+            await page.getColumnValues(
+                section,
+                columnIndex
+            );
+
+        values.forEach(value => {
+            expect(value).toContain(
+                expected
+            );
+        });
+    }
+
+    static async validatePageInfo(uiPracticeTablesPage, section, expectedInfo, totalRecord = null) {
+        const expectedText = 
+            expectedInfo === '0' || totalRecord === null || totalRecord === ''
+            ? 'No results'
+            : `${UiPracticeTablesData.text.showing}${expectedInfo}${UiPracticeTablesData.text.of}${totalRecord}`;
         await expect(
             uiPracticeTablesPage.getPageInfoLocator(section)
         ).toHaveText(
-            `${UiPracticeTablesData.text.showing}${expectedInfo}${UiPracticeTablesData.text.of}${totalRecord}`
+            expectedText
         );
+    }
+
+    static async validateRecordDisplayed(uiPracticeTablesPage, section, column, expectedText) {
+        const values = 
+            await uiPracticeTablesPage.getColumnRows(section,column);
+        expect(values.length).toBeGreaterThan(0);
+        values.forEach(value => {
+            expect(
+                value.toLowerCase()
+            ).toContain(
+                expectedText.toLowerCase()
+            );
+        });
+    }
+
+    static async validateResultCount(uiPracticeTablesPage, section, expectedCount, totalRecord, table) {
+        expect(
+            await uiPracticeTablesPage.getResultCountLocator(section)
+        ).toHaveText(
+            `${UiPracticeTablesData.text.showing}${expectedCount}${UiPracticeTablesData.text.of}${totalRecord}${table}`
+        );
+    }
+
+    static async validateSearchResult(uiPracticeTablesPage, section, expected) {
+        await expect(
+            uiPracticeTablesPage.getFirstRow(section)
+        ).resolves.toContain(expected);
     }
 
     static async validateTableDisplayed(uiPracticeTablesPage, tableLocators) {
