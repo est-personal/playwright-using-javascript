@@ -2,6 +2,7 @@ name: Playwright Tests - Before Merging PR
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   CI: true
@@ -41,6 +42,9 @@ concurrency:
 
 jobs:
   test:
+    permissions:
+      contents: write
+      pull-requests: write
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30     # Job timeout
@@ -49,8 +53,47 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get Changed Files
+        id: changed_files
+        if: github.event_name == 'pull_request'
+        run: |
+          gh pr view ${{ github.event.pull_request.number }} \
+            --json files \
+            --jq '.files[].path' > files.txt
+
+          {
+            echo "FILES<<EOF"
+            cat files.txt
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+          echo "COUNT=$(wc -l < files.txt)" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get PR Labels
+        if: github.event_name == 'pull_request'
+        id: labels
+        run: |
+          gh pr view ${{ github.event.pull_request.number }} \
+            --json labels \
+            --jq '.labels[].name' > labels.txt
+
+          {
+            echo "LABELS<<EOF"
+            cat labels.txt
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Playwright
         uses: ./.github/actions/setup-playwright
+
+      - name: Get Node Version
+        id: node
+        run: |
+          echo "VERSION=$(node -v)" >> $GITHUB_OUTPUT
 
       - name: Record Start Time
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
@@ -125,6 +168,17 @@ jobs:
           DURATION_REM_SEC=$((DURATION_SEC % 60))
           echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
 
+      - name: Publish Workflow Summary
+        if: always()
+        run: |
+          {
+            echo "# Playwright Test Summary"
+            echo ""
+            cat folder-summary.txt
+            echo ""
+            echo "Duration: ${{ env.DURATION }}"
+          } >> $GITHUB_STEP_SUMMARY
+
       - name: Upload Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -138,28 +192,54 @@ jobs:
             folder-summary.txt
           retention-days: 14
 
+      - name: Upload Failure Screenshots
+        if: steps.tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: |
+            test-results/**/*.png
+          retention-days: 14
+
       - name: Set Slack Context
         id: slack_context
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             {
               echo "DETAILS<<EOF"
-              echo "🖱️ Browser: chromium
-              echo "📁 Folder: all tests
+              echo "🧪 Execution Type: PR Validation"
+              echo "🖥️ Runner: ubuntu-latest"
+              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
+              echo "🖱️ Browser: chromium"
+              echo "📁 Folder: all tests"
+              echo "🤖 Auto Merge: Pending"
               echo "🔀 PR: #${{ github.event.pull_request.number }}"
               printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
               echo "👤 Author: ${{ github.event.pull_request.user.login }}"
               echo "🌿 Branch: ${{ github.head_ref }}"
+              echo "👤 Triggered By: ${{ github.actor }}"
               echo ""
               echo "🔗 PR:"
               echo "${{ github.event.pull_request.html_url }}"
+              echo "📄 Changed Files (${{ steps.changed_files.outputs.COUNT }}):"
+              echo "${{ steps.changed_files.outputs.FILES }}"
+              echo ""
+              echo "🏷️ Labels:"
+              echo "${{ steps.labels.outputs.LABELS }}"
+              echo ""
               echo "EOF"
             } >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             {
               echo "DETAILS<<EOF"
+              echo "🧪 Execution Type: Manual Execution"
+              echo "🖥️ Runner: ubuntu-latest"
+              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
               echo "🖱️ Browser: ${{ inputs.browser }}"
               echo "📁 Folder: ${{ inputs.folder }}"
+              echo "🤖 Auto Merge: N/A"
+              echo "📊 Allure Report:"
+              echo "Download from workflow artifacts"
               echo "EOF"
             } >> $GITHUB_OUTPUT
           fi
@@ -198,6 +278,26 @@ jobs:
                 🔍 Workflow:
                 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
+
+      - name: Comment Summary On PR
+        if: github.event_name == 'pull_request'
+        run: |
+          cat > pr-summary.md <<EOF
+          ## ✅ Playwright Validation Complete
+
+          ${{ steps.summary.outputs.SUMMARY }}
+
+          Duration: ${{ env.DURATION }}
+
+          Reports:
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+
+          gh pr comment \
+            ${{ github.event.pull_request.number }} \
+            --body-file pr-summary.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail Workflow If Tests Failed
         if: ${{ steps.tests.outcome == 'failure' }}
