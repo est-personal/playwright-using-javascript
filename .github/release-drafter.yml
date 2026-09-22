@@ -26,6 +26,12 @@ categories:
     labels:
       - documentation
 
+exclude-labels:
+  - skip-release
+
+exclude-contributors:
+  - github-actions[bot]
+
 change-template: "- #$NUMBER $TITLE (@$AUTHOR)"
 change-title-escapes: '\<*_&'
 
