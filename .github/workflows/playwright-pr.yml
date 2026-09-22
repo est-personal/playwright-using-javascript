@@ -24,6 +24,15 @@ on:
           - firefox
           - webkit
           - all
+      folder:
+        description: Test folder to run
+        required: true
+        default: demo
+        type: choice
+        options:
+          - practice
+          - demo
+          - all   
 
 # Concurrency control
 concurrency:
@@ -51,18 +60,26 @@ jobs:
         continue-on-error: true
         run: |
             if [ "${{ github.event_name }}" = "pull_request" ]; then
-                echo "Running Chromium for PR validation..."
-                npx playwright test --project=chromium
+              echo "Running Chromium for PR validation..."
+              npx playwright test --project=chromium
             fi
 
             if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-                echo "Running browser selected from workflow_dispatch..."
 
-                if [ "${{ inputs.browser }}" = "all" ]; then
-                    npx playwright test
-                else
-                    npx playwright test --project=${{ inputs.browser }}
-                fi
+              echo "Running folder and browser selected from workflow_dispatch..."
+
+              FOLDER="tests/${{ inputs.folder }}"
+
+              if [ "${{ inputs.folder }}" = "all" ]; then
+                FOLDER="tests"
+              fi
+
+              if [ "${{ inputs.browser }}" = "all" ]; then
+                  npx playwright test "$FOLDER"
+              else
+                  npx playwright test "$FOLDER" \
+                  --project=${{ inputs.browser }}
+              fi
             fi
 
       - name: Verify Playwright JSON Report
