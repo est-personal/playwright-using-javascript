@@ -2,6 +2,7 @@ name: Playwright Tests - Before Merging PR
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   CI: true
@@ -41,6 +42,9 @@ concurrency:
 
 jobs:
   test:
+    permissions:
+      contents: write
+      pull-requests: write
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30     # Job timeout
@@ -223,8 +227,6 @@ jobs:
               echo "🏷️ Labels:"
               echo "${{ steps.labels.outputs.LABELS }}"
               echo ""
-              echo "📊 Reports:"
-              echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
               echo "EOF"
             } >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
