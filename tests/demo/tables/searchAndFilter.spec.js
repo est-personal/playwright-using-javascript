@@ -1,5 +1,4 @@
 const {test, expect} = require('../../../fixtures/Pages.fixture');
-const { UiPracticeTablesLocators } = require('../../../locators/demo/UiPracticeTablesLocators');
 const { UiPracticeTablesData } = require('../../../testData/demo/UiPracticeTablesData');
 const { UiPracticeTablesAssertions } = require('../../../helpers/demo/UiPracticeTablesAssertions');
 
