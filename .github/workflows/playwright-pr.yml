@@ -164,10 +164,6 @@ jobs:
           DURATION_REM_SEC=$((DURATION_SEC % 60))
           echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
 
-      - name: Save Historical Metrics
-        if: always()
-        run: node scripts/save-history.js
-
       - name: Commit Metrics
         if: github.event_name == 'workflow_dispatch'
         run: |
