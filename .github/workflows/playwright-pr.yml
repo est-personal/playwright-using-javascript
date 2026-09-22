@@ -164,18 +164,6 @@ jobs:
           DURATION_REM_SEC=$((DURATION_SEC % 60))
           echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
 
-      - name: Commit Metrics
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-          git add metrics/history.json
-
-          git commit -m "Update metrics" || true
-
-          git push
-
       - name: Publish Workflow Summary
         if: always()
         run: |
@@ -236,7 +224,7 @@ jobs:
               echo "${{ steps.labels.outputs.LABELS }}"
               echo ""
               echo "📊 Reports:"
-              echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
               echo "EOF"
             } >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -292,8 +280,7 @@ jobs:
       - name: Comment Summary On PR
         if: github.event_name == 'pull_request'
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body "
+          cat > pr-summary.md <<EOF
           ## ✅ Playwright Validation Complete
 
           ${{ steps.summary.outputs.SUMMARY }}
@@ -302,7 +289,11 @@ jobs:
 
           Reports:
           https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          "
+          EOF
+
+          gh pr comment \
+            ${{ github.event.pull_request.number }} \
+            --body-file pr-summary.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
