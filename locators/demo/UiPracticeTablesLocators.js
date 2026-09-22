@@ -22,6 +22,8 @@ const UiPracticeTablesLocators = {
             '[data-testid="departments-info"]',
         previousButton: 
             '[data-testid="departments-prev"]',
+        resultCount:
+            '[data-testid="departments-result-count"]',
         searchInput: 
             '[data-testid="departments-search"]',
         table: 
@@ -54,6 +56,8 @@ const UiPracticeTablesLocators = {
             '[data-testid="products-info"]',
         previousButton: 
             '[data-testid="products-prev"]',
+        resultCount:
+            '[data-testid="products-result-count"]',
         searchInput: 
             '[data-testid="products-search"]',
         table: 

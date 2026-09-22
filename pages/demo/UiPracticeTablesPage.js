@@ -27,6 +27,13 @@ class UiPracticeTablesPage extends BasePage {
         throw new Error(`Column '${columnName}' not found`);
     }
 
+    async clearFilter(section) {
+        await this.click(
+            this.getTable(section)
+                .clearAllButton
+        );
+    }
+
     async clickNextButton(section) {
         await this.click(
             this.getTable(section)
@@ -60,7 +67,7 @@ class UiPracticeTablesPage extends BasePage {
         const columnMap = {
             Product: 'name',
             Name: 'name',
-            Department: 'department',
+            Department: 'dept',
             Salary: 'salary',
             'Date Joined': 'date-joined',
             Category: 'category',
@@ -99,6 +106,20 @@ class UiPracticeTablesPage extends BasePage {
         );
     }
 
+    async search(section, value) {
+        await this.fill(
+            this.getTable(section).searchInput,
+            value
+        );
+    }
+
+    async selectFilter(section, value) {
+        await this.selectByValue(
+            this.getTable(section).dropdown,
+            value
+        );
+    }
+
     // Non-Async
     getNextButton(section) {
         return this.page.locator(
@@ -115,6 +136,12 @@ class UiPracticeTablesPage extends BasePage {
     getPreviousButton(section) {
         return this.page.locator(
             this.getTable(section).previousButton
+        );
+    }
+
+    getResultCountLocator(section) {
+        return this.page.locator(
+            this.getTable(section).resultCount
         );
     }
 
