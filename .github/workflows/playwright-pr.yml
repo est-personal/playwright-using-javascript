@@ -60,7 +60,7 @@ jobs:
         continue-on-error: true
         run: |
             if [ "${{ github.event_name }}" = "pull_request" ]; then
-              echo "Running Chromium for PR validation..."
+              echo "Running ALL tests in Chromium for PR validation..."
               npx playwright test --project=chromium
             fi
 
@@ -90,34 +90,17 @@ jobs:
           echo "===== Playwright Report ====="
           ls -R playwright-report || true
 
-      - name: Get Allure History
+      - name: Install Allure
         if: always()
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+        run: |
+          npm install -g allure-commandline
 
       - name: Generate Allure Report
         if: always()
-        uses: simple-elf/allure-report-action@master
-        with:
-          allure_results: allure-results
-          gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-
-      - name: Debug Allure Files
-        if: always()
         run: |
-          echo "===== allure-results ====="
-          ls -la allure-results || true
-
-          echo "===== allure-report ====="
-          ls -la allure-report || true
-
-          echo "===== allure-history ====="
-          ls -la allure-history || true
+          allure generate allure-results \
+            --clean \
+            -o allure-report
 
       - name: Generate Folder Summary
         if: always()
@@ -161,8 +144,10 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             {
               echo "DETAILS<<EOF"
+              echo "🖱️ Browser: chromium
+              echo "📁 Folder: all tests
               echo "🔀 PR: #${{ github.event.pull_request.number }}"
-              echo "📝 Title: ${{ github.event.pull_request.title }}"
+              printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
               echo "👤 Author: ${{ github.event.pull_request.user.login }}"
               echo "🌿 Branch: ${{ github.head_ref }}"
               echo ""
@@ -174,6 +159,7 @@ jobs:
             {
               echo "DETAILS<<EOF"
               echo "🖱️ Browser: ${{ inputs.browser }}"
+              echo "📁 Folder: ${{ inputs.folder }}"
               echo "EOF"
             } >> $GITHUB_OUTPUT
           fi
@@ -214,5 +200,5 @@ jobs:
             }
 
       - name: Fail Workflow If Tests Failed
-        if: steps.tests.outcome == 'failure'
+        if: ${{ steps.tests.outcome == 'failure' }}
         run: exit 1
