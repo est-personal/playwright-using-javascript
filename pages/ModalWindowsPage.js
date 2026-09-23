@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Modal Windows Page
-const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
-const { ModalWindowsLocators } = require('../../locators/practice/ModalWindowsLocators');
-const { BasePage } = require('../BasePage');
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
+const { ModalWindowsLocators } = require('../locators/ModalWindowsLocators');
+const { BasePage } = require('./BasePage');
 
 class ModalWindowsPage extends BasePage {
 

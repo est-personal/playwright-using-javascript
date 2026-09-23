@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Links Page
-const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
-const { LinksLocators } = require('../../locators/practice/LinksLocators');
-const { BasePage } = require('../BasePage');
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
+const { LinksLocators } = require('../locators/LinksLocators');
+const { BasePage } = require('./BasePage');
 
 class LinksPage extends BasePage {
 

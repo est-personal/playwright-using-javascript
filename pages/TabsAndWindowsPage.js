@@ -1,9 +1,9 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Tabs and Windows Page
-const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
-const { TabsAndWindowsLocators } = require('../../locators/practice/TabsAndWindowsLocators');
-const { AlertsAndDialogsActions } = require('../../helpers/practice/AlertsAndDialogsActions');
-const { BasePage } = require('../BasePage');
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
+const { TabsAndWindowsLocators } = require('../locators/TabsAndWindowsLocators');
+const { AlertsAndDialogsActions } = require('../helpers/AlertsAndDialogsActions');
+const { BasePage } = require('./BasePage');
 
 class TabsAndWindowsPage extends BasePage {
 

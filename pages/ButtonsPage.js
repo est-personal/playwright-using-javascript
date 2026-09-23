@@ -1,9 +1,9 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Buttons Page
-const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
-const { ButtonsLocators } = require('../../locators/practice/ButtonsLocators');
-const { ButtonsData } = require('../../testData/practice/ButtonsData');
-const { BasePage } = require('../BasePage');
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
+const { ButtonsLocators } = require('../locators/ButtonsLocators');
+const { ButtonsData } = require('../testData/ButtonsData');
+const { BasePage } = require('./BasePage');
 
 class ButtonsPage extends BasePage {
 

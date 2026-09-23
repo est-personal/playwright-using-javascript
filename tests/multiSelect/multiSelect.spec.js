@@ -1,4 +1,4 @@
-const {test, expect} = require('../../../fixtures/Pages.fixture');
+const {test, expect} = require('../../fixtures/Pages.fixture');
 const { MultiSelectData } = require('../../testData/MultiSelectData');
 
 import { MultiSelectAssertions } from '../../helpers/MultiSelectAssertions';

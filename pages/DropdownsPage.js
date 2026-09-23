@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Dropdowns Page
-const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
-const { DropdownsLocators } = require('../../locators/practice/DropdownsLocators');
-const { BasePage } = require('../BasePage');
+const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
+const { DropdownsLocators } = require('../locators/DropdownsLocators');
+const { BasePage } = require('./BasePage');
 
 class DropdownsPage extends BasePage {
 
