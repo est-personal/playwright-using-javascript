@@ -73,9 +73,18 @@ async function generateChart(
     'duration-trend.png',
     'Duration (Minutes)',
     history.map(
-      h => h.durationSeconds / 60
+      h => (h.durationSeconds || 0) / 60
     ),
     '#3b82f6'
+  );
+
+  await generateChart(
+    'test-count-trend.png',
+    'Total Tests',
+    history.map(
+      h => h.total
+    ),
+    '#8b5cf6'
   );
 
   console.log(

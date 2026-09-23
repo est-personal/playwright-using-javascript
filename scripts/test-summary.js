@@ -189,10 +189,6 @@ fs.writeFileSync(
 );
 
 fs.writeFileSync(
-  'summary.json', 
-  JSON.stringify(summary, null, 2)
-);
-fs.writeFileSync(
   'folder-summary.txt', 
   output
 );
