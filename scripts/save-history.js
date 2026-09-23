@@ -15,17 +15,15 @@ if (fs.existsSync(historyFile)) {
 }
 
 history.push({
-  date: new Date().toISOString().split("T")[0],
+  date: summary.date,
   total: summary.total,
   passed: summary.passed,
   failed: summary.failed,
   flaky: summary.flaky,
   skipped: summary.skipped,
-  passRate:
-    ((summary.passed + summary.flaky) /
-      summary.total) *
-    100,
-  duration: process.env.DURATION
+  passRate: summary.passRate,
+  duration: summary.duration,
+  durationSeconds: summary.durationSeconds
 });
 
 fs.writeFileSync(
