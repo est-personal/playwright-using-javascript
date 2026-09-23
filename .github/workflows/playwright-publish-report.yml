@@ -7,6 +7,18 @@ env:
   CI: true
 
 on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser to run
+        required: true
+        default: chromium
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+
   schedule:
     - cron: '0 2 * * 0'
 
@@ -23,6 +35,11 @@ jobs:
       - name: Determine Run Week
         id: biweekly
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           WEEK=$(date +%U)
 
           if [ $((WEEK % 2)) -eq 0 ]; then
@@ -55,12 +72,18 @@ jobs:
               <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
             }
 
-      - name: Run Chromium Tests
+      - name: Run Tests for Github Page
         if: ${{ steps.biweekly.outputs.run == 'true' }}
         id: tests
         continue-on-error: true
         run: |
-          npx playwright test --project=chromium
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PROJECT="${{ github.event.inputs.browser }}"
+          else
+            PROJECT="chromium"
+          fi 
+
+          npx playwright test --project=$PROJECT
 
       - name: Get Allure History
         if: ${{ always() && steps.biweekly.outputs.run == 'true' }}
