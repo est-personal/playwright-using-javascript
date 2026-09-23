@@ -23,7 +23,8 @@ history.push({
   skipped: summary.skipped,
   passRate: summary.passRate,
   duration: summary.duration,
-  durationSeconds: summary.durationSeconds
+  durationSeconds: summary.durationSeconds,
+  browser: process.env.BROWSER || 'chromium'
 });
 
 fs.writeFileSync(

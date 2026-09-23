@@ -146,6 +146,7 @@ jobs:
       - name: Save Historical Metrics
         env:
           DURATION: ${{ env.DURATION }}
+          BROWSER: ${{ github.event.inputs.browser || 'chromium' }}
         run: node scripts/save-history.js
 
       - name: Generate Trend Charts
@@ -177,7 +178,12 @@ jobs:
 
           git add .
 
-          git commit -m "Update Allure Report - Run #${{ github.run_number }}" || echo "No changes"
+          git diff --cached --quiet \
+          && echo "No changes" \
+          && exit 0
+
+          git commit -m \
+          "Dashboard update - Run #${{ github.run_number }}"
 
           git push origin main
 
