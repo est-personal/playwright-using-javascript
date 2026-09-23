@@ -159,16 +159,15 @@ Object.entries(folders)
 
 console.log(output);
 
-const duration = 
-  process.env.DURATION || '';
+const duration = process.env.DURATION || '';
 
-const durationMatch =
+const match =
   duration.match(/(\d+)m\s+(\d+)s/);
 
 const durationSeconds =
-  durationMatch
-    ? Number(durationMatch[1]) * 60 +
-      Number(durationMatch[2])
+  match
+    ? Number(match[1]) * 60 +
+      Number(match[2])
     : 0;
 
 const summary = {
