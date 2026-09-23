@@ -159,4 +159,42 @@ Object.entries(folders)
 
 console.log(output);
 
-fs.writeFileSync('folder-summary.txt', output);
+const duration = 
+  process.env.DURATION || '';
+
+const durationMatch =
+  duration.match(/(\d+)m\s+(\d+)s/);
+
+const durationSeconds =
+  durationMatch
+    ? Number(durationMatch[1]) * 60 +
+      Number(durationMatch[2])
+    : 0;
+
+const summary = {
+  date: new Date().toISOString().split('T')[0],
+  total: overall.total,
+  passed: overall.passed,
+  failed: overall.failed,
+  flaky: overall.flaky,
+  skipped: overall.skipped,
+  passRate: Number(passRate),
+  duration,
+  durationSeconds
+};
+
+console.log(summary);
+
+fs.writeFileSync(
+  'summary.json',
+  JSON.stringify(summary, null, 2)
+);
+
+fs.writeFileSync(
+  'summary.json', 
+  JSON.stringify(summary, null, 2)
+);
+fs.writeFileSync(
+  'folder-summary.txt', 
+  output
+);
