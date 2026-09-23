@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Multi-Select Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { MultiSelectLocators } = require('../locators/MultiSelectLocators');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { MultiSelectLocators } = require('../../locators/practice/MultiSelectLocators');
+const { BasePage } = require('../BasePage');
 
 class MultiSelectPage extends BasePage {
 

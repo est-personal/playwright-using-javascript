@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Data Tables Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { DataTablesLocators } = require('../locators/DataTablesLocators');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { DataTablesLocators } = require('../../locators/practice/DataTablesLocators');
+const { BasePage } = require('../BasePage');
 
 class DataTablesPage extends BasePage {
 

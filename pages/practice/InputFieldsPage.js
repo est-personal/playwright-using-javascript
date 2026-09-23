@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Input Fields Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { InputFieldsLocators } = require('../locators/InputFieldsLocators');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { InputFieldsLocators } = require('../../locators/practice/InputFieldsLocators');
+const { BasePage } = require('../BasePage');
 
 class InputFieldsPage extends BasePage {
 

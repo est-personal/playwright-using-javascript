@@ -1,12 +1,12 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Radio and Checkbox Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { RadioAndCheckboxLocators } = require('../locators/RadioAndCheckboxLocators');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { RadioAndCheckboxLocators } = require('../../locators/practice/RadioAndCheckboxLocators');
+const { BasePage } = require('../BasePage');
 
 const { 
     getPermissionName 
-} = require('../helpers/RadioAndCheckboxActions');
+} = require('../../helpers/practice/RadioAndCheckboxActions');
 
 class RadioAndCheckboxPage extends BasePage {
 

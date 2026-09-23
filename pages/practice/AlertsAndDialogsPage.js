@@ -1,9 +1,9 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Alerts and Dialogs Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { AlertsAndDialogsLocators } = require('../locators/AlertsAndDialogsLocators');
-const { AlertsAndDialogsActions } = require('../helpers/AlertsAndDialogsActions');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { AlertsAndDialogsLocators } = require('../../locators/practice/AlertsAndDialogsLocators');
+const { AlertsAndDialogsActions } = require('../../helpers/practice/AlertsAndDialogsActions');
+const { BasePage } = require('../BasePage');
 
 class AlertsAndDialogsPage extends BasePage {
 

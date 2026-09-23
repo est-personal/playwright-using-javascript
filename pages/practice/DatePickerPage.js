@@ -1,9 +1,9 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - Date Picker Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { DatePickerLocators } = require('../locators/DatePickerLocators');
-const { AlertsAndDialogsActions } = require('../helpers/AlertsAndDialogsActions');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { DatePickerLocators } = require('../../locators/practice/DatePickerLocators');
+const { AlertsAndDialogsActions } = require('../../helpers/practice/AlertsAndDialogsActions');
+const { BasePage } = require('../BasePage');
 
 class DatePickerPage extends BasePage {
 

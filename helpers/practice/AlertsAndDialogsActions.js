@@ -1,4 +1,4 @@
-const { AlertsAndDialogsLocators } = require('../locators/AlertsAndDialogsLocators');
+const { AlertsAndDialogsLocators } = require('../../locators/practice/AlertsAndDialogsLocators');
 
 const AlertsAndDialogsActions = {
     closeInfoDialog: {

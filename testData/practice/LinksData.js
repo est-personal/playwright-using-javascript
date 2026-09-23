@@ -1,6 +1,6 @@
 // Arrange Alphabetically
 // Test Data for QA Playground - Links Page
-const { QaPlaygroundUrls } = require("../config/QaPlaygroundUrls");
+const { QaPlaygroundUrls } = require("../../config/QaPlaygroundUrls");
 
 const LinksData = {
     href: {

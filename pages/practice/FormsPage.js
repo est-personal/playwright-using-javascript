@@ -1,8 +1,8 @@
 // Arrange Alphabetically
 // Keywords for QA Playground - FormsLocators Page
-const { QaPlaygroundUrls } = require('../config/QaPlaygroundUrls');
-const { FormsLocators } = require('../locators/FormsLocators');
-const { BasePage } = require('./BasePage');
+const { QaPlaygroundUrls } = require('../../config/QaPlaygroundUrls');
+const { FormsLocators } = require('../../locators/practice/FormsLocators');
+const { BasePage } = require('../BasePage');
 
 class FormsPage extends BasePage {
 

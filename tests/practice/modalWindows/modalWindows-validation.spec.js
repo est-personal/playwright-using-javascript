@@ -1,4 +1,4 @@
-const {test, expect} = require('../../fixtures/Pages.fixture');
+const {test, expect} = require('../../../fixtures/Pages.fixture');
 const { ModalWindowsData } = require('../../testData/ModalWindowsData');
 const { ModalWindowsAssertions } = require('../../helpers/ModalWindowsAssertions');
 
