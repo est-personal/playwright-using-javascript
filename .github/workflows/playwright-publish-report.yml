@@ -103,14 +103,32 @@ jobs:
             test-results/
           retention-days: 14
 
+      - name: Generate Folder Summary
+        run: node scripts/test-summary.js
+
+      - name: Save Historical Metrics
+        run: node scripts/save-history.js
+
+      - name: Generate Trend Charts
+        run: node scripts/generate-chart.js
+
       - name: Publish Allure to Portfolio
         if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
         run: |
-          git clone https://${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
+          git clone https://x-access-token:${{ secrets.PORTFOLIO_PAT }}@github.com/est-personal/est-personal.github.io.git portfolio
 
           rm -rf portfolio/allure-report
 
           cp -R allure-report portfolio/allure-report
+
+          mkdir -p portfolio/dashboard
+
+          cp dashboard/index.html portfolio/dashboard/
+
+          cp metrics/pass-rate.png portfolio/dashboard/
+          cp metrics/failure-trend.png portfolio/dashboard/
+          cp metrics/duration-trend.png portfolio/dashboard/
+          cp metrics/history.json portfolio/dashboard/
 
           find portfolio/allure-report -name ".git" -type d -exec rm -rf {} + || true
 
@@ -144,7 +162,7 @@ jobs:
             }
 
       - name: Notify Slack Failure
-        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'failure' }}
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -162,5 +180,5 @@ jobs:
             }
 
       - name: Fail Workflow If Tests Failed
-        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'failure' }}
         run: exit 1
