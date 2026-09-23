@@ -146,8 +146,6 @@ jobs:
 
           mkdir -p portfolio/dashboard
 
-          cp dashboard/index.html portfolio/dashboard/
-
           cp metrics/pass-rate.png portfolio/dashboard/
           cp metrics/failure-trend.png portfolio/dashboard/
           cp metrics/duration-trend.png portfolio/dashboard/
