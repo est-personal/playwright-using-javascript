@@ -166,8 +166,7 @@ const match =
 
 const durationSeconds =
   match
-    ? Number(match[1]) * 60 +
-      Number(match[2])
+    ? Number(match[1]) * 60 + Number(match[2])
     : 0;
 
 const summary = {
