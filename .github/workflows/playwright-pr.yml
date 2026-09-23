@@ -168,6 +168,26 @@ jobs:
           DURATION_REM_SEC=$((DURATION_SEC % 60))
           echo "DURATION=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_ENV
 
+      - name: Save Historical Metrics
+        if: always()
+        run: node scripts/save-history.js
+
+      - name: Generate Trend Charts
+        if: always()
+        run: node scripts/generate-chart.js
+
+      - name: Commit Historical Metrics
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git add metrics/history.json
+
+          git commit -m "Update QA metrics" || true
+
+          git push
+
       - name: Publish Workflow Summary
         if: always()
         run: |
@@ -190,6 +210,7 @@ jobs:
             allure-results/
             test-results/
             folder-summary.txt
+            metrics/
           retention-days: 14
 
       - name: Upload Failure Screenshots
