@@ -12,7 +12,7 @@ const history = JSON.parse(
 const chart =
   new ChartJSNodeCanvas({
     width: 1200,
-    height: 600
+    height: 500
   });
 
 async function generateChart(
@@ -33,6 +33,9 @@ async function generateChart(
             label,
             data,
             borderColor: color,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 8,
             fill: false,
             tension: 0.3
           }
@@ -48,7 +51,6 @@ async function generateChart(
 
 (async () => {
 
-  // Step 7 - Pass Rate Trend
   await generateChart(
     'pass-rate.png',
     'Pass Rate (%)',
@@ -58,7 +60,6 @@ async function generateChart(
     '#22c55e'
   );
 
-  // Step 8 - Failure Trend
   await generateChart(
     'failure-trend.png',
     'Failed Tests',
@@ -68,7 +69,6 @@ async function generateChart(
     '#ef4444'
   );
 
-  // Step 9 - Duration Trend
   await generateChart(
     'duration-trend.png',
     'Duration (Minutes)',
