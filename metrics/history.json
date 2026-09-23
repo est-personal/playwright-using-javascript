@@ -7,6 +7,7 @@
     "flaky": 0,
     "skipped": 0,
     "passRate": 100,
-    "duration": "0m 30s"
+    "duration": "0m 30s",
+    "durationSeconds": 30
   }
 ]
