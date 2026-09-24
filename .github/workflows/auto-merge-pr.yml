@@ -46,13 +46,20 @@ jobs:
 
           PR_DATA=$(gh pr view $PR_NUMBER \
             --repo ${{ github.repository }} \
-            --json additions,deletions,changedFiles)
+            --json title,author,additions,deletions,changedFiles)
 
-          echo "files=$(echo "$PR_DATA" | jq -r '.changedFiles')" >> "$GITHUB_OUTPUT"
-          echo "additions=$(echo "$PR_DATA" | jq -r '.additions')" >> "$GITHUB_OUTPUT"
-          echo "deletions=$(echo "$PR_DATA" | jq -r '.deletions')" >> "$GITHUB_OUTPUT"
+          echo "title=$(echo "$PR_DATA" | jq -r '.title')" >> $GITHUB_OUTPUT
+          echo "author=$(echo "$PR_DATA" | jq -r '.author.login // "Unknown"')" >> $GITHUB_OUTPUT
+          echo "files=$(echo "$PR_DATA" | jq -r '.changedFiles')" >> $GITHUB_OUTPUT
+          echo "additions=$(echo "$PR_DATA" | jq -r '.additions')" >> $GITHUB_OUTPUT
+          echo "deletions=$(echo "$PR_DATA" | jq -r '.deletions')" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+
+      - name: Get Validation Result
+        id: validation
+        run: |
+          echo "RESULT=${{ github.event.workflow_run.conclusion }}" >> $GITHUB_OUTPUT
 
       - name: Short SHA
         id: sha
@@ -87,11 +94,11 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*📝 Title:*\n${{ github.event.workflow_run.pull_requests[0].title }}"
+                      "text": "*📝 Title:*\n${{ steps.pr.outputs.title }}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*👤 Author:*\n${{ github.event.workflow_run.pull_requests[0].user.login }}"
+                      "text": "*👤 Author:*\n${{ steps.pr.outputs.author }}"
                     },
                     {
                       "type": "mrkdwn",
@@ -154,10 +161,16 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🤖 *Triggered By:* Successful Playwright Validation"
-                  }
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🤖 Triggered By:*\nSuccessful Playwright Validation"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*✅ Validation:*\n${{ steps.validation.outputs.RESULT }}"
+                    }
+                  ]
                 },
                 {
                   "type": "actions",
