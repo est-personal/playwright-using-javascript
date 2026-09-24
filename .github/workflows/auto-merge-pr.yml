@@ -27,6 +27,38 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
 
+      - name: Calculate Duration
+        id: duration
+        run: |
+          START=$(date -d "${{ github.event.workflow_run.run_started_at }}" +%s)
+          END=$(date -d "${{ github.event.workflow_run.updated_at }}" +%s)
+
+          DURATION=$((END-START))
+          MINUTES=$((DURATION/60))
+          SECONDS=$((DURATION%60))
+
+          echo "duration=${MINUTES}m ${SECONDS}s" >> "$GITHUB_OUTPUT"
+
+      - name: Get PR Details
+        id: pr
+        run: |
+          PR_NUMBER="${{ github.event.workflow_run.pull_requests[0].number }}"
+
+          PR_DATA=$(gh pr view $PR_NUMBER \
+            --repo ${{ github.repository }} \
+            --json additions,deletions,changedFiles)
+
+          echo "files=$(echo "$PR_DATA" | jq -r '.changedFiles')" >> "$GITHUB_OUTPUT"
+          echo "additions=$(echo "$PR_DATA" | jq -r '.additions')" >> "$GITHUB_OUTPUT"
+          echo "deletions=$(echo "$PR_DATA" | jq -r '.deletions')" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+
+      - name: Short SHA
+        id: sha
+        run: |
+          echo "short=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - name: Notify Slack - PR Merged
         uses: slackapi/slack-github-action@v2
         with:
@@ -34,15 +66,120 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "🎉 Pull Request Auto-Merged
-
-              ✅ PR #${{ github.event.workflow_run.pull_requests[0].number }}
-              📝 Title: ${{ github.event.workflow_run.pull_requests[0].title }}
-              👤 Author: ${{ github.event.workflow_run.pull_requests[0].user.login }}
-
-              📦 Repository: ${{ github.repository }}
-
-              🤖 Triggered By: Successful Playwright Validation
-
-              🔗 https://github.com/${{ github.repository }}/pull/${{ github.event.workflow_run.pull_requests[0].number }}"
+              "text": "🎉 Pull Request Auto-Merged",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🎉 Pull Request Auto-Merged"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*✅ PR Number:*\n#${{ github.event.workflow_run.pull_requests[0].number }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📝 Title:*\n${{ github.event.workflow_run.pull_requests[0].title }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*👤 Author:*\n${{ github.event.workflow_run.pull_requests[0].user.login }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🌿 Branch:*\n${{ github.event.workflow_run.head_branch }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏰ Merged At:*\n${{ github.event.workflow_run.updated_at }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⚙️ Workflow Run:*\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}|View Run>"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔖 Commit:*\n`${{ steps.sha.outputs.short }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📄 Files Changed:*\n${{ steps.pr.outputs.files }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*➕ Additions:*\n${{ steps.pr.outputs.additions }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*➖ Deletions:*\n${{ steps.pr.outputs.deletions }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱ Validation Duration:*\n${{ steps.duration.outputs.duration }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔀 Merge Type:*\nSquash"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🚀 Deployment:*\nNot Applicable"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🤖 *Triggered By:* Successful Playwright Validation"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔗 View Pull Request"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/pull/${{ github.event.workflow_run.pull_requests[0].number }}",
+                      "style": "primary"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "📦 Repository"
+                      },
+                      "url": "https://github.com/${{ github.repository }}"
+                    }
+                  ]
+                }
+              ]
             }
