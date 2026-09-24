@@ -212,19 +212,33 @@ jobs:
         run: |
           cat -A problem-modules.txt
 
+      # - name: Read Problem Modules
+      #   id: problems
+      #   run: |
+      #     cat problem-modules.txt > problem-modules-output.txt
+
+      # - name: Build Problem Modules
+      #   id: problem_text
+      #   run: |
+      #     PROBLEMS=$(base64 -w 0 problem-modules.txt)
+      #     echo "PROBLEMS=$PROBLEMS" >> $GITHUB_OUTPUT
       - name: Read Problem Modules
         id: problems
         run: |
-          cat problem-modules.txt > problem-modules-output.txt
+          PROBLEMS=$(cat problem-modules.txt | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "PROBLEMS=$PROBLEMS" >> $GITHUB_OUTPUT
 
-      - name: Build Problem Modules
-        id: problem_text
-        run: |
-          {
-            echo "TEXT<<EOF"
-            cat problem-modules-output.txt
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+      # - name: Decode Problem Modules
+      #   id: decoded_problems
+      #   run: |
+      #     echo "${{ steps.problems.outputs.PROBLEMS }}" \
+      #       | base64 -d > decoded-problems.txt
+
+      #     {
+      #       echo "TEXT<<EOF"
+      #       cat decoded-problems.txt
+      #       echo "EOF"
+      #     } >> $GITHUB_OUTPUT
 
       - name: Calculate Duration
         if: always()
@@ -289,58 +303,58 @@ jobs:
             test-results/**/*.png
           retention-days: 14
 
-      - name: Set Slack Context
-        id: slack_context
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            {
-              echo "DETAILS<<EOF"
-              echo ""
-              echo "${{ steps.coverage.outputs.VALUE }}"
-              echo ""
-              echo "⚠️ Modules Requiring Attention:"
-              echo "${{ steps.problems.outputs.PROBLEMS }}"
-              echo "🧪 Execution Type: PR Validation"
-              echo "🖥️ Runner: ubuntu-latest"
-              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
-              echo "🖱️ Browser: chromium"
-              echo "📁 Folder: all tests"
-              echo "🤖 Auto Merge: Pending"
-              echo "🔀 PR: #${{ github.event.pull_request.number }}"
-              printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
-              echo "👤 Author: ${{ github.event.pull_request.user.login }}"
-              echo "🌿 Branch: ${{ github.head_ref }}"
-              echo "👤 Triggered By: ${{ github.actor }}"
-              echo ""
-              echo "🔗 PR:"
-              echo "${{ github.event.pull_request.html_url }}"
-              echo "📄 Changed Files (${{ steps.changed_files.outputs.COUNT }}):"
-              echo "${{ steps.changed_files.outputs.FILES }}"
-              echo ""
-              echo "🏷️ Labels:"
-              echo "${{ steps.labels.outputs.LABELS }}"
-              echo ""
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            {
-              echo "DETAILS<<EOF"
-              echo ""
-              echo "${{ steps.coverage.outputs.VALUE }}"
-              echo ""
-              echo "⚠️ Modules Requiring Attention:"
-              echo "${{ steps.problems.outputs.PROBLEMS }}"
-              echo "🧪 Execution Type: Manual Execution"
-              echo "🖥️ Runner: ubuntu-latest"
-              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
-              echo "🖱️ Browser: ${{ inputs.browser }}"
-              echo "📁 Folder: ${{ inputs.folder }}"
-              echo "🤖 Auto Merge: N/A"
-              echo "📊 Allure Report:"
-              echo "Download from workflow artifacts"
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
-          fi
+      # - name: Set Slack Context
+      #   id: slack_context
+      #   run: |
+      #     if [ "${{ github.event_name }}" = "pull_request" ]; then
+      #       {
+      #         echo "DETAILS<<EOF"
+      #         echo ""
+      #         echo "${{ steps.coverage.outputs.VALUE }}"
+      #         echo ""
+      #         echo "⚠️ Modules Requiring Attention:"
+      #         echo "${{ steps.problems.outputs.PROBLEMS }}"
+      #         echo "🧪 Execution Type: PR Validation"
+      #         echo "🖥️ Runner: ubuntu-latest"
+      #         echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
+      #         echo "🖱️ Browser: chromium"
+      #         echo "📁 Folder: all tests"
+      #         echo "🤖 Auto Merge: Pending"
+      #         echo "🔀 PR: #${{ github.event.pull_request.number }}"
+      #         printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
+      #         echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+      #         echo "🌿 Branch: ${{ github.head_ref }}"
+      #         echo "👤 Triggered By: ${{ github.actor }}"
+      #         echo ""
+      #         echo "🔗 PR:"
+      #         echo "${{ github.event.pull_request.html_url }}"
+      #         echo "📄 Changed Files (${{ steps.changed_files.outputs.COUNT }}):"
+      #         echo "${{ steps.changed_files.outputs.FILES }}"
+      #         echo ""
+      #         echo "🏷️ Labels:"
+      #         echo "${{ steps.labels.outputs.LABELS }}"
+      #         echo ""
+      #         echo "EOF"
+      #       } >> $GITHUB_OUTPUT
+      #     elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+      #       {
+      #         echo "DETAILS<<EOF"
+      #         echo ""
+      #         echo "${{ steps.coverage.outputs.VALUE }}"
+      #         echo ""
+      #         echo "⚠️ Modules Requiring Attention:"
+      #         echo "${{ steps.problems.outputs.PROBLEMS }}"
+      #         echo "🧪 Execution Type: Manual Execution"
+      #         echo "🖥️ Runner: ubuntu-latest"
+      #         echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
+      #         echo "🖱️ Browser: ${{ inputs.browser }}"
+      #         echo "📁 Folder: ${{ inputs.folder }}"
+      #         echo "🤖 Auto Merge: N/A"
+      #         echo "📊 Allure Report:"
+      #         echo "Download from workflow artifacts"
+      #         echo "EOF"
+      #       } >> $GITHUB_OUTPUT
+      #     fi
 
       - name: Set Slack Status
         if: always()
