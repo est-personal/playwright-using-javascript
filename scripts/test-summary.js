@@ -114,6 +114,9 @@ report.suites.forEach(processSuite);
 
 // Generate Slack-friendly aligned output
 let output = '';
+let problemModules = [];
+
+const totalModules = Object.keys(folders).length;
 
 output += '📊 Overall Results\n';
 output += `🧪 Total: ${overall.total}\n`;
@@ -148,6 +151,7 @@ Object.entries(folders)
     return folderA.localeCompare(folderB);
   })
   .forEach(([folder, stats]) => {
+
     output += `📁 ${folder}\n`;
     output += `🧪 Total: ${stats.total}\n`;
     output += `✅ Passed: ${stats.passed}\n`;
@@ -155,6 +159,16 @@ Object.entries(folders)
     output += `⚠️ Flaky: ${stats.flaky}\n`;
     output += `🚨 Issues: ${stats.failed + stats.flaky}\n`;
     output += `⏭️ Skipped: ${stats.skipped}\n\n`;
+
+    // Problem modules only
+    if (stats.failed + stats.flaky > 0) {
+      problemModules.push(
+        `📁 ${folder}
+    🚨 Issues: ${stats.failed + stats.flaky}
+    ❌ Failed: ${stats.failed}
+    ⚠️ Flaky: ${stats.flaky}`
+      );
+    }
   });
 
 console.log(output);
@@ -191,4 +205,28 @@ fs.writeFileSync(
 fs.writeFileSync(
   'folder-summary.txt', 
   output
+);
+
+fs.writeFileSync(
+  'problem-modules.txt',
+  problemModules.length
+    ? problemModules.join('\n\n')
+    : '✅ No Failed or Flaky Modules'
+);
+
+fs.writeFileSync(
+  "coverage.txt",
+  `📦 Modules Covered: ${totalModules}`
+);
+
+fs.writeFileSync(
+  'slack-metrics.json',
+  JSON.stringify({
+    total: overall.total,
+    passed: overall.passed,
+    failed: overall.failed,
+    flaky: overall.flaky,
+    skipped: overall.skipped,
+    passRate
+  }, null, 2)
 );
