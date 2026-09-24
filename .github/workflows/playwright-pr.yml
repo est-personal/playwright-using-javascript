@@ -202,15 +202,19 @@ jobs:
             echo EOF
           } >> $GITHUB_OUTPUT
 
+      - name: Debug Problem Modules
+        if: always()
+        run: |
+          echo "===== problem-modules.txt ====="
+          cat problem-modules.txt || true
+
       - name: Read Problem Modules
         id: problems
         if: always()
         run: |
-          {
-            echo 'PROBLEMS<<EOF'
-            cat problem-modules.txt
-            echo EOF
-          } >> $GITHUB_OUTPUT
+          echo "PROBLEMS<<END_PROBLEMS" >> $GITHUB_OUTPUT
+          cat problem-modules.txt >> $GITHUB_OUTPUT
+          echo "END_PROBLEMS" >> $GITHUB_OUTPUT
 
       - name: Calculate Duration
         if: always()
