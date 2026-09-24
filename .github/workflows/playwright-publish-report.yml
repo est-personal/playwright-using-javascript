@@ -64,12 +64,41 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "🚀 Chromium report publishing started
-
-              📦 Repository: ${{ github.repository }}
-
-              🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+              "text": "🚀 Playwright Report Publishing Started",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚀 Playwright Report Publishing Started"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Execution:*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🖱 Browser:*\n${{ github.event.inputs.browser || 'chromium' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📅 Trigger:*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔢 Run #:*\n${{ github.run_number }}"
+                    }
+                  ]
+                }
+              ]
             }
 
       - name: Record Start Time
@@ -143,6 +172,70 @@ jobs:
           DURATION: ${{ env.DURATION }}
         run: node scripts/test-summary.js
 
+      - name: Read Slack Metrics
+        id: metrics
+        run: |
+          echo "TOTAL=$(jq -r '.total' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "PASSED=$(jq -r '.passed' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "FAILED=$(jq -r '.failed' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "FLAKY=$(jq -r '.flaky' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "PASSRATE=$(jq -r '.passRate' slack-metrics.json)" >> $GITHUB_OUTPUT
+
+      - name: Read Top Problem Modules
+        id: flaky
+        run: |
+          if [ -f problem-modules.txt ]; then
+            TOP=$(awk '
+              /📁/ {module=$2}
+              /❌ Failed:/ {failed=$3}
+              /⚠️ Flaky:/ {
+                flaky=$3
+
+                if ((failed + flaky) > 0)
+                  print "📁 " module " | ❌ " failed " | ⚠️ " flaky
+              }
+            ' problem-modules.txt | head -3)
+
+            {
+              echo "TOP<<EOF"
+              echo "$TOP"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          else
+            echo "TOP=🎉 No Problem Modules Detected" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read Most Failed Module
+        id: module_kpi
+        run: |
+          if [ -f problem-modules.txt ]; then
+
+            WORST=$(awk '
+              /📁/ {
+                module=$2
+              }
+
+              /❌ Failed:/ {
+                if ($3 > max) {
+                  max=$3
+                  worst=module
+                }
+              }
+
+              END {
+                if (max > 0)
+                  print worst " (" max " failures)"
+                else
+                  print "✅ No Failed Modules"
+              }
+            ' problem-modules.txt)
+
+            echo "WORST=$WORST" >> $GITHUB_OUTPUT
+
+          else
+            echo "WORST=✅ No Failed Modules" >> $GITHUB_OUTPUT
+          fi
+
       - name: Save Historical Metrics
         env:
           DURATION: ${{ env.DURATION }}
@@ -151,6 +244,37 @@ jobs:
 
       - name: Generate Trend Charts
         run: node scripts/generate-chart.js
+
+      - name: Read Dashboard KPIs
+        id: kpi
+        run: |
+          LAST=$(jq '.[-1]' metrics/history.json)
+
+          COUNT=$(jq 'length' metrics/history.json)
+
+          if [ "$COUNT" -ge 2 ]; then
+            PREV=$(jq '.[-2]' metrics/history.json)
+
+            LAST_RATE=$(echo "$LAST" | jq -r '.passRate // 0')
+            PREV_RATE=$(echo "$PREV" | jq -r '.passRate // 0')
+
+            TREND=$(awk "BEGIN {print $LAST_RATE - $PREV_RATE}")
+          else
+            TREND="0"
+          fi
+
+          if (( $(echo "$TREND > 0" | bc -l) )); then
+            TREND_DISPLAY="📈 +$TREND%"
+          elif (( $(echo "$TREND < 0" | bc -l) )); then
+            TREND_DISPLAY="📉 $TREND%"
+          else
+            TREND_DISPLAY="➡️ 0%"
+          fi
+
+          echo "TREND_DISPLAY=$TREND_DISPLAY" >> $GITHUB_OUTPUT
+          echo "AVG_DURATION=$(echo "$LAST" | jq -r '.duration // "N/A"')" >> $GITHUB_OUTPUT
+          echo "TOTAL_TESTS=$(echo "$LAST" | jq -r '.total // 0')" >> $GITHUB_OUTPUT
+          echo "PASS_RATE=$(echo "$LAST" | jq -r '.passRate // 0')" >> $GITHUB_OUTPUT
 
       - name: Publish Allure to Portfolio
         if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
@@ -187,40 +311,191 @@ jobs:
 
           git push origin main
 
-      - name: Notify Slack Success
-        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'success' }}
+      - name: Set Publish Status
+        id: publish
+        if: always()
+        run: |
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "STATUS=Published to GitHub Pages" >> $GITHUB_OUTPUT
+          else
+            echo "STATUS=Publish Skipped" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Slack Status
+        id: status
+        if: always()
+        run: |
+          if [ "${{ steps.tests.outcome }}" = "success" ]; then
+            echo "ICON=✅" >> $GITHUB_OUTPUT
+            echo "STATUS=Published" >> $GITHUB_OUTPUT
+            echo "COLOR=good" >> $GITHUB_OUTPUT
+          else
+            echo "ICON=❌" >> $GITHUB_OUTPUT
+            echo "STATUS=Failed" >> $GITHUB_OUTPUT
+            echo "COLOR=danger" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Slack
+        if: always() && steps.biweekly.outputs.run == 'true'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "✅ Chromium report published successfully
-
-              📦 Repository: ${{ github.repository }}
-
-              🔢 Run Number: ${{ github.run_number }}
-
-              🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
-            }
-
-      - name: Notify Slack Failure
-        if: ${{ steps.biweekly.outputs.run == 'true' && steps.tests.outcome == 'failure' }}
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "❌ Chromium report publishing failed
-
-              📦 Repository: ${{ github.repository }}
-
-              🔢 Run Number: ${{ github.run_number }}
-
-              🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+              "text": "${{ steps.status.outputs.ICON }} Playwright Report ${{ steps.status.outputs.STATUS }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ steps.status.outputs.ICON }} Playwright Report ${{ steps.status.outputs.STATUS }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Execution*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🖱 Browser:*\n${{ github.event.inputs.browser || 'chromium' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📅 Trigger:*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱ Duration:*\n${{ env.DURATION }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🌐 Publish Status*\n${{ steps.publish.outputs.STATUS }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Artifacts*\n14 Days"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📈 Trend*\n${{ steps.kpi.outputs.TREND_DISPLAY }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Total*\n${{ steps.metrics.outputs.TOTAL }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*✅ Passed*\n${{ steps.metrics.outputs.PASSED }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*❌ Failed*\n${{ steps.metrics.outputs.FAILED }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⚠️ Flaky*\n${{ steps.metrics.outputs.FLAKY }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📈 Pass Rate*\n${{ steps.metrics.outputs.PASSRATE }}%"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Dashboard Tests*\n${{ steps.kpi.outputs.TOTAL_TESTS }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📈 Dashboard Pass Rate*\n${{ steps.kpi.outputs.PASS_RATE }}%"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱ Avg Duration*\n${{ steps.kpi.outputs.AVG_DURATION }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📊 Run #*\n${{ github.run_number }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*⚠️ Top Problem Modules*\n${{ steps.flaky.outputs.TOP }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🚨 Most Failed Module*\n${{ steps.module_kpi.outputs.WORST }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "📊 Allure Report"
+                      },
+                      "url": "https://est-personal.github.io/allure-report/"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "📈 Dashboard"
+                      },
+                      "url": "https://est-personal.github.io/dashboard/"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔍 Workflow"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
             }
 
       - name: Fail Workflow If Tests Failed
