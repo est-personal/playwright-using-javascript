@@ -95,6 +95,11 @@ jobs:
         run: |
           echo "VERSION=$(node -v)" >> $GITHUB_OUTPUT
 
+      - name: Short SHA
+        id: sha
+        run: |
+          echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - name: Record Start Time
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
@@ -159,6 +164,82 @@ jobs:
             echo EOF
           } >> $GITHUB_OUTPUT
 
+      - name: Read Slack Metrics
+        id: metrics
+        if: always()
+        run: |
+          echo "TOTAL=$(jq -r '.total' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "PASSED=$(jq -r '.passed' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "FAILED=$(jq -r '.failed' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "FLAKY=$(jq -r '.flaky' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "SKIPPED=$(jq -r '.skipped' slack-metrics.json)" >> $GITHUB_OUTPUT
+          echo "PASSRATE=$(jq -r '.passRate' slack-metrics.json)" >> $GITHUB_OUTPUT
+
+      - name: Read Coverage
+        id: coverage
+        if: always()
+        run: |
+          if [ -f coverage.txt ]; then
+            echo "VALUE=$(cat coverage.txt)" >> $GITHUB_OUTPUT
+          else
+            echo "VALUE=📦 Modules Covered: N/A" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Test Summary
+        id: test_summary
+        run: |
+          {
+            echo 'SUMMARY<<EOF'
+            echo "*📊 Test Summary*"
+            echo ""
+            echo "🧪 Total: ${{ steps.metrics.outputs.TOTAL }}"
+            echo "✅ Passed: ${{ steps.metrics.outputs.PASSED }}"
+            echo "❌ Failed: ${{ steps.metrics.outputs.FAILED }}"
+            echo "⚠️ Flaky: ${{ steps.metrics.outputs.FLAKY }}"
+            echo "⏭️ Skipped: ${{ steps.metrics.outputs.SKIPPED }}"
+            echo "📈 Pass Rate: ${{ steps.metrics.outputs.PASSRATE }}%"
+            echo "${{ steps.coverage.outputs.VALUE }}"
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Debug Problem Modules
+        if: always()
+        run: |
+          echo "===== problem-modules.txt ====="
+          cat problem-modules.txt || true
+
+      - name: Debug Problem Modules Raw
+        run: |
+          cat -A problem-modules.txt
+
+      # - name: Read Problem Modules
+      #   id: problems
+      #   run: |
+      #     cat problem-modules.txt > problem-modules-output.txt
+
+      # - name: Build Problem Modules
+      #   id: problem_text
+      #   run: |
+      #     PROBLEMS=$(base64 -w 0 problem-modules.txt)
+      #     echo "PROBLEMS=$PROBLEMS" >> $GITHUB_OUTPUT
+      - name: Read Problem Modules
+        id: problems
+        run: |
+          PROBLEMS=$(cat problem-modules.txt | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "PROBLEMS=$PROBLEMS" >> $GITHUB_OUTPUT
+
+      # - name: Decode Problem Modules
+      #   id: decoded_problems
+      #   run: |
+      #     echo "${{ steps.problems.outputs.PROBLEMS }}" \
+      #       | base64 -d > decoded-problems.txt
+
+      #     {
+      #       echo "TEXT<<EOF"
+      #       cat decoded-problems.txt
+      #       echo "EOF"
+      #     } >> $GITHUB_OUTPUT
+
       - name: Calculate Duration
         if: always()
         run: |
@@ -222,48 +303,58 @@ jobs:
             test-results/**/*.png
           retention-days: 14
 
-      - name: Set Slack Context
-        id: slack_context
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            {
-              echo "DETAILS<<EOF"
-              echo "🧪 Execution Type: PR Validation"
-              echo "🖥️ Runner: ubuntu-latest"
-              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
-              echo "🖱️ Browser: chromium"
-              echo "📁 Folder: all tests"
-              echo "🤖 Auto Merge: Pending"
-              echo "🔀 PR: #${{ github.event.pull_request.number }}"
-              printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
-              echo "👤 Author: ${{ github.event.pull_request.user.login }}"
-              echo "🌿 Branch: ${{ github.head_ref }}"
-              echo "👤 Triggered By: ${{ github.actor }}"
-              echo ""
-              echo "🔗 PR:"
-              echo "${{ github.event.pull_request.html_url }}"
-              echo "📄 Changed Files (${{ steps.changed_files.outputs.COUNT }}):"
-              echo "${{ steps.changed_files.outputs.FILES }}"
-              echo ""
-              echo "🏷️ Labels:"
-              echo "${{ steps.labels.outputs.LABELS }}"
-              echo ""
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            {
-              echo "DETAILS<<EOF"
-              echo "🧪 Execution Type: Manual Execution"
-              echo "🖥️ Runner: ubuntu-latest"
-              echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
-              echo "🖱️ Browser: ${{ inputs.browser }}"
-              echo "📁 Folder: ${{ inputs.folder }}"
-              echo "🤖 Auto Merge: N/A"
-              echo "📊 Allure Report:"
-              echo "Download from workflow artifacts"
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
-          fi
+      # - name: Set Slack Context
+      #   id: slack_context
+      #   run: |
+      #     if [ "${{ github.event_name }}" = "pull_request" ]; then
+      #       {
+      #         echo "DETAILS<<EOF"
+      #         echo ""
+      #         echo "${{ steps.coverage.outputs.VALUE }}"
+      #         echo ""
+      #         echo "⚠️ Modules Requiring Attention:"
+      #         echo "${{ steps.problems.outputs.PROBLEMS }}"
+      #         echo "🧪 Execution Type: PR Validation"
+      #         echo "🖥️ Runner: ubuntu-latest"
+      #         echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
+      #         echo "🖱️ Browser: chromium"
+      #         echo "📁 Folder: all tests"
+      #         echo "🤖 Auto Merge: Pending"
+      #         echo "🔀 PR: #${{ github.event.pull_request.number }}"
+      #         printf '%s\n' "📝 Title: ${{ github.event.pull_request.title }}"
+      #         echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+      #         echo "🌿 Branch: ${{ github.head_ref }}"
+      #         echo "👤 Triggered By: ${{ github.actor }}"
+      #         echo ""
+      #         echo "🔗 PR:"
+      #         echo "${{ github.event.pull_request.html_url }}"
+      #         echo "📄 Changed Files (${{ steps.changed_files.outputs.COUNT }}):"
+      #         echo "${{ steps.changed_files.outputs.FILES }}"
+      #         echo ""
+      #         echo "🏷️ Labels:"
+      #         echo "${{ steps.labels.outputs.LABELS }}"
+      #         echo ""
+      #         echo "EOF"
+      #       } >> $GITHUB_OUTPUT
+      #     elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+      #       {
+      #         echo "DETAILS<<EOF"
+      #         echo ""
+      #         echo "${{ steps.coverage.outputs.VALUE }}"
+      #         echo ""
+      #         echo "⚠️ Modules Requiring Attention:"
+      #         echo "${{ steps.problems.outputs.PROBLEMS }}"
+      #         echo "🧪 Execution Type: Manual Execution"
+      #         echo "🖥️ Runner: ubuntu-latest"
+      #         echo "🟢 Node: ${{ steps.node.outputs.VERSION }}"
+      #         echo "🖱️ Browser: ${{ inputs.browser }}"
+      #         echo "📁 Folder: ${{ inputs.folder }}"
+      #         echo "🤖 Auto Merge: N/A"
+      #         echo "📊 Allure Report:"
+      #         echo "Download from workflow artifacts"
+      #         echo "EOF"
+      #       } >> $GITHUB_OUTPUT
+      #     fi
 
       - name: Set Slack Status
         if: always()
@@ -277,6 +368,45 @@ jobs:
             echo "STATUS=Failed" >> $GITHUB_OUTPUT
           fi
 
+      - name: Create PR Info
+        id: pr_info
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo 'INFO<<EOF'
+            echo "*🔀 PR:* #${{ github.event.pull_request.number }}"
+            echo "*👤 Author:* ${{ github.event.pull_request.user.login }}"
+            echo "*🌿 Branch:* ${{ github.head_ref }}"
+            echo "*🏷 Labels:* ${{ steps.labels.outputs.LABELS }}"
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Get PR URL
+        id: pr_url
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_OUTPUT
+
+      - name: Build Slack PR Info
+        id: slack_pr
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            {
+              echo 'INFO<<EOF'
+              echo "${{ steps.pr_info.outputs.INFO }}"
+              echo ""
+              echo "*🔗 Pull Request:*"
+              echo "${{ steps.pr_url.outputs.URL }}"
+              echo EOF
+            } >> $GITHUB_OUTPUT
+          else
+            {
+              echo 'INFO<<EOF'
+              echo "📋 Manual Execution"
+              echo EOF
+            } >> $GITHUB_OUTPUT
+          fi
+
       - name: Notify Slack
         if: always()
         uses: slackapi/slack-github-action@v2
@@ -285,19 +415,89 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "${{ steps.slack_status.outputs.ICON }} Playwright Tests ${{ steps.slack_status.outputs.STATUS }}
-
-                📦 Repository: ${{ github.repository }}
-
-                ${{ steps.summary.outputs.SUMMARY }}
-
-                ${{ steps.slack_context.outputs.DETAILS }}
-
-                📅 Trigger: ${{ github.event_name }}
-                ⏱ Duration: ${{ env.DURATION }}
-
-                🔍 Workflow:
-                <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+              "text": "🎉 Playwright Test Result",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ steps.slack_status.outputs.ICON }} Playwright Tests ${{ steps.slack_status.outputs.STATUS }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📅 Trigger:*\n${{ github.event_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱ Duration:*\n${{ env.DURATION }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔖 Commit:*\n`${{ steps.sha.outputs.SHORT_SHA }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🟢 Node:*\n${{ steps.node.outputs.VERSION }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🖥 Runner:*\nubuntu-latest"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.test_summary.outputs.SUMMARY }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*⚠️ Modules Requiring Attention*\n${{ steps.problems.outputs.PROBLEMS }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.slack_pr.outputs.INFO }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔍 Open Workflow"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "style": "primary"
+                    }
+                  ]
+                }
+              ]
             }
 
       - name: Comment Summary On PR
