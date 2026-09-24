@@ -23,6 +23,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
+    outputs:
+      browser: ${{ steps.browser_name.outputs.name }}
+      icon: ${{ steps.browser_icon.outputs.ICON }}
+      browser_trend: ${{ steps.browser_trend.outputs.TREND }}
+      duration: ${{ steps.result.outputs.duration }}
+
+      total: ${{ steps.metrics.outputs.TOTAL }}
+      passed: ${{ steps.metrics.outputs.PASSED }}
+      failed: ${{ steps.metrics.outputs.FAILED }}
+      flaky: ${{ steps.metrics.outputs.FLAKY }}
+      passrate: ${{ steps.metrics.outputs.PASSRATE }}
+      failrate: ${{ steps.health.outputs.FAILRATE }}
+
+      trend: ${{ steps.trend.outputs.TREND_DISPLAY }}
+
+      top_modules: ${{ steps.flaky.outputs.TOP }}
+      worst_module: ${{ steps.module_kpi.outputs.WORST }}
+
+      health: ${{ steps.health.outputs.HEALTH }}
+      stability: ${{ steps.stability.outputs.STATUS }}
+
     steps:
       - name: Determine Browser
         id: browser
@@ -58,6 +79,21 @@ jobs:
               ;;
           esac
 
+      - name: Browser Icon
+        id: browser_icon
+        run: |
+          case "${{ steps.browser.outputs.browser }}" in
+            chromium)
+              echo "ICON=🌐" >> $GITHUB_OUTPUT
+              ;;
+            firefox)
+              echo "ICON=🦊" >> $GITHUB_OUTPUT
+              ;;
+            webkit)
+              echo "ICON=🧭" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
       - name: Notify Slack Schedule Started
         uses: slackapi/slack-github-action@v2
         with:
@@ -65,11 +101,37 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "🚀 Scheduled Playwright execution started
-              📦 Repository: ${{ github.repository }}
-              🖱️ Browser: ${{ steps.browser_name.outputs.name }}
-              🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+              "text": "🚀 Scheduled Playwright Execution Started",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚀 Scheduled Playwright Execution Started"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🖱 Browser*\n${{ steps.browser_name.outputs.name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Execution*\nSchedule"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📊 Run #*\n${{ github.run_number }}"
+                    }
+                  ]
+                }
+              ]
             }
 
       - name: Checkout Repository
@@ -87,7 +149,197 @@ jobs:
         run: |
           npx playwright test --project=${{ steps.browser.outputs.browser }}
 
+      - name: Read Metrics
+        id: metrics
+        if: always()
+        run: |
+          if [ -f slack-metrics.json ]; then
+            echo "TOTAL=$(jq -r '.total' slack-metrics.json)" >> $GITHUB_OUTPUT
+            echo "PASSED=$(jq -r '.passed' slack-metrics.json)" >> $GITHUB_OUTPUT
+            echo "FAILED=$(jq -r '.failed' slack-metrics.json)" >> $GITHUB_OUTPUT
+            echo "FLAKY=$(jq -r '.flaky' slack-metrics.json)" >> $GITHUB_OUTPUT
+            echo "PASSRATE=$(jq -r '.passRate' slack-metrics.json)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read Trend KPI
+        id: trend
+        if: always()
+        run: |
+          if [ -f metrics/history.json ]; then
+
+            LAST=$(jq '.[-1]' metrics/history.json)
+
+            COUNT=$(jq 'length' metrics/history.json)
+
+            if [ "$COUNT" -ge 2 ]; then
+              PREV=$(jq '.[-2]' metrics/history.json)
+
+              LAST_RATE=$(echo "$LAST" | jq -r '.passRate // 0')
+              PREV_RATE=$(echo "$PREV" | jq -r '.passRate // 0')
+
+              TREND=$(awk "BEGIN {print $LAST_RATE - $PREV_RATE}")
+            else
+              TREND=0
+            fi
+
+            if (( $(echo "$TREND > 0" | bc -l) )); then
+              TREND_DISPLAY="📈 +$TREND%"
+            elif (( $(echo "$TREND < 0" | bc -l) )); then
+              TREND_DISPLAY="📉 $TREND%"
+            else
+              TREND_DISPLAY="➡️ 0%"
+            fi
+
+            echo "TREND_DISPLAY=$TREND_DISPLAY" >> $GITHUB_OUTPUT
+
+          else
+            echo "TREND_DISPLAY=➡️ N/A" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read Browser Trend KPI
+        id: browser_trend
+        run: |
+          BROWSER="${{ steps.browser.outputs.browser }}"
+
+          COUNT=$(jq \
+            "[.[] | select(.browser==\"$BROWSER\")] | length" \
+            metrics/browser-history.json)
+
+          if [ "$COUNT" -ge 2 ]; then
+
+            LAST=$(jq -r \
+              "[.[] | select(.browser==\"$BROWSER\")][-1].passRate" \
+              metrics/browser-history.json)
+
+            PREV=$(jq -r \
+              "[.[] | select(.browser==\"$BROWSER\")][-2].passRate" \
+              metrics/browser-history.json)
+
+            DIFF=$(awk "BEGIN {print $LAST - $PREV}")
+
+            if (( $(echo "$DIFF > 0" | bc -l) )); then
+              DISPLAY="📈 +$DIFF%"
+            elif (( $(echo "$DIFF < 0" | bc -l) )); then
+              DISPLAY="📉 $DIFF%"
+            else
+              DISPLAY="➡️ 0%"
+            fi
+
+            echo "TREND=$DISPLAY" >> $GITHUB_OUTPUT
+
+          else
+
+            echo "TREND=➡️ First Run" >> $GITHUB_OUTPUT
+
+          fi
+
+      - name: Browser Health KPI
+        id: health
+        if: always()
+        run: |
+          if [ -f slack-metrics.json ]; then
+
+            PASSRATE=$(jq -r '.passRate // 0' slack-metrics.json)
+
+            FAIL_RATE=$(awk "BEGIN {
+              printf \"%.1f\", 100-$PASSRATE
+            }")
+
+            HEALTH=$(awk "BEGIN {
+              printf \"%.1f\", $PASSRATE
+            }")
+
+            echo "HEALTH=$HEALTH" >> $GITHUB_OUTPUT
+            echo "FAILRATE=$FAIL_RATE" >> $GITHUB_OUTPUT
+
+          else
+            echo "HEALTH=0" >> $GITHUB_OUTPUT
+            echo "FAILRATE=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Save Browser History
+        env:
+          BROWSER: ${{ steps.browser.outputs.browser }}
+        run: |
+          node scripts/save-browser-history.js
+
+      - name: Read Top Problem Modules
+        id: flaky
+        run: |
+          if [ -f problem-modules.txt ]; then
+            TOP=$(awk '
+              /📁/ {module=$2}
+              /❌ Failed:/ {failed=$3}
+              /⚠️ Flaky:/ {
+                flaky=$3
+
+                if ((failed + flaky) > 0)
+                  print "📁 " module " | ❌ " failed " | ⚠️ " flaky
+              }
+            ' problem-modules.txt | head -3)
+
+            {
+              echo "TOP<<EOF"
+              echo "$TOP"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          else
+            echo "TOP=🎉 No Problem Modules Detected" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read Most Failed Module
+        id: module_kpi
+        run: |
+          if [ -f problem-modules.txt ]; then
+
+            WORST=$(awk '
+              /📁/ {
+                module=$2
+              }
+
+              /❌ Failed:/ {
+                if ($3 > max) {
+                  max=$3
+                  worst=module
+                }
+              }
+
+              END {
+                if (max > 0)
+                  print worst " (" max " failures)"
+                else
+                  print "✅ No Failed Modules"
+              }
+            ' problem-modules.txt)
+
+            echo "WORST=$WORST" >> $GITHUB_OUTPUT
+
+          else
+            echo "WORST=✅ No Failed Modules" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stability KPI
+        id: stability
+        if: always()
+        run: |
+          if [ -f slack-metrics.json ]; then
+            PASSRATE=$(jq -r '.passRate // 0' slack-metrics.json)
+
+            if (( $(echo "$PASSRATE >= 99" | bc -l) )); then
+              STATUS="🟢 Excellent"
+            elif (( $(echo "$PASSRATE >= 95" | bc -l) )); then
+              STATUS="🟡 Good"
+            else
+              STATUS="🔴 Needs Attention"
+            fi
+
+            echo "STATUS=$STATUS" >> $GITHUB_OUTPUT
+          else
+            echo "STATUS=⚪ Unknown" >> $GITHUB_OUTPUT
+          fi
+
       - name: Save Browser Result
+        id: result
         if: always()
         run: |
           mkdir -p browser-results
@@ -99,8 +351,10 @@ jobs:
 
           if [ "${{ steps.tests.outcome }}" = "success" ]; then
             echo "✅ ${{ steps.browser_name.outputs.name }} - Passed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/result.txt
-          else
+            echo "duration=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_OUTPUT
+            else
             echo "❌ ${{ steps.browser_name.outputs.name }} - Failed (${DURATION_MIN}m ${DURATION_REM_SEC}s)" > browser-results/result.txt
+            echo "duration=${DURATION_MIN}m ${DURATION_REM_SEC}s" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload Browser Result
@@ -172,16 +426,136 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "${{ steps.schedule_status.outputs.ICON }} Daily Playwright Health Check ${{ steps.schedule_status.outputs.STATUS }}
-
-              📦 Repository: ${{ github.repository }}
-
-              🌙 Trigger: Schedule
-              🔢 Run Number: ${{ github.run_number }}
-
-              Browser Results:
-              ${{ steps.browser_summary.outputs.RESULTS }}
-
-              🔗 Workflow:
-              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Workflow>"
+              "text": "${{ steps.schedule_status.outputs.ICON }} Scheduled Playwright Health Check",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ steps.schedule_status.outputs.ICON }} Scheduled Playwright Health Check"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏰ Schedule*\n${{ github.event.schedule }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Repository*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🖱 Browser*\n${{ needs.cross-browser.outputs.icon }} ${{ needs.cross-browser.outputs.browser }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📊 Run #*\n${{ github.run_number }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱ Duration*\n${{ needs.cross-browser.outputs.duration }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Artifacts*\n14 Days"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🟢 Browser Health*\n${{ needs.cross-browser.outputs.health }}/100"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🌐 Browser Trend*\n${{ needs.cross-browser.outputs.browser_trend }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🌐 Stability*\n${{ needs.cross-browser.outputs.stability }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📦 Test Volume*\n${{ needs.cross-browser.outputs.total }} Tests"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🧪 Total*\n${{ needs.cross-browser.outputs.total }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*✅ Passed*\n${{ needs.cross-browser.outputs.passed }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*❌ Failed*\n${{ needs.cross-browser.outputs.failed }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⚠️ Flaky*\n${{ needs.cross-browser.outputs.flaky }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📈 Pass Rate*\n${{ needs.cross-browser.outputs.passrate }}%"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*📉 Failure Rate*\n${{ needs.cross-browser.outputs.failrate }}%"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*⚠️ Top Problem Modules*\n${{ needs.cross-browser.outputs.top_modules }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🚨 Most Failed Module*\n${{ needs.cross-browser.outputs.worst_module }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Browser Result*\n${{ steps.browser_summary.outputs.RESULTS }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔍 Workflow"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
             }
