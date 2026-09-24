@@ -42,6 +42,10 @@ template: |
 
   $CHANGES
 
+  ## 🧪 Automation Validation
+
+  See the attached `release-summary.md` for the test metrics
+
   ## Dependency Versions
 
   See the attached `dependency-versions.txt` release asset for the exact package versions.
