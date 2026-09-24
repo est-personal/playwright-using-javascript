@@ -31,6 +31,27 @@ jobs:
       - name: Run Playwright Tests
         run: npx playwright test
 
+      - name: Generate Release Metrics
+        if: always()
+        run: |
+          TOTAL=$(jq -r '.total // 0' slack-metrics.json)
+          PASSED=$(jq -r '.passed // 0' slack-metrics.json)
+          FAILED=$(jq -r '.failed // 0' slack-metrics.json)
+          FLAKY=$(jq -r '.flaky // 0' slack-metrics.json)
+          PASSRATE=$(jq -r '.passRate // 0' slack-metrics.json)
+
+          {
+            echo "## 🧪 Automation Test Summary"
+            echo ""
+            echo "| Metric | Value |"
+            echo "|---------|---------|"
+            echo "| Total Tests | $TOTAL |"
+            echo "| Passed | $PASSED |"
+            echo "| Failed | $FAILED |"
+            echo "| Flaky | $FLAKY |"
+            echo "| Pass Rate | $PASSRATE% |"
+          } > release-summary.md
+
       - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -63,11 +84,10 @@ jobs:
           cat dependency-versions.txt
 
       - name: Create GitHub Release
-        if: always()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: Playwright - JavaScript Release ${{ github.ref_name }}
           files: |
             dependency-versions.txt
+            release-summary.md
           #generate_release_notes: true
