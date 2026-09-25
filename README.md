@@ -1,13 +1,13 @@
 # Playwright Using JavaScript
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Playwright--green">
-  <img src="https://img.shields.io/badget-Framework-yellow">
-  <img src="https://img.shields.io/badge/tHub_Actions-blue">
+  <img src="https://img.shields.io/badge/Playwright_Framework-green">
+  <img src="https://img.shields.io/badge/JavaScript-yellow">
+  <img src="https://img.shields.io/badge/GitHub_Actions-blue">
   <img src="https://img.shields.io/badge/CD-Jenkins-red">
   <img src="https://img.shields.io/badge/Reporting-Allure-orange">
   <img src="https://img.shields.io/badge/Notifications-Slack-purple">
-  <img src="https://imgo/badge/Releases-Automated-success">
+  <img src="https://img.shields.io/badge/Releases-Automated-success">
 </p>
 
 UI Test Automation built using Playwright Framework and JavaScript.
@@ -82,7 +82,7 @@ This project demonstrates a scalable UI test automation built using Playwright F
 - [Installation](#installation)
 - [Running Tests](#running-tests)
 - [CI/CD Workflow](#ci-cd-workflow)
-- [Slack Notifications](#slack-notifications)
+- [Integrations](#integrations)
 - [Test Result Classification](#test-result-classification)
 - [Reports](#reports)
 - [Dashboard](#dashboard)
@@ -325,53 +325,13 @@ Pipeline Parameters:
 
 ---
 
-## Slack Notifications
+## Integrations
+
+### GitHub Actions
+CI/CD built in GitHub that lets automate tasks such as building, testing, and deploying code using YAML‑defined workflows triggered by repository events
+
+### Slack
 A Slack notification is sent after every workflow execution.
-
-### Github Actions
-```text
-✅ Playwright Tests Passed
-📦 Repository: est-personal/playwright-using-javascript
-📊 Overall Results 🧪 Total:336 ✅ Passed: 331 ❌ Failed: 0 ⚠️ Flaky: 5 ⏭️ Skipped:0 
-📁 forms 🧪 Total:123 ✅ Passed: 119 ❌ Failed: 0 ⚠️ Flaky: 4 ⏭️ Skipped:0 
-📁 dropdowns 🧪 Total:63 ✅ Passed: 63 ❌ Failed: 0 ⚠️ Flaky: 0 ⏭️ Skipped:0 
-📁 buttons 🧪 Total:99 ✅ Passed: 99 ❌ Failed: 0 ⚠️ Flaky: 0 ⏭️ Skipped:0 
-📁 inputFields 🧪 Total:51 ✅ Passed: 50 ❌ Failed: 0 ⚠️ Flaky: 1 ⏭️ Skipped:0 
-🔀 PR: 172 📝 Title: Fix Jenkinsfile as build failed after merging of Parallel Execution Parameter 👤 Author: est-personal 🌿 Branch: item-AUTOMATION-122-140
-⏱ Duration: 8m 19s
-🔗 PR: https://github.com/est-personal/playwright-using-javascript/pull/172
-🔍 Workflow: https://github.com/est-personal/playwright-using-javascript/actions/runs/31337602104
-```
-
-### Jenkins
-```text
-🟡 PLAYWRIGHT TESTS COMPLETED WITH FAILURES
-🧪 Total: 336
-✅ Passed: 205
-❌ Failed: 74
-⚠️ Flaky: 57
-⏭ Skipped: 0
-📊 Playwright Report: http://localhost:8080/job/Test%20Automation%20Project%20-%20Playwright%20JavaScript/47/Playwright_Report/
-🌐 Browser: all
-⚙️ Execution Mode: parallel
-🖥 Mode: headless
-📁 Test Suite: dropdowns
-🏷️ Tag: N/A
-🔄 Retries: 1
-👷 Workers: 2
-👨 Author: est-personal
-📧 Email: esteen.personalwork@gmail.com
-📦 Repository: playwright-using-javascript
-🌿 Branch: main
-🚀 Trigger: Started by user Esteen Valdez
-🏗 Job: Test Automation Project - Playwright JavaScript
-🔢 Build: #47
-📝 Commit: 08d3ddb
-📄 Message: Merge pull request #173 from est-personal/item-AUTOMATION-122-140
-🔀 PR: est
-⏱ Duration: 1 hr 34 min and counting
-🔗 Build URL: http://localhost:8080/job/Test%20Automation%20Project%20-%20Playwright%20JavaScript/47/
-```
 
 ---
 
