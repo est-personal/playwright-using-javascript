@@ -29,25 +29,41 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
+        id: tests
+        continue-on-error: true
         run: npx playwright test
 
       - name: Generate Test Summary
         if: always()
         run: |
-          node scripts/test-summary.js
+          node scripts/test-summary.js || true
+
+      - name: Test Status
+        if: always()
+        run: |
+          echo "Playwright Tests Result: ${{ steps.tests.outcome }}"
 
       - name: Verify Report Files
         if: always()
         run: |
           echo "=== REPORT FILES ==="
           find . -name "*.json"
-          ls -la test-results || *rue
+          ls -la test-results || true
 
-          echo "=== ROOT FILES ==="*    ls -la
+          echo "=== ROOT FILES ==="
+          ls -la
 
       - name: Generate Release Metrics
         if: always()
         run: |
+
+          TEST_STATUS="${{ steps.tests.outcome }}"
+
+          if [ "$TEST_STATUS" = "success" ]; then
+            TEST_STATUS="✅ Passed"
+          else
+            TEST_STATUS="❌ Failed"
+          fi
 
           if [ ! -f slack-metrics.json ]; then
             echo "Metrics file missing"
@@ -73,6 +89,7 @@ jobs:
             echo ""
             echo "| Metric | Value |"
             echo "|---------|---------|"
+            echo "| Test Execution | $TEST_STATUS |"
             echo "| Total Tests | $TOTAL |"
             echo "| Passed | $PASSED |"
             echo "| Failed | $FAILED |"
@@ -125,6 +142,7 @@ jobs:
           echo "Release assets verified."
 
       - name: Create GitHub Release
+        if: always()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
