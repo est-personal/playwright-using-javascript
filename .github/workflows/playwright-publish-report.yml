@@ -60,7 +60,7 @@ jobs:
         if: ${{ steps.biweekly.outputs.run == 'true' }}
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.SLACK_GITHUB_ACTIONS_DASHBOARD_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
@@ -339,7 +339,7 @@ jobs:
         if: always() && steps.biweekly.outputs.run == 'true'
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_GITHUB_ACTIONS_CICD_WEBHOOK_URL }}
+          webhook: ${{ secrets.SLACK_GITHUB_ACTIONS_DASHBOARD_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
