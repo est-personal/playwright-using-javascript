@@ -10,11 +10,24 @@ on:
       - completed
 
 jobs:
-  debug:
+  merge:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-      - name: Debug PR
+      - name: Show PR
         run: |
-          echo "PR Data:"
           echo '${{ toJson(github.event.workflow_run.pull_requests) }}'
+
+      - name: Merge PR
+        run: |
+          gh pr merge \
+            ${{ github.event.workflow_run.pull_requests[0].number }} \
+            --repo ${{ github.repository }} \
+            --squash \
+            --delete-branch
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
