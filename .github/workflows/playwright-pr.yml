@@ -327,7 +327,7 @@ jobs:
         if: always()
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.SLACK_GITHUB_ACTIONS_CICD_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
@@ -337,7 +337,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ steps.slack_status.outputs.ICON }} Playwright Tests ${{ steps.slack_status.outputs.STATUS }}"
+                    "text": "${{ steps.slack_status.outputs.ICON }} Playwright - JavaScript Tests ${{ steps.slack_status.outputs.STATUS }}"
                   }
                 },
                 {
