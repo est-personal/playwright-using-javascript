@@ -3,7 +3,7 @@ name: Auto Merge PR
 on:
   workflow_run:
     workflows:
-      - Playwright Tests - Before Merging PR
+      - Playwright Tests - PR or Manual Valdation
     types:
       - completed
 
