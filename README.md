@@ -1,21 +1,81 @@
 # Playwright Using JavaScript
 
-![Playwright](https://img.shields.io/badge/Playwright-Automation-green)
-![JavaScript](https://img.shields.io/badge/JavaScript-Framework-yellow)
-![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-blue)
-![Jenkins](https://img.shields.io/badge/CD-Jenkins-red)
+<p align="center">
+  <img src="https://img.shields.io/badge/Playwright--green">
+  <img src="https://img.shields.io/badget-Framework-yellow">
+  <img src="https://img.shields.io/badge/tHub_Actions-blue">
+  <img src="https://img.shields.io/badge/CD-Jenkins-red">
+  <img src="https://img.shields.io/badge/Reporting-Allure-orange">
+  <img src="https://img.shields.io/badge/Notifications-Slack-purple">
+  <img src="https://imgo/badge/Releases-Automated-success">
+</p>
 
-UI Test Automation Framework built using Playwright and JavaScript.
+UI Test Automation built using Playwright Framework and JavaScript.
 
 ---
 
 ## Overview
-This project demonstrates a scalable UI test automation framework built using Playwright and JavaScript. It follows the Page Object Model (POM) design pattern, supports cross-browser execution, integrates with GitHub Actions and Jenkins for CI/CD, and provides automated Slack notifications and detailed reporting.
+This project demonstrates a scalable UI test automation built using Playwright Framework and JavaScript. It follows the Page Object Model (POM) design pattern, supports cross-browser execution, integrates with GitHub Actions and Jenkins for CI/CD, and provides automated Slack notifications and detailed reporting via Allure.
+
+---
+
+## Quick Links
+
+- Repository: https://github.com/est-personal/playwright-using-javascript
+- Dashboard: https://est-personal.github.io/
+- Releases: https://github.com/est-personal/playwright-using-javascript/releases
+- Actions: https://github.com/est-personal/playwright-using-javascript/actions
+
+---
+
+## Project Highlights
+
+✅ Playwright with JavaScript
+
+✅ Page Object Model (POM)
+
+✅ Cross-Browser Testing
+
+✅ GitHub Actions CI/CD
+
+✅ Jenkins Integration
+
+✅ Allure Reporting
+
+✅ GitHub Pages Dashboard
+
+✅ Slack Notifications
+
+✅ Release Automation
+
+✅ Release Drafter
+
+✅ Historical Metrics Tracking
+
+✅ Browser Health Monitoring
+
+---
+
+## Project Statistics
+
+- ✅ 100+ Automated Test Cases
+- ✅ Cross-Browser Testing
+- ✅ GitHub Actions CI/CD
+- ✅ Jenkins Integration
+- ✅ Slack Notifications
+- ✅ Automated Release Management
+- ✅ Release Drafter
+- ✅ GitHub Pages Dashboard
+- ✅ Allure Reporting
 
 ---
 
 ## Table of Contents
 - [Overview](#overview)
+- [Quick Links](#quick-links)
+- [Project Highlights](#project-highlights)
+- [Project Statistics](#project-statistics)
+- [Framework Architecture](#framework-architecture)
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
@@ -25,7 +85,58 @@ This project demonstrates a scalable UI test automation framework built using Pl
 - [Slack Notifications](#slack-notifications)
 - [Test Result Classification](#test-result-classification)
 - [Reports](#reports)
+- [Dashboard](#dashboard)
+- [Release Management](#release-management)
+- [Browser Health](#browser-health)
+- [Quality Metrics](#quality-metrics)
+- [Screenshots](#screenshots)
 - [Future Enhancements](#future-enhancements)
+
+---
+
+## Dashboard
+Monitor automation health and execution trends through GitHub Pages.
+
+🔗 Dashboard:
+https://est-personal.github.io/
+
+The dashboard provides:
+- Browser Health KPI
+- Browser Trend KPI
+- Stability KPI
+- Pass Rate Trend
+- Duration Trend
+- Release Metrics
+- Historical Execution Data
+
+---
+
+## Framework Architecture
+```text
+Playwright Framework
+│
+├── Tests
+├── Pages
+├── Locators
+├── Test Data
+├── Fixtures
+├── Helpers
+│
+├── Playwright
+│
+├── GitHub Actions
+│   ├── PR Validation
+│   ├── Scheduled Execution
+│   ├── Release Automation
+│
+├── Jenkins
+│
+├── Slack Notifications
+│
+├── Allure Reports
+│
+└── GitHub Pages Dashboard
+```
 
 ---
 
@@ -41,8 +152,8 @@ This project demonstrates a scalable UI test automation framework built using Pl
 - Allure Reporter
 - GitHub Actions CI/CD
 - Jenkins Pipeline Integration
-- Slack Notifications
-- Gitlab Syncing
+- Slack Notification
+- Gitlab Synchronization
 
 ---
 
@@ -54,26 +165,55 @@ playwright-using-javascript/
 ├── config/
 │   ├── QaPlaygroundUrls.js
 ├── fixtures/
-│   ├── Pages.fixtures.js
+│   ├── Pages.fixture.js
 ├── helpers/
-│   ├── AlertsAndDialogsActions.js
-│   ├── AlertsAndDialogsAssertions.js
+│   ├── demo/
+|   |   ├── UiPracticeTablesAssertions.js
+│   ├── practice/
+|   |   ├── AlertsAndDialogsActions.js
+|   |   ├── AlertsAndDialogsAssertions.js
 ├── locators/
-│   ├── AlertsAndDialogsLocators.js
-│   └── DropdownsLocators.js
+│   ├── demo/
+|   |   ├── UiPracticeTablesLocators.js
+│   ├── practice/
+|   |   ├── AlertsAndDialogsLocators.js
+|   |   ├── ButtonsLocators.js
+├── metrics/
+│   ├── browser-history.json
+│   ├── duration-trend.png
+│   ├── failure-trend.png
+│   ├── history.json
+│   ├── pass-rate.png
 ├── pages/
-│   ├── AlertsAndDialogsPage.js
-│   └── DropdownsPage.js
+│   ├── demo/
+|   |   ├── UiPracticeTablesPage.js
+│   ├── practice/
+|   |   ├── AlertsAndDialogsPage.js
+|   |   ├── ButtonsPage.js
+├── scripts/
+│   ├── generate-chart.js
+│   ├── problem-modules.txt
+│   ├── save-browser-history.js
+│   ├── save-history.js
+│   ├── test-summary.js
 ├── testData/
-│   ├── AlertsAndDialogsData.js
-│   ├── DropdownsData.js
+│   ├── demo/
+|   |   ├── UiPracticeTablesData.js
+│   ├── practice/
+|   |   ├── AlertsAndDialogsData.js
+|   |   ├── ButtonsData.js
 ├── tests/
-│   ├── alertsAndDialogs/
-│   |   ├── alertsAndDialogs-validation.spec.js
-│   |   ├── alertsAndDialogs.spec.js
-│   ├── dropdowns/
-│   |   ├── dropdowns-validation.spec.js
-│   |   ├── dropdowns.spec.js
+│   ├── demo/
+│   |   ├── tables/
+|   |   |   ├── delete.spec.js
+|   |   |   ├── display.spec.js
+│   ├── practice/
+│   |   ├── alertsAndDialogs/
+|   |   |   ├── alertsAndDialogs-validation.spec.js
+|   |   |   ├── alertsAndDialogs.spec.js
+│   |   ├── buttons/
+|   |   |   ├── buttons-validation.spec.js
+|   |   |   ├── buttons.spec.js
 ├── Jenkinsfile
 ├── package-lock.json
 ├── package.json
@@ -98,7 +238,7 @@ allure --version
 ## Installation
 Clone the repository and install dependencies:
 ```bash
-git clone <repository-url>
+git clone https://github.com/est-personal/playwright-using-javascript.git
 cd playwright-using-javascript
 npm install
 npx playwright install
@@ -264,13 +404,155 @@ folder-summary.txt
 
 ---
 
+## Release Management
+
+The framework supports automated release management:
+
+### Release Drafter
+
+Automatically generates:
+
+- Features
+- Fixes
+- Integrations
+- CI/CD Updates
+- Refactoring
+- Documentation Updates
+
+### Features:
+
+- Automated Release Drafting
+- Categorized Release Notes
+- Dependency Reporting
+- Automated Slack Notifications
+- Automated Validation Before Release
+
+### Release Validation
+
+Before publishing a release:
+
+1. Playwright Tests Execute
+2. Test Metrics Generated
+3. Dependency Report Created
+4. Release Assets Uploaded
+5. Slack Release Notification Sent
+
+### Release Assets
+
+- release-summary.md
+- dependency-versions.txt
+
+---
+
+## Browser Health
+
+The framework automatically executes scheduled browser validation:
+
+| Browser | Schedule |
+|----------|----------|
+| Chromium | Daily |
+| Firefox | Weekly |
+| WebKit | Weekly |
+
+Collected KPIs:
+- Browser Health
+- Browser Stability
+- Browser Trend
+- Test Volume
+- Failure Rate
+- Top Problem Modules
+
+Example KPIs:
+- 🟢 Browser Health: 99.8/100
+- 🌐 Browser Trend: 📈 +1.2%
+- 📉 Failure Rate: 0.2%
+- 📦 Test Volume: 485 Tests
+- 🌐 Stability: Excellent
+
+---
+
+## Quality Metrics
+
+The framework tracks:
+
+- Pass Rate
+- Failure Rate
+- Flaky Tests
+- Browser Trend
+- Stability KPI
+- Module Failures
+- Historical Trends
+- Execution Duration
+- Test Volume
+
+---
+
+## Screenshots
+
+### GitHub Pages Dashboard
+
+add
+
+### Allure Report
+
+add
+
+### Slack Notification
+
+add
+
+---
+
 ## Future Enhancements
-- Github Pages
-- Docker Integration
-- Azure DevOps Pipeline
-- Email Notifications
-- Test Dashboard
+
+- AI Test Generation
+- AI Failure Analysis
+- Self-Healing Locators
+- Visual Regression Testing
 - API Automation Coverage
+- Docker Execution
+- Azure DevOps Pipeline
+- BrowserStack Integration
+- Performance Testing
+- Accessibility Testing
+- Email Notifications
+
+---
+
+## Why This Project?
+
+This repository demonstrates:
+
+- Test Automation Framework Design
+- CI/CD Pipeline Integration
+- Release Management
+- Test Analytics
+- Reporting and Monitoring
+- QA Engineering Best Practices
+- Enterprise-Level Test Automation Architecture
+
+---
+
+## Skills Demonstrated
+
+- Playwright
+- JavaScript
+- Page Object Model
+- Test Automation
+- GitHub Actions
+- Jenkins
+- Slack API Integration
+- Allure Reporting
+- Release Automation
+- Test Analytics
+- CI/CD Pipelines
+- Quality Engineering
+
+---
+
+## License
+
+MIT License
 
 ---
 
