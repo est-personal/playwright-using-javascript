@@ -8,8 +8,21 @@ const DEBUG = process.env.DEBUG === 'true';
 const reportPath = 'test-results/results.json';
 
 if (!fs.existsSync(reportPath)) {
-  console.error(`Report not found: ${reportPath}`);
-  process.exit(1);
+  console.log(`Report not found: ${reportPath}`);
+
+  fs.writeFileSync(
+    'slack-metrics.json',
+    JSON.stringify({
+      total: 0,
+      passed: 0,
+      failed: 0,
+      flaky: 0,
+      skipped: 0,
+      passRate: 0
+    }, null, 2)
+  );
+
+  process.exit(0);
 }
 
 const report = JSON.parse(
