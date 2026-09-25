@@ -14,9 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Debug
+      - name: Debug PR
         run: |
-          echo "Auto Merge Triggered"
-          echo "Conclusion: ${{ github.event.workflow_run.conclusion }}"
-          echo "Event: ${{ github.event.workflow_run.event }}"
-          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "PR Data:"
+          echo '${{ toJson(github.event.workflow_run.pull_requests) }}'
