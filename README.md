@@ -518,7 +518,7 @@ MIT License
 
 ## Author
 
-**Esteen Rae Valdez**
+**Esteen Valdez**
 QA Automation Consultant
 
 GitHub: https://github.com/est-personal
