@@ -1,4 +1,5 @@
-name: Sync GitHub to GitLab
+name: 🔄 GitHub to GitLab Sync
+run-name: Mirror Main Branch to GitLab
 
 on:
   push:

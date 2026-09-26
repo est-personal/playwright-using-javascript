@@ -1,4 +1,10 @@
-name: Playwright Tests - Scheduled Run
+name: 🩺 Playwright JavaScript Browser Health
+run-name: >-
+  ${{ github.event.schedule == '0 22 * * *' &&
+    '🌐 Chromium Health Check' || 
+    github.event.schedule == '30 12 * * 1' &&
+    '🦊 Firefox Health Check' || 
+    '🧭 Webkit Health Check' }}
 
 permissions:
   contents: write

@@ -1,4 +1,8 @@
-name: Publish Playwright Report
+name: 📊 QA Dashboard Publisher - Playwright JavaScript
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch' &&
+    format('Manual • {0}', github.event.inputs.browser) ||
+    'Bi-Weekly Dashboard Refresh' }}
 
 permissions:
   contents: write

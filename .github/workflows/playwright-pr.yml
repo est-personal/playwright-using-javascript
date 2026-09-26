@@ -1,4 +1,9 @@
-name: Playwright Tests - PR or Manual Validation
+name: 🎭 Playwright - PR or Manual Validation
+run-name: >-
+  ${{ github.event_name == 'pull_request' &&
+      format('PR #{0}', github.event.pull_request.number) ||
+      format('Manual • {0}/{1}', inputs.folder, inputs.browser) }}
+
 permissions:
   contents: write
   pull-requests: write

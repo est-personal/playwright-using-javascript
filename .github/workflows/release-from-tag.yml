@@ -1,5 +1,6 @@
 # After creation of version, this will run and automatically created release notes
-name: Release And Test
+name: 🚀 Release Pipeline
+run-name: Release ${{ github.ref_name }}
 
 on:
   push:
