@@ -1,4 +1,5 @@
-name: Release Drafter
+name: 📝 Release Notes Generator
+run-name: Release Draft Update
 
 on:
   push:
