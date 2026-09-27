@@ -12,7 +12,6 @@ concurrency:
   group: auto-merge-${{ github.event.workflow_run.id || github.run_id }}
   cancel-in-progress: false
 
-
 jobs:
   merge:
     if: >
