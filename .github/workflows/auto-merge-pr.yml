@@ -2,13 +2,16 @@ name: 🤖 Auto Merge PR
 run-name: Auto Merge PR #${{ github.event.workflow_run.pull_requests[0].number }}
 
 on:
-  workflow_dispatch:
-
   workflow_run:
     workflows:
       - 🎭 Playwright - PR or Manual Validation
     types:
       - completed
+
+concurrency:
+  group: auto-merge-${{ github.event.workflow_run.id || github.run_id }}
+  cancel-in-progress: false
+
 
 jobs:
   merge:
@@ -31,10 +34,43 @@ jobs:
           gh pr merge \
             ${{ github.event.workflow_run.pull_requests[0].number }} \
             --repo ${{ github.repository }} \
-            --squash \
-            --delete-branch
+            --squash
+
+          echo "✅ PR merged"
         env:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+
+      - name: Wait For Merge To Complete
+        run: sleep 15
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_PAT }}
+          fetch-depth: 0
+
+      - name: Sync Source Branch With Main
+        run: |
+
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+
+          if [ "$BRANCH" = "main" ]; then
+            echo "Refusing to modify main"
+            exit 1
+          fi
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git fetch origin
+
+          git ls-remote --heads origin "$BRANCH"
+
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+
+          git reset --hard origin/main
+
+          git push --force origin "$BRANCH"
 
       - name: Calculate Duration
         id: duration
@@ -47,6 +83,27 @@ jobs:
           SECONDS=$((DURATION%60))
 
           echo "duration=${MINUTES}m ${SECONDS}s" >> "$GITHUB_OUTPUT"
+
+      - name: Branch Sync Status
+        id: sync
+        run: |
+          echo "STATUS=✅ Branch Reset to Latest Main" >> $GITHUB_OUTPUT
+
+      - name: Verify Branch Sync
+        run: |
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+
+          git fetch origin
+
+          MAIN_SHA=$(git rev-parse origin/main)
+          BRANCH_SHA=$(git rev-parse origin/$BRANCH)
+
+          if [ "$MAIN_SHA" = "$BRANCH_SHA" ]; then
+            echo "✅ Branch successfully synced with main"
+          else
+            echo "❌ Branch sync failed"
+            exit 1
+          fi
 
       - name: Get PR Details
         id: pr
@@ -120,6 +177,10 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*⏰ Merged At:*\n${{ github.event.workflow_run.updated_at }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔄 Branch Sync:*\n${{ steps.sync.outputs.STATUS }}"
                     },
                     {
                       "type": "mrkdwn",
